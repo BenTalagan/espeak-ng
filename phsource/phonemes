@@ -1701,6 +1701,12 @@ phonemetable en-wi en
 include ph_english_wi
 
 
+
+phonemetable en-jrrt-tengwar en
+include ph_english_jrrt_tengwar
+
+
+
 phonemetable af base1
 include ph_afrikaans
 

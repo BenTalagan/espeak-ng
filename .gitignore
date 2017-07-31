@@ -160,6 +160,21 @@ emscripten/js/*.js
 !emscripten/js/demo.js
 !emscripten/js/espeakng.js
 
+
+!emscripten-glaemscribe/build
+!emscripten-glaemscribe/build/demo.html
+emscripten-glaemscribe/build/node_modules
+emscripten-glaemscribe/build/package-lock.json
+emscripten-glaemscribe/build/js/espeakng.library.*
+emscripten-glaemscribe/*.out
+emscripten-glaemscribe/*.pkl
+emscripten-glaemscribe/espeakng_data_package.js
+emscripten-glaemscribe/espeakng_data_package_for_node.js
+emscripten-glaemscribe/glue.*
+
+
+
+
 # espeak-ng-data
 
 dictsource/*_extra
