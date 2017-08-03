@@ -1,3 +1,6 @@
+
+// Ex : under
+// Ex : underaged (with vowel)
 phoneme 3    //  Schwa, used for rhotic schwa in American
   vwl   starttype #@  endtype #@
   ipa ɚ
@@ -7,16 +10,18 @@ phoneme 3    //  Schwa, used for rhotic schwa in American
   FMT(vwl_en_us/3_us)
 endphoneme
 
+// Defined for use by next rule (vanilla ice)
 phoneme r2-
   vwl rhotic
   ipa ɹ-
 endphoneme
 
+// Schwa + Vanilla ice 
 phoneme @    //  Schwa
   vwl   starttype #@  endtype #@
   unstressed
   length 130
-  IfNextVowelAppend(r2-) // Vanilla ice
+  IfNextVowelAppend(r2-) // Vanilla ice (see upper)
   IF nextPh(isRhotic) THEN
     ChangePhoneme(3)
   ENDIF
@@ -27,7 +32,7 @@ phoneme @    //  Schwa
 endphoneme
 
 
-
+// Ex: dark
 phoneme A@      // Used for [A:] when followed by 'r', becomes [A:]+[r] in American
   vwl  starttype #a  endtype #a
   ipa ɑː|ɹ
@@ -39,6 +44,7 @@ phoneme A@      // Used for [A:] when followed by 'r', becomes [A:]+[r] in Ameri
   FMT(vwl_en_us/aar)
 endphoneme
 
+// Ex: lord
 phoneme O@
   vwl  starttype #o  endtype #@
   length 250
@@ -50,6 +56,7 @@ phoneme O@
   FMT(vwl_en_us/oor)
 endphoneme
 
+// Ex: more
 phoneme o@
   vwl  starttype #o  endtype #@
   length 250
@@ -61,6 +68,7 @@ phoneme o@
   FMT(vwl_en_us/or)
 endphoneme
 
+// Ex: where
 phoneme e@
   vwl  starttype #e  endtype #@
   length 260
@@ -72,6 +80,7 @@ phoneme e@
   FMT(vwl_en_us/er)
 endphoneme
 
+// Ex: here
 phoneme i@3
   vwl  starttype #i  endtype #@
   length 280
@@ -83,6 +92,7 @@ phoneme i@3
   FMT(vwl_en_us/ir)
 endphoneme
 
+// Ex : moor
 phoneme U@
   vwl  starttype #@  endtype #@
   length 250
@@ -94,6 +104,7 @@ phoneme U@
   FMT(vwl_en_us/ur)
 endphoneme
 
+// Ex : layer
 phoneme aI3
   vwl  starttype #a  endtype #@
   length 310
@@ -102,8 +113,8 @@ phoneme aI3
   FMT(vwl_en_us/ai3)
 endphoneme
 
-
-
+// Ex : the (used only for the)
+// Ex : the age (with vowel)
 phoneme @2   //  Schwa, changes to I before a vowel
   vwl  starttype #@  endtype #@
   unstressed
@@ -114,6 +125,7 @@ phoneme @2   //  Schwa, changes to I before a vowel
   FMT(vowel/@_low2)
 endphoneme
 
+// Ex : repeated (schwi)
 phoneme I#
   vwl  starttype #i  endtype #i
   unstressed
@@ -123,6 +135,7 @@ phoneme I#
   FMT(vowel/ii#)
 endphoneme
 
+// ???
 phoneme oU
   vwl  starttype #@  endtype #u
   length 230
