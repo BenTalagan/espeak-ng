@@ -135,11 +135,46 @@ phoneme I#
   FMT(vowel/ii#)
 endphoneme
 
+
+// forgotten rule : to verify 
+// Ex : bias / pariah
+phoneme aI@
+  vwl  starttype #a  endtype #@
+  length 300
+  ipa aɪə
+  IfNextVowelAppend(r-)
+  FMT(vwl_en_us/ai@)
+endphoneme
+
+// forgotten rule : butterfaker
+phoneme 3:
+  vwl  starttype #@  endtype #@
+  length 210
+  IfNextVowelAppend(r-)
+  ChangeIfDiminished(3)
+  FMT(vwl_en_us/3_us2)
+endphoneme
+
+// forgotten rule : to verify
+phoneme aU@
+  vwl  starttype #a   endtype #@
+  length 300
+  ipa aɪʊɹ
+  IF nextPhW(r) THEN
+    ipa aɪʊ
+  ENDIF
+  IfNextVowelAppend(r)
+  FMT(vwl_en_us/aU@)
+endphoneme
+
+
+
 // ???
 phoneme oU
   vwl  starttype #@  endtype #u
   length 230
   FMT(vdiph/8u)
 endphoneme
+
 
 
