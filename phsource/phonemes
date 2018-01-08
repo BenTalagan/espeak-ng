@@ -1701,9 +1701,21 @@ phonemetable en-wi en
 include ph_english_wi
 
 
+// Glaemscribe's phoneme tables
 
-phonemetable en-jrrt-tengwar en
-include ph_english_jrrt_tengwar
+phonemetable en-tengwar-legacy en
+include ph_tengwar_en_legacy
+
+phonemetable en-tengwar base1
+include ph_tengwar_english
+
+phonemetable en-tengwar-gb en-tengwar
+include ph_tengwar_english_gb
+
+phonemetable en-tengwar-us en-tengwar
+include ph_tengwar_english_us
+
+// End of glaemscribe's phoneme tables
 
 
 

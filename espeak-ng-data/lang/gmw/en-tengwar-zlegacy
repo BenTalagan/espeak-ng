@@ -1,6 +1,6 @@
-name English (JRRT Tengwar use for English)
-language en-jrrt-tengwar  42
-language en 42
+name English (JRRT Tengwar use for English LEGACY)
+language en-tengwar-zlegacy
+language en 45
 
 // Have the wh / w rule (no whine/wine merger) because Tolkien makes the graphic distinction.
 // Have the fir/fur/fern merger (Rule 5) ? Rather yes (no rule).
@@ -9,7 +9,7 @@ dictrules 2
 maintainer Benjamin Talagan Babut <for_my_email_address_please_visit@glaemscrafu>
 status testing
 
-phonemes en-jrrt-tengwar
+phonemes en-tengwar-legacy
 
 // No horse/hoarse merger
 // replace 00  o@  O@
