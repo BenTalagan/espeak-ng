@@ -95,10 +95,10 @@ public:
     voices = espeak_ListVoices(NULL);
   }
   
-  int synth_all_(const char* aText, const char* wavVirtualFileName, const char* ipaVirtualFileName)
+  int synth_all_(const char* aText, const char* wavVirtualFileName, const char* phoVirtualFileName, bool phonemesAreIpa)
   {   
     bool processWav = (wavVirtualFileName != NULL);
-    bool processIpa = (ipaVirtualFileName != NULL);
+    bool processPho = (phoVirtualFileName != NULL);
     
     FILE* f_phonemes_out = NULL;
     
@@ -125,19 +125,23 @@ public:
       espeak_SetParameter(espeakRATE, rate, 0);
     }
     
-    if(processIpa)
+    if(processPho)
     {
       // phoneme_mode
+      //  bits 0-2:
+      //   value=0  No phoneme output (default)
+      //   value=1  Output the translated phoneme symbols for the text
+      //   value=2  as (1), but produces IPA phoneme names rather than ascii
       //  bit 1:   0=eSpeak's ascii phoneme names, 1= International Phonetic Alphabet (as UTF-8 characters).
       //  bit 7:   use (bits 8-23) as a tie within multi-letter phonemes names
       //  bits 8-23:  separator character, between phoneme names
       
-      int phoneme_conf = (1<<1);
+      int phoneme_conf = (phonemesAreIpa)?(2):(1);
       // phoneme_conf |= (1<<7)
       // int phonemes_separator = ' ';
       // phoneme_conf |= (phonemes_separator << 8);
     
-      f_phonemes_out = fopen(ipaVirtualFileName,"wb");
+      f_phonemes_out = fopen(phoVirtualFileName,"wb");
       if(!f_phonemes_out)
         return -2;
     
@@ -153,7 +157,7 @@ public:
       fclose(gCurrentWavFile);
     }
     
-    if(processIpa)
+    if(processPho)
     {
       fclose(f_phonemes_out);   
     }

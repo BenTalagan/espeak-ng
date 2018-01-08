@@ -13,13 +13,13 @@ print    = console.log;
 
 // Use the following trick to load the javascript that we would use normally in a web browser
 function include(path) { var code = Fs.readFileSync(path, 'utf-8'); Vm.runInThisContext(code, path); }
-include(__dirname + "/js/glaemscribe.espeakng.js")
+include(__dirname + "/js/espeakng.library.node.js")
 
-client = new GlaemscribeEspeakClient(__dirname + "/js/")
-client.load()
-client.synthesize("toto",{voice:'en-jrrt-tengwar'},function(wav) {
-  console.log(wav)
-});
+client = new ESpeakNGGlue();
+
+result = client.synthesize("A letter for toto", false, true, false, function(result) {});
+
+console.log(result)
 
 /*
 espeak = require("./js/espeakng.library.node.js")

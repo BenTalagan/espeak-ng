@@ -15,43 +15,43 @@
  * along with this program; if not, see: <http://www.gnu.org/licenses/>.
  */
 
-ESpeakNGGlue.prototype.synthesize = function (aText, with_wav, with_ipa, aCallback) {
+ESpeakNGGlue.prototype.synthesize = function (aText, with_wav, with_phonemes, phonemes_are_ipa, aCallback) {
   
   // Use a unique temp file for the worker. Avoid collisions, just in case.
   var wavVirtualFileName  = null;
   // Use a unique temp file for the worker. Avoid collisions, just in case.
-  var ipaVirtualFileName  = null;
+  var phoVirtualFileName  = null;
   
   if(with_wav)
     wavVirtualFileName = "espeak-ng-wav-tmp-"  + Math.random().toString().substring(2);
   
-  if(with_ipa)
-    ipaVirtualFileName  = "espeak-ng-ipa-tmp-"  + Math.random().toString().substring(2);
+  if(with_phonemes)
+    phoVirtualFileName  = "espeak-ng-pho-tmp-"  + Math.random().toString().substring(2);
   
   var wav = "";
-  var ipa = ""
-  var code = this.synth_all_(aText, wavVirtualFileName, ipaVirtualFileName);
+  var pho = ""
+  var code = this.synth_all_(aText, wavVirtualFileName, phoVirtualFileName, phonemes_are_ipa);
 
   if(code == 0)
   {
     if(with_wav)
       wav = FS.readFile(wavVirtualFileName, { encoding: 'binary' })
     
-    if(with_ipa)
-      ipa = FS.readFile(ipaVirtualFileName, { encoding: 'utf8' })
+    if(with_phonemes)
+      pho = FS.readFile(phoVirtualFileName, { encoding: 'utf8' })
   } 
   
   // Clean up the tmp file
   if(with_wav)
     FS.unlink(wavVirtualFileName);
   
-  if(with_ipa)
-    FS.unlink(ipaVirtualFileName);
+  if(with_phonemes)
+    FS.unlink(phoVirtualFileName);
     
   var ret = {
     code: code,
     wav: wav,
-    ipa: ipa
+    pho: pho
   }
   
   if(aCallback)

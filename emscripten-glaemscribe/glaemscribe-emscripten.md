@@ -1,6 +1,13 @@
 Fast recompile resources and js, in the root directory :
 
+- 1.a. If installed from source
 source ~/emsdk-portable/emsdk_set_env.sh 
+
+- 1.b. If installed from brew
+=> Nothing to do
+
+- 2.
+
 make clean
 make distclean
 ./configure --prefix=/usr --without-async --without-mbrola --without-sonic

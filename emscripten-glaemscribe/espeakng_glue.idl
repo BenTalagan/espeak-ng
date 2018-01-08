@@ -51,7 +51,7 @@ interface espeak_EVENT {
 
 interface ESpeakNGGlue {
   void ESpeakNGGlue();
-  long synth_all_(DOMString aText, DOMString wavVirtualFileName, DOMString ipaVirtualFileName);
+  long synth_all_(DOMString aText, DOMString wavVirtualFileName, DOMString phoVirtualFileName, boolean phonemesAreIpa);
   long getSizeOfEventStruct_();
   long set_voice(DOMString aName, DOMString aLang, optional octet gender=0, optional octet age=0, optional octet aVariant=0);
   [Const] attribute espeak_VOICE[] voices;
