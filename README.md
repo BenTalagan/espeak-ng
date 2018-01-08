@@ -49,11 +49,11 @@ The following platforms are supported:
 
 ### Binaries
 
-The Windows version of eSpeak NG 1.49.1 is available as:
+The Windows version of eSpeak NG 1.49.2 is available as:
 
-*  [espeak-ng-x64.msi](https://github.com/espeak-ng/espeak-ng/releases/download/1.49.1/espeak-ng-x64.msi) --
+*  [espeak-ng-x64.msi](https://github.com/espeak-ng/espeak-ng/releases/download/1.49.2/espeak-ng-x64.msi) --
    64-bit Windows installer
-*  [espeak-ng-x86.msi](https://github.com/espeak-ng/espeak-ng/releases/download/1.49.1/espeak-ng-x86.msi) --
+*  [espeak-ng-x86.msi](https://github.com/espeak-ng/espeak-ng/releases/download/1.49.2/espeak-ng-x86.msi) --
    32-bit Windows installer
 
 You also need to install the [Visual C++ Redistributable for Visual Studio 2015](https://www.microsoft.com/en-us/download/details.aspx?id=48145).
@@ -391,8 +391,8 @@ The `ieee80.c` implementation is taken directly from
 [ToFromIEEE.c.txt](http://www.realitypixels.com/turk/opensource/ToFromIEEE.c.txt)
 which has been made available for use in Open Source applications per the
 [license statement](COPYING.IEEE) on http://www.realitypixels.com/turk/opensource/.
-The only modification made to the code is to comment out the `TEST_FP` define
-to make it useable in the eSpeak NG library.
+The only modifications made to the code is to comment out the `TEST_FP` define
+to make it useable in the eSpeak NG library, and to fix compiler warnings.
 
 The `getopt.c` compatibility implementation for getopt support on Windows is
 taken from the NetBSD `getopt_long` implementation, which is licensed under a

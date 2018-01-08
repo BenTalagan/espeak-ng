@@ -23,6 +23,7 @@
 #include "config.h"
 
 #include <math.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -33,8 +34,12 @@
 
 #include "speech.h"
 #include "phoneme.h"
-#include "synthesize.h"
 #include "voice.h"
+#include "synthesize.h"
+
+#ifdef INCLUDE_KLATT
+#include "klatt.h"
+#endif
 
 #if HAVE_SONIC_H
 #include "sonic.h"
@@ -665,7 +670,7 @@ static int ApplyBreath(void)
 	return value;
 }
 
-int Wavegen()
+static int Wavegen()
 {
 	if (wvoice == NULL)
 		return 0;
@@ -888,7 +893,7 @@ int Wavegen()
 	}
 }
 
-static int PlaySilence(int length, int resume)
+static int PlaySilence(int length, bool resume)
 {
 	static int n_samples;
 	int value = 0;
@@ -900,7 +905,7 @@ static int PlaySilence(int length, int resume)
 	if (length == 0)
 		return 0;
 
-	if (resume == 0)
+	if (resume == false)
 		n_samples = length;
 
 	while (n_samples-- > 0) {
@@ -922,14 +927,14 @@ static int PlaySilence(int length, int resume)
 	return 0;
 }
 
-static int PlayWave(int length, int resume, unsigned char *data, int scale, int amp)
+static int PlayWave(int length, bool resume, unsigned char *data, int scale, int amp)
 {
 	static int n_samples;
 	static int ix = 0;
 	int value;
 	signed char c;
 
-	if (resume == 0) {
+	if (resume == false) {
 		n_samples = length;
 		ix = 0;
 	}
@@ -1117,7 +1122,7 @@ void SetPitch2(voice_t *voice, int pitch1, int pitch2, int *pitch_base, int *pit
 	*pitch_range = base + (pitch2 * range)/2 - *pitch_base;
 }
 
-void SetPitch(int length, unsigned char *env, int pitch1, int pitch2)
+static void SetPitch(int length, unsigned char *env, int pitch1, int pitch2)
 {
 	if (wvoice == NULL)
 		return;
@@ -1140,7 +1145,7 @@ void SetPitch(int length, unsigned char *env, int pitch1, int pitch2)
 	flutter_amp = wvoice->flutter;
 }
 
-void SetSynth(int length, int modn, frame_t *fr1, frame_t *fr2, voice_t *v)
+static void SetSynth(int length, int modn, frame_t *fr1, frame_t *fr2, voice_t *v)
 {
 	if (wvoice == NULL || v == NULL)
 		return;
@@ -1227,9 +1232,9 @@ void SetSynth(int length, int modn, frame_t *fr1, frame_t *fr2, voice_t *v)
 	}
 }
 
-static int Wavegen2(int length, int modulation, int resume, frame_t *fr1, frame_t *fr2)
+static int Wavegen2(int length, int modulation, bool resume, frame_t *fr1, frame_t *fr2)
 {
-	if (resume == 0)
+	if (resume == false)
 		SetSynth(length, modulation, fr1, fr2, wvoice);
 
 	return Wavegen();
@@ -1246,7 +1251,7 @@ void Write4Bytes(FILE *f, int value)
 	}
 }
 
-int WavegenFill2()
+static int WavegenFill2()
 {
 	// Pick up next wavegen commands from the queue
 	// return: 0  output buffer has been filled
@@ -1255,7 +1260,7 @@ int WavegenFill2()
 	int length;
 	int result;
 	int marker_type;
-	static int resume = 0;
+	static bool resume = false;
 	static int echo_complete = 0;
 
 	while (out_ptr < out_end) {
@@ -1263,7 +1268,7 @@ int WavegenFill2()
 			if (echo_complete > 0) {
 				// continue to play silence until echo is completed
 				resume = PlaySilence(echo_complete, resume);
-				if (resume == 1)
+				if (resume == true)
 					return 0; // not yet finished
 			}
 			return 1; // queue empty, close sound channel
@@ -1279,7 +1284,7 @@ int WavegenFill2()
 			SetPitch(length, (unsigned char *)q[2], q[3] >> 16, q[3] & 0xffff);
 			break;
 		case WCMD_PAUSE:
-			if (resume == 0)
+			if (resume == false)
 				echo_complete -= length;
 			wdata.n_mix_wavefile = 0;
 			wdata.amplitude_fmt = 100;
@@ -1357,9 +1362,9 @@ int WavegenFill2()
 
 		if (result == 0) {
 			WcmdqIncHead();
-			resume = 0;
+			resume = false;
 		} else
-			resume = 1;
+			resume = true;
 	}
 
 	return 0;

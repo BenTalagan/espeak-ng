@@ -7,7 +7,27 @@
 
 The espeak-ng project is a fork of the espeak project.
 
-### 1.49.2 - (In Development)
+### 1.49.3 - (In Development)
+
+bug fixes:
+
+*  Fix several issues with the emoji support.
+
+new languages:
+
+*  hak (Hakka Chinese) -- Chen Chien-ting
+
+updated languages:
+
+*  af (Afrikaans) -- Christo de Klerk
+*  fi (Finnish) -- Juho Hiltunen
+*  fr (French) -- Shallowmallow
+*  it (Italian) -- chrislm
+*  lv (Latvian) -- Valdis Vitolins
+*  my (Myanmar/Burmese) -- Min Maung
+*  ur (Urdu) -- Ejaz Shah
+
+### 1.49.2 - 2017-09-24
 
 *  Provide more validation when reading phoneme tables and voice/language files.
 *  Removed support for phoneme equivalence tables. These were disabled in the
@@ -25,6 +45,7 @@ bug fixes:
 *  Fix running `make clean ; make`.
 *  Fix reading stdin buffers larger than 1000.
 *  Fixed various language and parent BCP 47 codes (`jp` is now `ja`).
+*  Fixed several crashes and bugs in `espeak_SetVoiceByName/Properties`.
 
 new languages:
 
@@ -90,10 +111,14 @@ Unicode Emoji support (from the Unicode Emoji 5.0, and CLDR 31.0.1 data files):
 *  lt (Lithuanian)
 *  lv (Latvian)
 *  mk (Macedonian)
+*  ml (Malayalam)
 *  mr (Marathi)
 *  ms (Malay)
+*  my (Myanmar/Burmese)
+*  ne (Nepali)
 *  nl (Dutch)
 *  or (Oriya)
+*  pa (Punjabi)
 *  pl (Polish)
 *  pt (Portuguese) -- Brazil
 *  ro (Romanian)
@@ -105,6 +130,7 @@ Unicode Emoji support (from the Unicode Emoji 5.0, and CLDR 31.0.1 data files):
 *  sr (Serbian)
 *  sv (Swedish)
 *  sw (Swahili)
+*  ta (Tamil)
 *  te (Telugu)
 *  tr (Turkish)
 *  ur (Urdu)

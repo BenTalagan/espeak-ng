@@ -19,6 +19,7 @@
   - [Letter Names](#letter-names)
   - [Numbers](#numbers)
 - [Character Substitution](#character-substitution)
+- [(Re)definition of charater groups](#redefinition-of-charater-groups)
 
 ----------
 
@@ -55,9 +56,9 @@ The utility 'phonemes' are:
 | `=`    | put the primary stress on the preceding syllable |
 | `_:`   | short pause |
 | `_`    | a shorter pause |
-| `||`   | indicates a word boundary within a phoneme string |
-| `|`    | can be used to separate two adjacent characters, to prevent them from being considered as a multi-character phoneme mnemonic |
- 
+| <code>&#124;</code>  | indicates a word boundary within a phoneme string |
+| <code>&#124;&#124;</code>    | can be used to separate two adjacent characters, to prevent them from being considered as a multi-character phoneme mnemonic |
+
 It is not necessary to specify the stress of every syllable. Stress
 markers are only needed in order to change the effect of the language's
 default stress rule.
@@ -147,16 +148,25 @@ Each rule is on separate line, and has the syntax:
 
 	[<pre>)] <match> [(<post>] <phoneme string>
 
-e.g.
+* characters in `<pre>)` group are already spelled and "consumed"
+* characters in `<match>` group are ones which will be spelled and "consumed"
+by best matching rule
+* characters in `(<post>` group will not be spelled and produced, but can be
+used as reference to choose matching rule
 
+Note that `<match>` group can be longer than name of character group, but cannot
+be shorter.
+
+Example:
 
 	.group o
-	       o        0    // "o" is pronounced as [0]
-	       oo       u:   // but "oo" is pronounced as [u:]
-	    b) oo (k    U
+	       o      0   // "o" is pronounced as [0], one letter consumed
+	       oo     u:  // but "oo" is pronounced as [u:], two letters consumed
+	    b) oo (k  U   // pronounced as [U], two letters consumed
+
 
 `oo` is pronounced as `[u:]`, but when also preceded by `b` and followed
-by `k`, it is pronounced `[U]`.
+by `k`, it is pronounced `[U]`. If 
 
 In the case of a single-letter group, the first character of `<match>`
 much be the group letter. In the case of a 2-letter group, the first two
@@ -189,10 +199,10 @@ translation rules and spoken with English phonemes.
 |-------------|-------------|
 | `_`         | Beginning or end of a word (or a hyphen). |
 | `-`         | Hyphen. |
-| `A`         | Any vowel (the set of vowel characters may be defined for a particular language). |
-| `C`         | Any consonant. |
-| `B H F G Y` | These may indicate other sets of characters (defined for a particular language). |
-| `L<nn>`     | Any of the sequence of characters defined as a letter group (see above). |
+| `A`         | Any vowel[<sup>1</sup>](#redefinition-of-charater-groups). |
+| `C`         | Any consonant [<sup>1</sup>](#redefinition-of-charater-groups). |
+| `B H F G Y` | These may indicate other sets of characters[<sup>1</sup>](#redefinition-of-charater-groups). |
+| `L<nn>`     | Any of the sequence of characters defined as a letter grup. |
 | `D`         | Any digit. |
 | `K`         | Not a vowel (i.e. a consonant or word boundary or non-alphabetic character). |
 | `X`         | There is no vowel until the word boundary. |
@@ -202,8 +212,7 @@ translation rules and spoken with English phonemes.
 | `\xxx`      | Character is written as by 3 digit octal value of `xxx`|
 | `@`         | One syllable (i.e. at least one vowel or diphthong) |
 
-The sets of letters indicated by `A`, `B`, `C`, `E`, `F` and `G` may be defined
-differently for each language.
+
 
 Examples of rules:
 ```
@@ -379,8 +388,8 @@ instead of, or as well as, the phonetic translation.
 | `$hasdot`            | Use this pronunciation if the word is followed by a dot. (This attribute also implies `$dot`). |
 | `$max3`              | Limit to 3 repetitions in pronunciation.|
 | `$text`              | Word translates to replacement text, not phonemes.|
-| `$verbf`             | The following word is probably is a verb. |
-| `$verbsf`            | The following word is probably is a if it has an "s" suffix. |
+| `$verbf`             | The following word is probably a verb. |
+| `$verbsf`            | The following word is probably a verb if it has an "s" suffix. |
 | `$nounf`             | The following word is probably not a verb. |
 | `$pastf`             | The following word is probably past tense. |
 | `$verb`              | Use this pronunciation if it's a verb, i.e. previously processed word had `$verbf` or `$verbsf` set.|
@@ -504,3 +513,16 @@ version of the characters needs to be specified. e.g.
 	   û   ű
 	   cx  ĉ   // (Esperanto) allow "cx" as an alternative to c-circumflex
 	   ﬁ   fi  // replace a single character ligature by two characters
+
+## (Re)definition of charater groups
+
+The set of these vowel characters in `A` group and consonants in `C` group may be
+redefined for a particular language. Other sets of letters indicated by `B`, `E`, `F` and `G`
+usually have specific meaning for each particular language.
+
+(Re)definition of letter groups is done in [tr_languages.c](../src/libespeak-ng/tr_languages.c)
+file by calling `SetLetterBits()` function from (usually) `NewTranslator()` function.
+Note, that letters should be stored as array of chars, thus multibyte
+unicode letters should be transposed using `transpose_min` and `transpose_max` parameters
+of particular `Translator` structure.
+

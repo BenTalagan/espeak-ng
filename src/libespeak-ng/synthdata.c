@@ -34,8 +34,8 @@
 #include "error.h"
 #include "speech.h"
 #include "phoneme.h"
-#include "synthesize.h"
 #include "voice.h"
+#include "synthesize.h"
 #include "translate.h"
 
 const char *version_string = PACKAGE_VERSION;
@@ -65,8 +65,6 @@ int seq_len_adjust;
 int vowel_transition[4];
 int vowel_transition0;
 int vowel_transition1;
-
-int FormantTransition2(frameref_t *seq, int *n_frames, unsigned int data1, unsigned int data2, PHONEME_TAB *other_ph, int which);
 
 static espeak_ng_STATUS ReadPhFile(void **ptr, const char *fname, int *size, espeak_ng_ERROR_CONTEXT *context)
 {
@@ -112,7 +110,6 @@ espeak_ng_STATUS LoadPhData(int *srate, espeak_ng_ERROR_CONTEXT *context)
 	int length = 0;
 	int rate;
 	unsigned char *p;
-	int *pw;
 
 	espeak_ng_STATUS status;
 	if ((status = ReadPhFile((void **)&phoneme_tab_data, "phontab", NULL, context)) != ENS_OK)
@@ -336,19 +333,19 @@ unsigned char *GetEnvelope(int index)
 	return (unsigned char *)&phondata_ptr[index];
 }
 
-static void SetUpPhonemeTable(int number, int recursing)
+static void SetUpPhonemeTable(int number, bool recursing)
 {
 	int ix;
 	int includes;
 	int ph_code;
 	PHONEME_TAB *phtab;
 
-	if (recursing == 0)
+	if (recursing == false)
 		memset(phoneme_tab_flags, 0, sizeof(phoneme_tab_flags));
 
 	if ((includes = phoneme_tab_list[number].includes) > 0) {
 		// recursively include base phoneme tables
-		SetUpPhonemeTable(includes-1, 1);
+		SetUpPhonemeTable(includes-1, true);
 	}
 
 	// now add the phonemes from this table
@@ -367,7 +364,7 @@ static void SetUpPhonemeTable(int number, int recursing)
 void SelectPhonemeTable(int number)
 {
 	n_phoneme_tab = 0;
-	SetUpPhonemeTable(number, 0); // recursively for included phoneme tables
+	SetUpPhonemeTable(number, false); // recursively for included phoneme tables
 	n_phoneme_tab++;
 	current_phoneme_table = number;
 }
@@ -508,7 +505,6 @@ static bool InterpretCondition(Translator *tr, int control, PHONEME_LIST *plist,
 	unsigned int data;
 	int instn;
 	int instn2;
-	int count;
 	int check_endtype = 0;
 	PHONEME_TAB *ph;
 	PHONEME_LIST *plist_this;
@@ -760,7 +756,7 @@ int NumInstnWords(USHORT *prog)
 			// This instruction is followed by addWav(), 2 more words
 			return 4;
 		}
-		if (instn2 == OPCODE_CONTINUE)
+		if (instn2 == INSTN_CONTINUE)
 			return 3;
 		return 2;
 	}
@@ -817,10 +813,10 @@ void InterpretPhoneme(Translator *tr, int control, PHONEME_LIST *plist, PHONEME_
 				// instructions with no operand
 				switch (data)
 				{
-				case OPCODE_RETURN:
+				case INSTN_RETURN:
 					end_flag = 1;
 					break;
-				case OPCODE_CONTINUE:
+				case INSTN_CONTINUE:
 					break;
 				default:
 					InvalidInstn(ph, instn);
@@ -958,7 +954,7 @@ void InterpretPhoneme(Translator *tr, int control, PHONEME_LIST *plist, PHONEME_
 			param_sc = phdata->sound_param[instn2] = (instn >> 4) & 0xff;
 			prog++;
 
-			if (prog[1] != OPCODE_CONTINUE) {
+			if (prog[1] != INSTN_CONTINUE) {
 				if (instn2 < 2) {
 					// FMT() and WAV() imply Return
 					end_flag = 1;

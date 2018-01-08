@@ -25,12 +25,13 @@
   - [dictionary](#dictionary)
   - [dictrules](#dictrules)
   - [replace](#replace)
+  - [stressRule](#stressrule)
   - [stressLength](#stresslength)
   - [stressAdd](#stressadd)
   - [stressAmp](#stressamp)
   - [intonation](#intonation)
   - [dictmin](#dictmin)
-
+  - [letterVowel](#letterVowel)
 ----------
 
 A Voice file specifies a language (and possibly a language variant or
@@ -290,7 +291,7 @@ values will be used.
 
 	speed <value>
 
-Default value 10
+Default value 100
 
 Adjusts the speaking speed by a percentage of the default rate. This
 can be used if a language voice seems faster or slower compared to other
@@ -372,6 +373,20 @@ e.g.
 The phoneme mnemonics can be defined for each language, but some are
 listed in [Phonemes](phonemes.md).
 
+### stressRule
+
+	stressRule <4 integer values>
+
+Four integer parameters. These correspond to:
+
+1. langopts->stress_rule (values in translate.h)
+2. langopts->stress_flags
+3. langopts->unstressed_wd1 (stress for $u word of 1 syllable)
+4. langopts->unstressed_wd2 (stress for $u word of >1 syllable) 
+
+If a value is not given, it defaults to zero. For example:
+"stressRule 2" is equal to "stressRule 2 0 0 0"
+
 ### stressLength
 
 	stressLength <8 integer values>
@@ -379,16 +394,17 @@ listed in [Phonemes](phonemes.md).
 Eight integer parameters. These control the relative lengths of the
 vowels in stressed and unstressed syllables.
 
-* 0  unstressed
+* 0  unstressed. Unstressed syllable in word
+  (syllable with `%` mark or without any stress mark).
 * 1 diminished. Its use depends on the language. In English it's used for
-  unstressed syllables within multisyllabic words. In Spanish it's used
-  for unstressed final syllables.
-* 2 secondary stress
-* 3 words marked as "unstressed" in the dictionary
+  unstressed syllables (marked with `%%`) within multisyllabic words.
+  In other languages it is final unstressed syllable.
+* 2 secondary stress (syllable with marked with `,`).
+* 3 words marked as "unstressed" in the dictionary.
 * 4   not currently used
 * 5   not currently used
-* 6 stressed syllable (the main syllable in stressed words)
-* 7 tonic syllable (by default, the last stressed syllable in the clause) 
+* 6 stressed syllable (the main syllable in stressed words marked with `'`).
+* 7 tonic syllable (by default, the last stressed syllable in the clause).
 
 ### stressAdd
 
@@ -424,3 +440,9 @@ Used for some languages to detect if additional language data is
 installed. If the size of the compiled dictionary data for the language
 (the file `espeak-ng-data/*_dict`) is less than this size then a
 warning is given.
+
+### letterVowel
+
+	letterVowel <letter>
+
+Used for some languages to handle a certain letter as a vowel instead of consonant.
