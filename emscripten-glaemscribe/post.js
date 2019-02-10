@@ -60,7 +60,7 @@ ESpeakNGGlue.prototype.synthesize = function (aText, with_wav, with_phonemes, ph
   return ret;
 };
 
-
+/*
 // Make this a worker 
 if (typeof WorkerGlobalScope !== 'undefined') {
   var glue;
@@ -80,14 +80,15 @@ if (typeof WorkerGlobalScope !== 'undefined') {
     if (e.data.callback)
       postMessage(message);
   }
-/* 
-  // Need for using embeded version in a web worker 
-  shouldRunNow        = true;
-  Module["calledRun"] = false;
-  run();
-*/
-}
 
+//  
+// // Need for using embeded version in a web worker 
+// shouldRunNow        = true;
+// Module["calledRun"] = false;
+// run();
+// 
+}
+*/
 
 
 

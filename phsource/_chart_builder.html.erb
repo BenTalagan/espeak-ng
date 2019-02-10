@@ -1,0 +1,47 @@
+<html>
+
+<head>
+</head>
+
+<body>
+  
+  <table>
+  
+  <% ref_phonemes.each do |ph| %>
+  
+  <tr>
+    <th></th>
+  <% chart_sources.keys.each do |l| %>
+    <th><%= l %></th>
+  <% end %>  
+  </tr>
+  
+  <tr>
+    <td>
+      <%= ph %>
+    </td>
+    <% chart_sources.each do |k,l| %>
+      <td class="code">
+        <% code = (l[ph])?(l[ph].pre + l[ph].code):("") %>
+        <pre><%= colorize(code) %></pre>      
+      </td>
+    <% end %>
+  </tr>
+  <% end %>
+  
+  
+  <style>
+    td {
+      text-align:left;
+      padding:10px;
+      border: solid 1px black;
+      border-collapse: collapse;
+    }
+    td.code {
+      vertical-align:bottom;
+    }
+  </style>
+  
+</body>
+
+</html>

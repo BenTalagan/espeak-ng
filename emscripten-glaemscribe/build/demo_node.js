@@ -11,18 +11,21 @@ Path     = require("path")
 Util     = require("util")
 print    = console.log;
 
+Espeak = require(__dirname + "/js/espeakng.for.glaemscribe.embed.js")
+
 // Use the following trick to load the javascript that we would use normally in a web browser
 function include(path) { var code = Fs.readFileSync(path, 'utf-8'); Vm.runInThisContext(code, path); }
-include(__dirname + "/js/espeakng.library.node.js")
 
-client = new ESpeakNGGlue();
 
-result = client.synthesize("A letter for toto", false, true, false, function(result) {});
+//include(__dirname + "/packed/espeakng.for.glaemscribe.embed.js")
+// include(__dirname + "/js/espeakng.for.glaemscribe.embed.js")
 
-console.log(result)
+function transcribe() {
+  client = new Espeak.ESpeakNGGlue();
+  result = client.synthesize("A letter for toto", false, true, true, function(result) {});
+  console.log(result)
+}
 
-/*
-espeak = require("./js/espeakng.library.node.js")
-glue = new espeak.ESpeakNGGlue();
-console.log(glue.synthesize("toto"))
-*/
+transcribe()
+ 
+console.log("yo")
