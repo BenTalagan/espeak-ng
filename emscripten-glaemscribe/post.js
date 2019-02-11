@@ -1,20 +1,3 @@
-/*
- * Copyright (C) 2014-2017 Eitan Isaacson
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, see: <http://www.gnu.org/licenses/>.
- */
-
 ESpeakNGGlue.prototype.synthesize = function (aText, with_wav, with_phonemes, phonemes_are_ipa, aCallback) {
   
   // Use a unique temp file for the worker. Avoid collisions, just in case.
@@ -59,36 +42,3 @@ ESpeakNGGlue.prototype.synthesize = function (aText, with_wav, with_phonemes, ph
   
   return ret;
 };
-
-/*
-// Make this a worker 
-if (typeof WorkerGlobalScope !== 'undefined') {
-  var glue;
-
-  Module.postRun.push(function () {
-    glue = new ESpeakNGGlue();
-    postMessage('ready');
-  });
-
-  onmessage = function(e) {
-    if (!glue) {
-      throw 'ESpeakNGGlue for worker is not initialized';
-    }
-    var args = e.data.args;
-    var message = { callback: e.data.callback, done: true };
-    message.result = [glue[e.data.method].apply(glue, args)];
-    if (e.data.callback)
-      postMessage(message);
-  }
-
-//  
-// // Need for using embeded version in a web worker 
-// shouldRunNow        = true;
-// Module["calledRun"] = false;
-// run();
-// 
-}
-*/
-
-
-
