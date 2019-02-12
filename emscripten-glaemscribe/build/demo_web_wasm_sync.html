@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="./js/espeakng.for.glaemscribe.wasm.async.js"></script>
+  <script src="./demo_common.js"></script>
+  <meta charset="UTF-8">
+</head>
+
+<body>
+  Example of a benchmark done loading the library synchronously (no wasm, chrome does not support synchronous wasm loading).
+  <br/><br/>
+  
+  
+  <script>
+    loadGlaemscribeEspeakNGAsync(function() {
+      document.write(benchmark().replace(/\n/g,"<br/>"));    
+    });
+  </script>
+  
+</body>
+</html>

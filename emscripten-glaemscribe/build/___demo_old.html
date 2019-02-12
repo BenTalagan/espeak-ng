@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <meta charset="UTF-8">
+</head>
+
+<body>
+  
+  <script>
+    /* A thin wrapper for glaemscribe espeak worker, based on Eitan Isaacson demo for espeak */
+    /* It simplifies the use of the worker and abstractizes communication to the worker by messages */
+
+    function GlaemscribeESpeakNGWorker(worker_path, ready_cb, error_cb) {
+
+      // If worker is available, create a worker to permorm tasks.
+      try {
+        this.worker = new Worker(worker_path);
+      }
+      catch(e) {
+        error_cb("Failed to build speak client worker. (" + e + ")");
+        return;
+      }
+  
+      this.ready = false;
+      this.worker.onmessage = function(e) {
+        if (e.data !== 'ready') {
+          return;
+        }
+        this.worker.onmessage = null;
+        this.worker.addEventListener('message', this);
+        this.ready = true;
+        if (ready_cb) {
+          ready_cb();
+        }
+      }.bind(this); 
+    }
+
+    GlaemscribeESpeakNGWorker.prototype.handleEvent = function (evt) {
+      var callback = evt.data.callback;
+      if (callback && this[callback]) {
+        this[callback].apply(this, evt.data.result);
+        if (evt.data.done) {
+          delete this[callback];
+        }
+        return;
+      }
+    };
+
+    GlaemscribeESpeakNGWorker.prototype._createAsyncMethod = function(method) {
+      return function() {
+        var lastArg = arguments[arguments.length - 1];
+        var message = { method: method, args: Array.prototype.slice.call(arguments, 0) };
+        if (typeof lastArg == 'function') {
+          var callback = '_' + method + '_' + Math.random().toString().substring(2) +'_cb';
+          this[callback] = lastArg;
+          message.args.pop();
+          message.callback = callback;
+        }
+        this.worker.postMessage(message);
+      };
+    }
+
+    GlaemscribeESpeakNGWorker.prototype.terminate = function() {
+      if(this.worker)
+        this.worker.terminate();
+    }
+
+    for (var method of [
+        'get_rate',
+        'get_pitch',
+        'set_rate',
+        'set_pitch',
+        'set_voice',
+        'synthesize'
+        ]) {
+      GlaemscribeESpeakNGWorker.prototype[method] = GlaemscribeESpeakNGWorker.prototype._createAsyncMethod(method);
+    }
+  </script>
+    
+    
+  
+  
+  <script>
+    
+      
+      $(document).ready(function() {
+        
+        var client = {};
+        var lib_path = "./js/espeakng.for.glaemscribe.embed.js";
+        
+        client.ipaWorker = new GlaemscribeESpeakNGWorker(lib_path,function() {
+          $(".succeededtoload").show();
+        },function() {
+          $(".failedtoload").show();
+        })
+        client.wavWorker = new GlaemscribeESpeakNGWorker(lib_path,function() {},function() {})
+        
+        client.synthesize_phonemes = function(text, is_ipa, args, onended) {
+  
+          // In case we're working with workers, kill the last one
+          if(client.ipaWorker)
+            client.ipaWorker.terminate();
+
+          function localSynth() { 
+    
+            args = args || {}
+            client.ipaWorker.set_voice(args.voice  || 'en');
+
+            var ts = new Date();
+            client.ipaWorker.synthesize(text, false, true, is_ipa, function(result) {
+              var te = new Date();
+              console.log("IPA synthesized in " + (te - ts) + " ms");
+              if(onended)
+                onended(result);
+            });
+          }
+          client.ipaWorker = new GlaemscribeESpeakNGWorker(lib_path,function() { localSynth(); },function() {});  
+        }  
+      
+        client.synthesize_wav = function(text, args, onended) {
+  
+          // In case we're working with workers, kill the last one
+          if(client.wavWorker)
+            client.wavWorker.terminate();
+  
+          function localSynth() { 
+    
+            args = args || {}
+            client.wavWorker.set_voice  (args.voice   || 'en');
+            client.wavWorker.set_rate   (args.rate    || 120);
+            client.wavWorker.set_pitch  (args.pitch   || 5);
+
+            var ts = new Date();
+            client.wavWorker.synthesize(text, true, false, true, function(result) {
+              var te = new Date();
+              console.log("WAV synthesized in " + (te - ts) + " ms");
+              if(onended)
+                onended(result);
+            });
+          }
+          client.wavWorker = new GlaemscribeESpeakNGWorker(lib_path,function() { localSynth(); },function() {});  
+        }  
+        
+        $("#process").click(function() {
+          
+          client.synthesize_phonemes($("#to_transcribe").val(), $("#phoneme_format").val() == 'IPA' , {voice:$("#voice").val()}, function(res) {
+            $("#ipa_result").html(res.pho.replace(/\n/g,"<br/>"))
+          });
+
+          client.synthesize_wav($("#to_transcribe").val(),{voice:$("#voice").val()}, function(res) {
+            
+            var audio = $("#theaudio")[0];
+            var url   = URL.createObjectURL(new Blob([res.wav], {type: "audio/wav"}));
+    
+            var last_url = audio.src;
+  
+            audio.pause();
+            audio.currentTime = 0;
+            audio.src = url
+            audio.load();
+            audio.currentTime = 0;
+ 
+            URL.revokeObjectURL(last_url);
+          });
+        })
+      
+      });
+      
+
+      
+    </script>
+  
+  <div class="failedtoload" style="display:none">
+    Espeak module failed to load
+  </div>
+  
+  <div class="succeededtoload" style="display:none">
+    <div>
+      <div style="vertical-align:top;display:inline-block">
+        <textarea rows="10" cols="50" id="to_transcribe"></textarea>
+      </div>
+      <div id="ipa_result" style="vertical-align:top;display:inline-block">
+      </div>
+    </div>
+    
+    <div>
+      <audio id="theaudio" controls></audio>
+    </div>
+
+    <div>
+      <select id="phoneme_format">
+        <option value="IPA">IPA</option>
+        <option value="KIRCH">Kirchenbaum</option>
+      </select>
+    </div>
+    
+    <div>
+      <select id="voice">
+        <option value="en">en-gb</option>
+        <option value="en-us">en-us</option>
+        <option value="en-tengwar-legacy">en-tengwar-zlegacy</option>
+        <option value="en-tengwar">en-tengwar</option>
+        <option value="en-tengwar">en-tengwar-us</option>
+        <option value="en-tengwar">en-tengwar-gb</option>
+      </select>
+    </div>
+    
+    <div>
+      <button id="process">Process!</button>
+    </div>
+    
+  </div>
+
+  
+  
+</body>
+</html>

@@ -1,17 +1,19 @@
-Fast recompile resources and js, in the root directory :
+Reworked the Makefile to use a more recent version of emscripten.
+Will generate multiple async/sync wasm/nowasm versions for different purposes.
+Removed worker logic from demos : too much overhead here and not useful.
 
-- Preinstall requirements (version may be different for binaryen)
+### Preinstall requirements (version may be different for binaryen)
 
 brew install emscripten
 python /usr/local/Cellar/emscripten/1.38.25/libexec/embuilder.py build binaryen
 
-- 1.a. If emscripten is installed from source
+#### 1.a. If emscripten is installed from source
 source ~/emsdk-portable/emsdk_set_env.sh 
 
-- 1.b. If emscripten is installed from brew
-=> Nothing to do
+#### 1.b. If emscripten is installed from brew
+=> Nothing to do (emscripten is in the env)
 
-- 2. From root directory
+#### 2. BUILD From root directory
 
 make clean
 make distclean
