@@ -30,6 +30,15 @@
 // letter names, as they are spoken as a single character in text
 // precede by _  to distinguish from pronunciation as a language word
 
+// Glaemscribe. Use the character 0 (NULL) to mark punctuation and get it back in IPA.
+// Introduce four virtual phonemes that will be left unchanged in IPA output, to mark punctation.
+// 0xF8E0,0xF8E1,0xF8E2,0xF8E3
+
+ 
+ 
+ 
+ 
+
 _a	eI
 b	bi:
 c	si:

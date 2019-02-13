@@ -7,13 +7,33 @@ Removed worker logic from demos : too much overhead here and not useful.
 brew install emscripten
 python /usr/local/Cellar/emscripten/1.38.25/libexec/embuilder.py build binaryen
 
-#### 1.a. If emscripten is installed from source
-source ~/emsdk-portable/emsdk_set_env.sh 
+#### 1.a. If emscripten is installed from source (for an install in ~/emsdk)
+
+source ~/emsdk/emsdk_set_env.sh 
 
 #### 1.b. If emscripten is installed from brew
+
 => Nothing to do (emscripten is in the env)
 
 #### 2. BUILD From root directory
+
+#### First runs
+
+Should call ./autogen.sh in the 
+
+  root and src/ucd-tools
+ 
+directories !!
+
+#### General espeakng rebuild flow
+
+make clean
+make distclean
+./configure --prefix=/usr/local
+make en
+make install
+
+#### General emscripten rebuild flow
 
 make clean
 make distclean
