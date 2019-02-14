@@ -237,7 +237,7 @@ def build_chart(langs)
   ref_phonemes = ref_phonemes.sort{ |ph1,ph2| phoneme_sorter(ph1,ph2) }.uniq
   
   @toto = "test"
-  File.open("_chart_builder.html","wb:UTF-8") { |f|
+  File.open("chart_ph_tengwar.html","wb:UTF-8") { |f|
     f << $ERB.result(binding)
   }
 end
