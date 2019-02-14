@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# encoding: UTF-8
 
 require "erb"
 require "securerandom"
@@ -109,8 +110,11 @@ PHSTART_REGEXP  = /^phoneme\s+(\S+)\s*.*$/
 PHEND_REGEXP    = /^endphoneme.*$/ 
     
 def load_erb(filepath)
-  template = File.read(filepath)
-  ERB.new(template, 0, "", "erb_" + SecureRandom.uuid.gsub("-","_"))
+  template = ""
+  File.open(filepath,"rb:UTF-8") { |f| template = f.read }
+  puts template.encoding
+  puts template.valid_encoding?
+  ERB.new(template, 0, nil, "erb_" + SecureRandom.uuid.gsub("-","_"))
 end
 
 $ERB = load_erb("_chart_builder.html.erb")
@@ -118,6 +122,17 @@ $ERB = load_erb("_chart_builder.html.erb")
 class Phoneme
   attr_accessor :name, :pre, :code
 end
+
+class Lang
+  attr_accessor :name
+  attr_accessor :parent
+  
+  def initialize(name,parent)
+    @name = name
+    @parent = parent
+  end
+end
+  
 
 # Read a phoneme file
 # Return { "ph": Phoneme }
@@ -128,7 +143,7 @@ def read_ph_source(file_path)
   cphon       = ""
   cphon_name  = ""
   interphon   = ""
-  File.open(file_path,"rb") { |f|
+  File.open(file_path,"rb:UTF-8") { |f|
     f.read.lines.each{ |l|
     
       if(!in_phon && PHSTART_REGEXP =~ l)
@@ -162,7 +177,7 @@ def read_ph_source(file_path)
 end
 
 def span_colorize(s, color)
-  "<span style='color:#{color}'>#{s}</span>"
+  "<span class='#{color}'>#{s}</span>"
 end
 
 def colorize(code)
@@ -172,10 +187,10 @@ def colorize(code)
   code = code.gsub(/^(phoneme|endphoneme)/) {
     span_colorize($1, "blue")
   }
-  code = code.gsub(/\b(END|IF|NOT|THEN|ELSE|ENDIF)\b/) {
+  code = code.gsub(/\b(END|IF|NOT|THEN|ELSE|ELSEIF|ENDIF)\b/) {
     span_colorize($1, "green")    
   }
-  code = code.gsub(/\b(CALL)\b/) {
+  code = code.gsub(/\b(CALL|ChangePhoneme|ChangeIfDiminished|AppendPhoneme|IfNextVowelAppend|InsertPhoneme)\b/) {
     span_colorize($1, "red")    
   }
   
@@ -210,21 +225,34 @@ end
 
 def build_chart(langs)  
   chart_sources = {}
-  langs.each{ |l| chart_sources[l] = read_ph_source(l) }
+  
+  langs.each{ |l| 
+    chart_sources[l.name] = read_ph_source(l.name) 
+  }
   
   ref_lang      = langs[0]
-  ref_phonemes  = chart_sources[ref_lang].keys
+  ref_phonemes  = chart_sources[ref_lang.name].keys
   
-  langs.each{|l| ref_phonemes += chart_sources[l].keys}
+  langs.each{|l| ref_phonemes += chart_sources[l.name].keys}
   ref_phonemes = ref_phonemes.sort{ |ph1,ph2| phoneme_sorter(ph1,ph2) }.uniq
   
   @toto = "test"
-  File.open("_chart_builder.html","wb") { |f|
+  File.open("_chart_builder.html","wb:UTF-8") { |f|
     f << $ERB.result(binding)
   }
 end
 
-build_chart(["ph_english","ph_english_rp","ph_english_us","ph_tengwar_english","ph_tengwar_english_gb","ph_tengwar_english_us"])
+en   =   Lang.new("ph_english",nil)
+en_t =   Lang.new("ph_tengwar_english",nil)
+
+build_chart([
+  en,
+  Lang.new("ph_english_rp",en),
+  Lang.new("ph_english_us",en),
+  en_t,
+  Lang.new("ph_tengwar_english_gb",en_t),
+  Lang.new("ph_tengwar_english_us",en_t),
+])
 
 
 

@@ -1,9 +1,37 @@
 <html>
 
 <head>
+  <script
+    src="https://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
 </head>
 
 <body>
+  
+  <style>
+  
+    .grey, .gray, .grey span, .gray span  { color:gray  !important; }
+    .green        { color:green !important; }
+    .red          { color:red   !important; }
+    .blue         { color:blue  !important; }
+    .absent       { background-color: #fff0f0;}
+    .inherited    { background-color: #f0fff0;}
+    
+  </style>
+  
+  <script>
+      $(document).ready(function() {
+        $(".toggler").click(function() {
+          
+          var toggler = $(this);
+          
+          var c = toggler.data("class");
+          $("."+c).toggle();
+          
+        });
+      });
+  </script>
   
   <table>
   
@@ -11,8 +39,8 @@
   
   <tr>
     <th></th>
-  <% chart_sources.keys.each do |l| %>
-    <th><%= l %></th>
+  <% langs.each do |l| %>
+    <th style="white-space:nowrap"><button type='button' class='toggler' data-class='<%= l %>'>❤</button> <span class='<%= l %>'><%= l.name %></span></th>
   <% end %>  
   </tr>
   
@@ -20,10 +48,22 @@
     <td>
       <%= ph %>
     </td>
-    <% chart_sources.each do |k,l| %>
-      <td class="code">
-        <% code = (l[ph])?(l[ph].pre + l[ph].code):("") %>
-        <pre><%= colorize(code) %></pre>      
+    <% langs.each do |l| %>
+     
+        <% lph = chart_sources[l.name][ph] %>
+        <% if lph %>
+         <td>
+          <div class="code <%= l.name %>">
+            <% code = lph.pre + lph.code %>
+            <pre><%= colorize(code) %></pre>                
+          </div>
+        </td>
+        <% elsif l.parent && chart_sources[l.parent.name][ph] %>
+          <td class='inherited'>Inherited from <%= l.parent.name %></td>
+        <% else %>
+          <td class='absent'>Absent</td>
+        <% end %>
+      
       </td>
     <% end %>
   </tr>

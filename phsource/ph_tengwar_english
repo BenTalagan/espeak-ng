@@ -1,3 +1,28 @@
+// The four phonemes are virtual chars used as a hack
+// For keeping the punctuation in the IPA output.
+// The used chars are 0xF8E0,0xF8E1,0xF8E2,0xF8E3
+
+phoneme 
+  virtual
+  ipa 
+endphoneme
+
+phoneme 
+  virtual
+  ipa 
+endphoneme
+
+phoneme 
+  virtual
+  ipa 
+endphoneme
+
+phoneme 
+  virtual
+  ipa 
+endphoneme
+
+
 // List of phonemes used by espeak specifically for english
 
 /////////////////////////
