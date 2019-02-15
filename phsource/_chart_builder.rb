@@ -192,7 +192,7 @@ def colorize(code)
   code = code.gsub(/\b(END|IF|NOT|THEN|ELSE|ELSEIF|ENDIF)\b/) {
     span_colorize($1, "green")    
   }
-  code = code.gsub(/\b(CALL|ChangePhoneme|ChangeIfDiminished|AppendPhoneme|IfNextVowelAppend|InsertPhoneme)\b/) {
+  code = code.gsub(/\b(CALL|ChangePhoneme|ChangeIfDiminished|AppendPhoneme|IfNextVowelAppend|InsertPhoneme|import_phoneme)\b/) {
     span_colorize($1, "red")    
   }
   
