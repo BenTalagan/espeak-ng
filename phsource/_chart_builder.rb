@@ -124,12 +124,14 @@ class Phoneme
 end
 
 class Lang
-  attr_accessor :name
-  attr_accessor :parent
+  attr_reader :name
+  attr_reader :parent
+  attr_reader :ref_langs
   
-  def initialize(name,parent)
+  def initialize(name,parent,ref_langs=nil)
     @name = name
     @parent = parent
+    @ref_langs = ref_langs || []
   end
 end
   
@@ -197,6 +199,12 @@ def colorize(code)
   code  
 end
 
+def compile(code)
+  code = code.gsub(/(\/\/.*)$/) { "" }
+  code = code.lines.each{ |l| l.strip }.join("\n").strip
+  code
+end
+
 def phoneme_sorter(ph1,ph2)
   if !$PHLKUP
     $PHLKUP = {}
@@ -242,16 +250,21 @@ def build_chart(langs)
   }
 end
 
-en   =   Lang.new("ph_english",nil)
-en_t =   Lang.new("ph_tengwar_english",nil)
+en     = Lang.new("ph_english",nil)
+en_rp  = Lang.new("ph_english_rp",en)
+en_us  = Lang.new("ph_english_us",en)
+
+ref_langs = [en,en_rp,en_us]
+
+teng_t = Lang.new("ph_tengwar_english",nil,ref_langs)
 
 build_chart([
   en,
-  Lang.new("ph_english_rp",en),
-  Lang.new("ph_english_us",en),
-  en_t,
-  Lang.new("ph_tengwar_english_gb",en_t),
-  Lang.new("ph_tengwar_english_us",en_t),
+  en_rp,
+  en_us,
+  teng_t,
+  Lang.new("ph_tengwar_english_gb",teng_t,ref_langs),
+  Lang.new("ph_tengwar_english_us",teng_t,ref_langs)
 ])
 
 

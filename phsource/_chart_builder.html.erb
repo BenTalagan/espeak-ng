@@ -16,8 +16,25 @@
     .red          { color:red   !important; }
     .blue         { color:blue  !important; }
     .absent       { background-color: #fff0f0;}
-    .inherited    { background-color: #f0fff0;}
+    td.inherited    { background-color: #f0fff0;}
+    td { vertical-align:top;}
+    .sameas { 
+      background-color: yellow;
+    padding: 5px;
+    margin-bottom: 5px;
+    color: #928900;
+    font-weight: bold;
+    white-space:nowrap;
+    }
     
+    div.inherited {
+      background-color: #02bb02;
+      padding: 5px;
+      margin-bottom: 5px;
+      color: white;
+      white-space:nowrap;
+      
+    }
   </style>
   
   <script>
@@ -55,13 +72,21 @@
          <td>
           <div class="code <%= l.name %>">
             <% code = lph.pre + lph.code %>
+            
+            <% l.ref_langs.each do |lref| %>
+              <% phref = chart_sources[lref.name][ph] %>
+              <% if(phref && compile(code) == compile(phref.code)) %>
+                <div class='sameas'>Same as in <%= lref.name %></div>
+              <% end %>
+            <% end %>
+            
             <pre><%= colorize(code) %></pre>                
           </div>
         </td>
         <% elsif l.parent && chart_sources[l.parent.name][ph] %>
-          <td class='inherited'>Inherited from <%= l.parent.name %></td>
+          <td class='inherited'><div class='inherited'>Inherited from <%= l.parent.name %></div></td>
         <% else %>
-          <td class='absent'>Absent</td>
+          <td class='absent'><div class='absent'>Absent</div></td>
         <% end %>
       
       </td>
