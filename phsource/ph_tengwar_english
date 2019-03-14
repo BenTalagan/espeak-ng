@@ -210,22 +210,25 @@ phoneme 3    //  Schwa, used for rhotic schwa in American
 endphoneme
 
 // G : use that phoneme at the end of words finishing 
-// by a schwa followed by a word beginning with a r
+//   by a schwa followed by a word beginning with a r
+//   It becomes a rhotic schwa but the only reason is the linking with the next word in r
+//   Ex: america rules
+
 phoneme 32
   CALL 3
   ipa ɚ‿
 endphoneme
 
-// G : Taken from US
+// G : Taken from US, classic schwa
 phoneme @    //  Schwa
   vwl   starttype #@  endtype #@
   unstressed
   length 130
-  // G: CHANGED! nextPh > nextPhW, we don't want "america rules" with a rothic schwa at the end.
+  // G: CHANGED! nextPh > nextPhW, we want to treat the end of word case separately.
   IF nextPhW(isRhotic) THEN 
     ChangePhoneme(3)
   ENDIF
-  // G: CHANGED! "america rules" with a rothic schwa at the end, but marked differently
+  // G: CHANGED! "america rules" with a rothic schwa at the end, but marked differently for better precision
   IF nextPh(isRhotic) AND thisPh(isWordEnd) THEN
     ChangePhoneme(32)   
   ENDIF
@@ -273,12 +276,12 @@ phoneme @L // simp**le**
 endphoneme
 
 // G : Taken from US
-// Long i th*e* / or Liz's
+// Schwa i in : th*e* + vowel / or for genitives like Liz's
 phoneme I2
   vwl  starttype #i  endtype #i
   unstressed
   length 160
-  IfNextVowelAppend(;)
+  IfNextVowelAppend(;) // Make it long before vowels.
   FMT(vowel/ii#_3)
 endphoneme
 
