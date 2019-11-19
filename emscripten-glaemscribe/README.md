@@ -27,7 +27,7 @@ directories !!
 
 #### General espeakng rebuild flow
 
-````
+```
 make clean
 make distclean
 ./configure --prefix=/usr/local
