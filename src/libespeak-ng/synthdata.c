@@ -31,6 +31,9 @@
 #include <espeak-ng/speak_lib.h>
 #include <espeak-ng/encoding.h>
 
+#include "readclause.h"
+#include "synthdata.h"
+
 #include "error.h"
 #include "speech.h"
 #include "phoneme.h"
@@ -38,7 +41,6 @@
 #include "synthesize.h"
 #include "translate.h"
 
-const char *version_string = PACKAGE_VERSION;
 const int version_phdata  = 0x014801;
 
 // copy the current phoneme table into here
@@ -47,7 +49,7 @@ int current_phoneme_table;
 PHONEME_TAB *phoneme_tab[N_PHONEME_TAB];
 unsigned char phoneme_tab_flags[N_PHONEME_TAB];   // bit 0: not inherited
 
-USHORT *phoneme_index = NULL;
+unsigned short *phoneme_index = NULL;
 char *phondata_ptr = NULL;
 unsigned char *wavefile_data = NULL;
 static unsigned char *phoneme_tab_data = NULL;
@@ -58,13 +60,9 @@ int phoneme_tab_number = 0;
 
 int wavefile_ix; // a wavefile to play along with the synthesis
 int wavefile_amp;
-int wavefile_ix2;
-int wavefile_amp2;
 
 int seq_len_adjust;
 int vowel_transition[4];
-int vowel_transition0;
-int vowel_transition1;
 
 static espeak_ng_STATUS ReadPhFile(void **ptr, const char *fname, int *size, espeak_ng_ERROR_CONTEXT *context)
 {
@@ -466,15 +464,15 @@ static bool StressCondition(Translator *tr, PHONEME_LIST *plist, int condition, 
 
 		if ((tr->langopts.param[LOPT_REDUCE] & 0x2) && (stress_level >= pl->wordstress)) {
 			// treat the most stressed syllable in an unstressed word as stressed
-			stress_level = 4;
+			stress_level = STRESS_IS_PRIMARY;
 		}
 	}
 
-	if (condition == isMaxStress)
+	if (condition == STRESS_IS_PRIMARY)
 		return stress_level >= pl->wordstress;
 
-	if (condition == isStressed) {
-		if (stress_level > 3)
+	if (condition == STRESS_IS_SECONDARY) {
+		if (stress_level > STRESS_IS_SECONDARY)
 			return true;
 	} else {
 		if (stress_level < condition_level[condition])
@@ -498,14 +496,14 @@ static int CountVowelPosition(PHONEME_LIST *plist)
 	return count;
 }
 
-static bool InterpretCondition(Translator *tr, int control, PHONEME_LIST *plist, USHORT *p_prog, WORD_PH_DATA *worddata)
+static bool InterpretCondition(Translator *tr, int control, PHONEME_LIST *plist, unsigned short *p_prog, WORD_PH_DATA *worddata)
 {
 	int which;
 	int ix;
 	unsigned int data;
 	int instn;
 	int instn2;
-	int check_endtype = 0;
+	bool check_endtype = false;
 	PHONEME_TAB *ph;
 	PHONEME_LIST *plist_this;
 
@@ -552,7 +550,7 @@ static bool InterpretCondition(Translator *tr, int control, PHONEME_LIST *plist,
 		case 0: // prevPh
 		case 5: // prevPhW
 			plist--;
-			check_endtype = 1;
+			check_endtype = true;
 			break;
 		case 1: // thisPh
 			break;
@@ -579,7 +577,7 @@ static bool InterpretCondition(Translator *tr, int control, PHONEME_LIST *plist,
 			if ((worddata == NULL) || (worddata->prev_vowel.ph == NULL))
 				return false; // no previous vowel
 			plist = &(worddata->prev_vowel);
-			check_endtype = 1;
+			check_endtype = true;
 			break;
 		case 9: // next3PhW
 			for (ix = 1; ix <= 3; ix++) {
@@ -592,7 +590,7 @@ static bool InterpretCondition(Translator *tr, int control, PHONEME_LIST *plist,
 			if ((plist[0].sourceix) || (plist[-1].sourceix))
 				return false;
 			plist -= 2;
-			check_endtype = 1;
+			check_endtype = true;
 			break;
 		}
 
@@ -633,11 +631,11 @@ static bool InterpretCondition(Translator *tr, int control, PHONEME_LIST *plist,
 		case CONDITION_IS_OTHER:
 			switch (data)
 			{
-			case isDiminished:
-			case isUnstressed:
-			case isNotStressed:
-			case isStressed:
-			case isMaxStress:
+			case STRESS_IS_DIMINISHED:
+			case STRESS_IS_UNSTRESSED:
+			case STRESS_IS_NOT_STRESSED:
+			case STRESS_IS_SECONDARY:
+			case STRESS_IS_PRIMARY:
 				return StressCondition(tr, plist, data, 0);
 			case isBreak:
 				return (ph->type == phPAUSE) || (plist_this->synthflags & SFLAG_NEXT_PAUSE);
@@ -693,9 +691,9 @@ static bool InterpretCondition(Translator *tr, int control, PHONEME_LIST *plist,
 	return false;
 }
 
-static void SwitchOnVowelType(PHONEME_LIST *plist, PHONEME_DATA *phdata, USHORT **p_prog, int instn_type)
+static void SwitchOnVowelType(PHONEME_LIST *plist, PHONEME_DATA *phdata, unsigned short **p_prog, int instn_type)
 {
-	USHORT *prog;
+	unsigned short *prog;
 	int voweltype;
 	signed char x;
 
@@ -716,7 +714,7 @@ static void SwitchOnVowelType(PHONEME_LIST *plist, PHONEME_DATA *phdata, USHORT 
 	*p_prog += 12;
 }
 
-int NumInstnWords(USHORT *prog)
+int NumInstnWords(unsigned short *prog)
 {
 	int instn;
 	int instn2;
@@ -769,8 +767,8 @@ void InterpretPhoneme(Translator *tr, int control, PHONEME_LIST *plist, PHONEME_
 	// bit 8:  change phonemes
 
 	PHONEME_TAB *ph;
-	USHORT *prog;
-	USHORT instn;
+	unsigned short *prog;
+	unsigned short instn;
 	int instn2;
 	int or_flag;
 	bool truth;
@@ -782,7 +780,7 @@ void InterpretPhoneme(Translator *tr, int control, PHONEME_LIST *plist, PHONEME_
 
 	#define N_RETURN 10
 	int n_return = 0;
-	USHORT *return_addr[N_RETURN]; // return address stack
+	unsigned short *return_addr[N_RETURN]; // return address stack
 
 	ph = plist->ph;
 

@@ -22,6 +22,7 @@
 
 #include <ctype.h>
 #include <errno.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -32,6 +33,10 @@
 #include <espeak-ng/speak_lib.h>
 #include <espeak-ng/encoding.h>
 
+#include "compiledict.h"
+#include "dictionary.h"
+#include "readclause.h"
+
 #include "error.h"
 #include "speech.h"
 #include "phoneme.h"
@@ -39,16 +44,13 @@
 #include "synthesize.h"
 #include "translate.h"
 
-extern void Write4Bytes(FILE *f, int value);
-
 static FILE *f_log = NULL;
-extern char *dir_dictionary;
 
 extern char word_phonemes[N_WORD_PHONEMES];    // a word translated into phoneme codes
 
 static int linenum;
 static int error_count;
-static int text_mode = 0;
+static bool text_mode = false;
 static int debug_flag = 0;
 static int error_need_dictionary = 0;
 
@@ -209,13 +211,13 @@ char *DecodeRule(const char *group_chars, int group_length, char *rule, int cont
 	char *p_end;
 	int ix;
 	int match_type;
-	int finished = 0;
+	bool finished = false;
 	int value;
 	int linenum = 0;
 	int flags;
 	int suffix_char;
 	int condition_num = 0;
-	int at_start = 0;
+	bool at_start = false;
 	const char *name;
 	char buf[200];
 	char buf_pre[200];
@@ -247,10 +249,10 @@ char *DecodeRule(const char *group_chars, int group_length, char *rule, int cont
 			{
 			case 0:
 			case RULE_PHONEMES:
-				finished = 1;
+				finished = true;
 				break;
 			case RULE_PRE_ATSTART:
-				at_start = 1;
+				at_start = true;
 				// fallthrough:
 			case RULE_PRE:
 				match_type = RULE_PRE;
@@ -384,15 +386,15 @@ static int compile_line(char *linebuf, char *dict_line, int n_dict_line, int *ha
 	int flag_offset;
 	int length;
 	int multiple_words = 0;
-	int multiple_numeric_hyphen = 0;
+	bool multiple_numeric_hyphen = false;
 	char *multiple_string = NULL;
 	char *multiple_string_end = NULL;
 
 	int len_word;
 	int len_phonetic;
-	int text_not_phonemes; // this word specifies replacement text, not phonemes
+	bool text_not_phonemes = false; // this word specifies replacement text, not phonemes
 	unsigned int wc;
-	int all_upper_case;
+	bool all_upper_case;
 
 	char *mnemptr;
 	unsigned char flag_codes[100];
@@ -401,7 +403,6 @@ static int compile_line(char *linebuf, char *dict_line, int n_dict_line, int *ha
 	int bad_phoneme;
 	static char nullstring[] = { 0 };
 
-	text_not_phonemes = 0;
 	phonetic = word = nullstring;
 
 	p = linebuf;
@@ -445,11 +446,11 @@ static int compile_line(char *linebuf, char *dict_line, int n_dict_line, int *ha
 			flagnum = LookupMnem(mnem_flags, mnemptr);
 			if (flagnum > 0) {
 				if (flagnum == 200)
-					text_mode = 1;
+					text_mode = true;
 				else if (flagnum == 201)
-					text_mode = 0;
+					text_mode = false;
 				else if (flagnum == BITNUM_FLAG_TEXTMODE)
-					text_not_phonemes = 1;
+					text_not_phonemes = true;
 				else
 					flag_codes[n_flag_codes++] = flagnum;
 			} else {
@@ -476,7 +477,7 @@ static int compile_line(char *linebuf, char *dict_line, int n_dict_line, int *ha
 		case LINE_PARSER_END_OF_WORD:
 			if ((c == '-') && multiple_words) {
 				if (IsDigit09(word[0]))
-					multiple_numeric_hyphen = 1;
+					multiple_numeric_hyphen = true;
 				flag_codes[n_flag_codes++] = BITNUM_FLAG_HYPHENATED;
 				c = ' ';
 			}
@@ -536,7 +537,7 @@ static int compile_line(char *linebuf, char *dict_line, int n_dict_line, int *ha
 		return 0; // blank line
 
 	if (text_mode)
-		text_not_phonemes = 1;
+		text_not_phonemes = true;
 
 	if (text_not_phonemes) {
 		if (word[0] == '_') {
@@ -546,7 +547,7 @@ static int compile_line(char *linebuf, char *dict_line, int n_dict_line, int *ha
 			// PROBLEM  vowel reductions are not applied to the translated phonemes
 			// condition rules are not applied
 			TranslateWord(translator, phonetic, NULL, NULL);
-			text_not_phonemes = 0;
+			text_not_phonemes = false;
 			strncpy0(encoded_ph, word_phonemes, N_WORD_BYTES-4);
 
 			if ((word_phonemes[0] == 0) && (error_need_dictionary < 3)) {
@@ -582,7 +583,7 @@ static int compile_line(char *linebuf, char *dict_line, int n_dict_line, int *ha
 		// convert to lower case, and note if the word is all-capitals
 		int c2;
 
-		all_upper_case = 1;
+		all_upper_case = true;
 		for (p = word;;) {
 			// this assumes that the lower case char is the same length as the upper case char
 			// OK, except for Turkish "I", but use towlower() rather than towlower2()
@@ -590,9 +591,9 @@ static int compile_line(char *linebuf, char *dict_line, int n_dict_line, int *ha
 			if (c2 == 0)
 				break;
 			if (iswupper(c2))
-				utf8_out(towlower2(c2), p);
+				utf8_out(towlower2(c2, translator), p);
 			else
-				all_upper_case = 0;
+				all_upper_case = false;
 			p += ix;
 		}
 		if (all_upper_case)
@@ -699,7 +700,7 @@ static int compile_dictlist_file(const char *path, const char *filename)
 	char fname[sizeof(path_home)+45];
 	char dict_line[256]; // length is uint8_t, so an entry can't take up more than 256 bytes
 
-	text_mode = 0;
+	text_mode = false;
 
 	// try with and without '.txt' extension
 	sprintf(fname, "%s%s.txt", path, filename);
@@ -776,8 +777,8 @@ static void copy_rule_string(char *string, int *state_out)
 	int c2, c3;
 	int sxflags;
 	int value;
-	int literal;
-	int hexdigit_input = 0;
+	bool literal;
+	bool hexdigit_input = false;
 	int state = *state_out;
 	MNEM_TAB *mr;
 
@@ -794,10 +795,10 @@ static void copy_rule_string(char *string, int *state_out)
 	sxflags = 0x808000; // to ensure non-zero bytes
 
 	for (p = string, ix = 0;;) {
-		literal = 0;
+		literal = false;
 		c = *p++;
 		if ((c == '0') && (p[0] == 'x') && (isHexDigit(p[1]) >= 0) && (isHexDigit(p[2]) >= 0)) {
-			hexdigit_input = 1;
+			hexdigit_input = true;
 			c = p[1];
 			p += 2;
 		}
@@ -808,19 +809,19 @@ static void copy_rule_string(char *string, int *state_out)
 				c = (c-'0')*64 + (p[0]-'0')*8 + (p[1]-'0');
 				p += 2;
 			}
-			literal = 1;
+			literal = true;
 		}
 		if (hexdigit_input) {
 			if (((c2 = isHexDigit(c)) >= 0) && ((c3 = isHexDigit(p[0])) >= 0)) {
 				c = c2 * 16 + c3;
-				literal = 1;
+				literal = true;
 				p++;
 			} else
-				hexdigit_input = 0;
+				hexdigit_input = false;
 		}
 		if ((state == 1) || (state == 3)) {
 			// replace special characters (note: 'E' is reserved for a replaced silent 'e')
-			if (literal == 0) {
+			if (literal == false) {
 				static const char lettergp_letters[9] = { LETTERGP_A, LETTERGP_B, LETTERGP_C, 0, 0, LETTERGP_F, LETTERGP_G, LETTERGP_H, LETTERGP_Y };
 				switch (c)
 				{
@@ -1017,7 +1018,7 @@ static char *compile_rule(char *input)
 	int len_name;
 	int start;
 	int state = 2;
-	int finish = 0;
+	bool finish = false;
 	char buf[80];
 	char output[150];
 	int bad_phoneme;
@@ -1032,7 +1033,7 @@ static char *compile_rule(char *input)
 
 	p = buf;
 
-	for (ix = 0; finish == 0; ix++) {
+	for (ix = 0; finish == false; ix++) {
 		switch (c = input[ix])
 		{
 		case ')': // end of prefix section
@@ -1057,7 +1058,7 @@ static char *compile_rule(char *input)
 		case 0:    // end of line
 			*p = 0;
 			copy_rule_string(buf, &state);
-			finish = 1;
+			finish = true;
 			break;
 		case '\t': // end of section section
 		case ' ':
@@ -1300,6 +1301,14 @@ static int compile_lettergroup(char *input, FILE *f_out)
 	return 0;
 }
 
+static void free_rules(char **rules, int n_rules)
+{
+	for (int i = 0; i < n_rules; ++i) {
+		free(*rules);
+		*rules++ = NULL;
+	}
+}
+
 static espeak_ng_STATUS compile_dictrules(FILE *f_in, FILE *f_out, char *fname_temp, espeak_ng_ERROR_CONTEXT *context)
 {
 	char *prule;
@@ -1352,6 +1361,7 @@ static espeak_ng_STATUS compile_dictrules(FILE *f_in, FILE *f_out, char *fname_t
 				n_rgroups++;
 
 				count += n_rules;
+				free_rules(rules, n_rules);
 			}
 			n_rules = 0;
 			err_n_rules = 0;
@@ -1359,6 +1369,7 @@ static espeak_ng_STATUS compile_dictrules(FILE *f_in, FILE *f_out, char *fname_t
 			if (compile_mode == 2) {
 				// end of the character replacements section
 				fwrite(&n_rules, 1, 4, f_out); // write a zero word to terminate the replacemenmt list
+				fputc(RULE_GROUP_END, f_out);
 				compile_mode = 0;
 			}
 
@@ -1437,33 +1448,23 @@ static espeak_ng_STATUS compile_dictrules(FILE *f_in, FILE *f_out, char *fname_t
 			}
 			break;
 		case 2: //  .replace
-		{
-			int replace1;
-			int replace2;
-			char *p;
+			p = (unsigned char *)buf;
 
-			p = buf;
-			replace1 = 0;
-			replace2 = 0;
 			while (isspace2(*p)) p++;
-			ix = 0;
-			while ((unsigned char)(*p) > 0x20) { // not space or zero-byte
-				p += utf8_in(&c, p);
-				replace1 += (c << ix);
-				ix += 16;
+			if ((unsigned char)(*p) > 0x20) {
+				while ((unsigned char)(*p) > 0x20) { // not space or zero-byte
+					fputc(*p, f_out);
+					p++;
+				}
+				fputc(0, f_out);
+
+				while (isspace2(*p)) p++;
+				while ((unsigned char)(*p) > 0x20) {
+					fputc(*p, f_out);
+					p++;
+				}
+				fputc(0, f_out);
 			}
-			while (isspace2(*p)) p++;
-			ix = 0;
-			while ((unsigned char)(*p) > 0x20) {
-				p += utf8_in(&c, p);
-				replace2 += (c << ix);
-				ix += 16;
-			}
-			if (replace1 != 0) {
-				Write4Bytes(f_out, replace1); // write as little-endian
-				Write4Bytes(f_out, replace2); // if big-endian, reverse the bytes in LoadDictionary()
-			}
-		}
 			break;
 		}
 	}
@@ -1471,8 +1472,10 @@ static espeak_ng_STATUS compile_dictrules(FILE *f_in, FILE *f_out, char *fname_t
 
 	qsort((void *)rgroup, n_rgroups, sizeof(rgroup[0]), (int(__cdecl *)(const void *, const void *))rgroup_sorter);
 
-	if ((f_temp = fopen(fname_temp, "rb")) == NULL)
+	if ((f_temp = fopen(fname_temp, "rb")) == NULL) {
+		free_rules(rules, n_rules);
 		return create_file_error_context(context, errno, fname_temp);
+	}
 
 	prev_rgroup_name = "\n";
 
@@ -1506,6 +1509,7 @@ static espeak_ng_STATUS compile_dictrules(FILE *f_in, FILE *f_out, char *fname_t
 	remove(fname_temp);
 
 	fprintf(f_log, "\t%d rules, %d groups (%d)\n\n", count, n_rgroups, n_groups3);
+	free_rules(rules, n_rules);
 	return ENS_OK;
 }
 

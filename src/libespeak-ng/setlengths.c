@@ -28,7 +28,11 @@
 #include <espeak-ng/speak_lib.h>
 #include <espeak-ng/encoding.h>
 
-#include "speech.h"
+#include "readclause.h"
+#include "setlengths.h"
+#include "synthdata.h"
+#include "wavegen.h"
+
 #include "phoneme.h"
 #include "voice.h"
 #include "synthesize.h"
@@ -37,7 +41,7 @@
 extern int saved_parameters[];
 
 // convert from words-per-minute to internal speed factor
-// Use this to calibrate speed for wpm 80-350
+// Use this to calibrate speed for wpm 80-450 (espeakRATE_MINIMUM - espeakRATE_MAXIMUM)
 static unsigned char speed_lookup[] = {
 	255, 255, 255, 255, 255, //  80
 	253, 249, 245, 242, 238, //  85
@@ -146,7 +150,7 @@ void SetSpeed(int control)
 	double sonic;
 
 	speed.loud_consonants = 0;
-	speed.min_sample_len = 450;
+	speed.min_sample_len = espeakRATE_MAXIMUM;
 	speed.lenmod_factor = 110; // controls the effect of FRFLAG_LEN_MOD reduce length change
 	speed.lenmod2_factor = 100;
 	speed.min_pause = 5;
@@ -162,9 +166,9 @@ void SetSpeed(int control)
 
 	if (control & 2)
 		DoSonicSpeed(1 * 1024);
-	if ((wpm_value >= 450) || ((wpm_value > speed.fast_settings[0]) && (wpm > 350))) {
+	if ((wpm_value >= espeakRATE_MAXIMUM) || ((wpm_value > speed.fast_settings[0]) && (wpm > 350))) {
 		wpm2 = wpm;
-		wpm = 175;
+		wpm = espeakRATE_NORMAL;
 
 		// set special eSpeak speed parameters for Sonic use
 		// The eSpeak output will be speeded up by at least x2
@@ -178,9 +182,9 @@ void SetSpeed(int control)
 			sonic = ((double)wpm2)/wpm;
 			DoSonicSpeed((int)(sonic * 1024));
 			speed.pause_factor = 85;
-			speed.clause_pause_factor = 80;
+			speed.clause_pause_factor = espeakRATE_MINIMUM;
 			speed.min_pause = 22;
-			speed.min_sample_len = 450*2;
+			speed.min_sample_len = espeakRATE_MAXIMUM*2;
 			speed.wav_factor = 211;
 			speed.lenmod_factor = 210;
 			speed.lenmod2_factor = 170;
@@ -188,16 +192,16 @@ void SetSpeed(int control)
 		return;
 	}
 
-	if (wpm > 450)
-		wpm = 450;
+	if (wpm > espeakRATE_MAXIMUM)
+		wpm = espeakRATE_MAXIMUM;
 
 	if (wpm > 360)
 		speed.loud_consonants = (wpm - 360) / 8;
 
 	wpm2 = wpm;
 	if (wpm > 359) wpm2 = 359;
-	if (wpm < 80) wpm2 = 80;
-	x = speed_lookup[wpm2-80];
+	if (wpm < espeakRATE_MINIMUM) wpm2 = espeakRATE_MINIMUM;
+	x = speed_lookup[wpm2-espeakRATE_MINIMUM];
 
 	if (wpm >= 380)
 		x = 7;
@@ -239,7 +243,7 @@ void SetSpeed(int control)
 			speed.wav_factor = wav_factor_350[wpm-350];
 
 		if (wpm >= 390) {
-			speed.min_sample_len = 450 - (wpm - 400)/2;
+			speed.min_sample_len = espeakRATE_MAXIMUM - (wpm - 400)/2;
 			if (wpm > 440)
 				speed.min_sample_len = 420 - (wpm - 440);
 		}
@@ -278,7 +282,7 @@ void SetSpeed(int control)
 	int wpm2;
 
 	speed.loud_consonants = 0;
-	speed.min_sample_len = 450;
+	speed.min_sample_len = espeakRATE_MAXIMUM;
 	speed.lenmod_factor = 110; // controls the effect of FRFLAG_LEN_MOD reduce length change
 	speed.lenmod2_factor = 100;
 
@@ -288,16 +292,16 @@ void SetSpeed(int control)
 
 	if (voice->speed_percent > 0)
 		wpm = (wpm * voice->speed_percent)/100;
-	if (wpm > 450)
-		wpm = 450;
+	if (wpm > espeakRATE_MAXIMUM)
+		wpm = espeakRATE_MAXIMUM;
 
 	if (wpm > 360)
 		speed.loud_consonants = (wpm - 360) / 8;
 
 	wpm2 = wpm;
 	if (wpm > 359) wpm2 = 359;
-	if (wpm < 80) wpm2 = 80;
-	x = speed_lookup[wpm2-80];
+	if (wpm < espeakRATE_MINIMUM) wpm2 = espeakRATE_MINIMUM;
+	x = speed_lookup[wpm2-espeakRATE_MINIMUM];
 
 	if (wpm >= 380)
 		x = 7;
@@ -339,7 +343,7 @@ void SetSpeed(int control)
 			speed.wav_factor = wav_factor_350[wpm-350];
 
 		if (wpm >= 390) {
-			speed.min_sample_len = 450 - (wpm - 400)/2;
+			speed.min_sample_len = espeakRATE_MAXIMUM - (wpm - 400)/2;
 			if (wpm > 440)
 				speed.min_sample_len = 420 - (wpm - 440);
 		}
@@ -373,6 +377,7 @@ espeak_ng_STATUS SetParameter(int parameter, int value, int relative)
 
 	int new_value = value;
 	int default_value;
+	extern const int *param_defaults;
 
 	if (relative) {
 		if (parameter < 5) {
@@ -451,8 +456,8 @@ void CalcLengths(Translator *tr)
 	int stress;
 	int type;
 	static int more_syllables = 0;
-	int pre_sonorant = 0;
-	int pre_voiced = 0;
+	bool pre_sonorant = false;
+	bool pre_voiced = false;
 	int last_pitch = 0;
 	int pitch_start;
 	int length_mod;
@@ -536,7 +541,7 @@ void CalcLengths(Translator *tr)
 
 			if (type == phVFRICATIVE) {
 				if (next->type == phVOWEL)
-					pre_voiced = 1;
+					pre_voiced = true;
 				if ((prev->type == phVOWEL) || (prev->type == phLIQUID))
 					p->length = (255 + prev->length)/2;
 			}
@@ -547,7 +552,7 @@ void CalcLengths(Translator *tr)
 
 			if (next->type == phVOWEL || next->type == phLIQUID) {
 				if ((next->type == phVOWEL) || !next->newword)
-					pre_voiced = 1;
+					pre_voiced = true;
 
 				p->prepause = 40;
 
@@ -587,7 +592,7 @@ void CalcLengths(Translator *tr)
 			}
 
 			if (next->type == phVOWEL)
-				pre_sonorant = 1;
+				pre_sonorant = true;
 			else {
 				p->pitch2 = last_pitch;
 
@@ -614,7 +619,7 @@ void CalcLengths(Translator *tr)
 				if (p->pitch2 < 16)
 					p->pitch1 = 0;
 				p->env = PITCHfall;
-				pre_voiced = 0;
+				pre_voiced = false;
 			}
 			break;
 		case phVOWEL:
@@ -653,7 +658,7 @@ void CalcLengths(Translator *tr)
 			if (p2->ph->code == phonPAUSE_CLAUSE)
 				end_of_clause = 2;
 
-			if ((p2->newword & 2) && (more_syllables == 0))
+			if ((p2->newword & PHLIST_END_OF_CLAUSE) && (more_syllables == 0))
 				end_of_clause = 2;
 
 			// calc length modifier
@@ -804,8 +809,8 @@ void CalcLengths(Translator *tr)
 			}
 
 			last_pitch = p->pitch1 + ((p->pitch2-p->pitch1)*envelope_data[p->env][127])/256;
-			pre_sonorant = 0;
-			pre_voiced = 0;
+			pre_sonorant = false;
+			pre_voiced = false;
 			break;
 		}
 	}

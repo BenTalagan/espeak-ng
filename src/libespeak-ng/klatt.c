@@ -34,7 +34,6 @@
 #include <espeak-ng/espeak_ng.h>
 #include <espeak-ng/speak_lib.h>
 
-#include "speech.h"
 #include "phoneme.h"
 #include "voice.h"
 #include "synthesize.h"
@@ -422,7 +421,7 @@ static int parwave(klatt_frame_ptr frame)
 			echo_head = 0;
 
 		sample_count++;
-		if (out_ptr >= out_end)
+		if (out_ptr + 2 > out_end)
 			return 1;
 	}
 	return 0;
@@ -938,7 +937,7 @@ static int Wavegen_Klatt(int resume)
 static void SetSynth_Klatt(int length, frame_t *fr1, frame_t *fr2, voice_t *v, int control)
 {
 	int ix;
-	DOUBLEX next;
+	double next;
 	int qix;
 	int cmd;
 	frame_t *fr3;

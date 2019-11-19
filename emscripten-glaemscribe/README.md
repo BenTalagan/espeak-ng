@@ -27,14 +27,17 @@ directories !!
 
 #### General espeakng rebuild flow
 
+````
 make clean
 make distclean
 ./configure --prefix=/usr/local
 make en
 make install
+```
 
 #### General emscripten rebuild flow
 
+```
 make clean
 make distclean
 ./configure --prefix=/usr --without-async --without-mbrola --without-sonic
@@ -51,3 +54,4 @@ emmake make src/libespeak-ng.la
 cd emscripten-glaemscribe
 emmake make clean
 emmake make
+```

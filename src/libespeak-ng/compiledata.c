@@ -35,13 +35,19 @@
 #include <espeak-ng/speak_lib.h>
 #include <espeak-ng/encoding.h>
 
+#include "readclause.h"
+#include "synthdata.h"
+#include "wavegen.h"
+
 #include "error.h"
-#include "speech.h"
 #include "phoneme.h"
 #include "voice.h"
 #include "synthesize.h"
 #include "spect.h"
 #include "translate.h"
+#include "dictionary.h"
+
+#define N_ITEM_STRING 256
 
 typedef struct {
 	unsigned int value;
@@ -119,11 +125,11 @@ static keywtab_t k_properties[] = {
 
 	{ "isVelar", 0, CONDITION_IS_PLACE_OF_ARTICULATION | phPLACE_VELAR },
 
-	{ "isDiminished",  0, CONDITION_IS_OTHER | isDiminished },
-	{ "isUnstressed",  0, CONDITION_IS_OTHER | isUnstressed },
-	{ "isNotStressed", 0, CONDITION_IS_OTHER | isNotStressed },
-	{ "isStressed",    0, CONDITION_IS_OTHER | isStressed },
-	{ "isMaxStress",   0, CONDITION_IS_OTHER | isMaxStress },
+	{ "isDiminished",  0, CONDITION_IS_OTHER | STRESS_IS_DIMINISHED },
+	{ "isUnstressed",  0, CONDITION_IS_OTHER | STRESS_IS_UNSTRESSED },
+	{ "isNotStressed", 0, CONDITION_IS_OTHER | STRESS_IS_NOT_STRESSED },
+	{ "isStressed",    0, CONDITION_IS_OTHER | STRESS_IS_SECONDARY },
+	{ "isMaxStress",   0, CONDITION_IS_OTHER | STRESS_IS_PRIMARY },
 
 	{ "isPause2",           0, CONDITION_IS_OTHER | isBreak },
 	{ "isWordStart",        0, CONDITION_IS_OTHER | isWordStart },
@@ -260,10 +266,11 @@ static keywtab_t keywords[] = {
 	{ "InsertPhoneme",       tINSTRN1, i_INSERT_PHONEME },
 	{ "AppendPhoneme",       tINSTRN1, i_APPEND_PHONEME },
 	{ "IfNextVowelAppend",   tINSTRN1, i_APPEND_IFNEXTVOWEL },
-	{ "ChangeIfDiminished",  tINSTRN1, i_CHANGE_IF | isDiminished },
-	{ "ChangeIfUnstressed",  tINSTRN1, i_CHANGE_IF | isUnstressed },
-	{ "ChangeIfNotStressed", tINSTRN1, i_CHANGE_IF | isNotStressed },
-	{ "ChangeIfStressed",    tINSTRN1, i_CHANGE_IF | isStressed },
+	{ "ChangeIfDiminished",  tINSTRN1, i_CHANGE_IF | STRESS_IS_DIMINISHED },
+	{ "ChangeIfUnstressed",  tINSTRN1, i_CHANGE_IF | STRESS_IS_UNSTRESSED },
+	{ "ChangeIfNotStressed", tINSTRN1, i_CHANGE_IF | STRESS_IS_NOT_STRESSED },
+	{ "ChangeIfStressed",    tINSTRN1, i_CHANGE_IF | STRESS_IS_SECONDARY },
+	{ "ChangeIfStressed",    tINSTRN1, i_CHANGE_IF | STRESS_IS_PRIMARY },
 
 	{ "PauseBefore", tINSTRN1, i_PAUSE_BEFORE },
 	{ "PauseAfter",  tINSTRN1, i_PAUSE_AFTER },
@@ -317,12 +324,12 @@ static int phoneme_flags;
 #define N_PROCS 50
 int n_procs;
 int proc_addr[N_PROCS];
-char proc_names[40][N_PROCS];
+char proc_names[N_ITEM_STRING+1][N_PROCS];
 
 #define MAX_PROG_BUF 2000
-USHORT *prog_out;
-USHORT *prog_out_max;
-USHORT prog_buf[MAX_PROG_BUF+20];
+unsigned short *prog_out;
+unsigned short *prog_out_max;
+unsigned short prog_buf[MAX_PROG_BUF+20];
 
 static espeak_ng_STATUS ReadPhondataManifest(espeak_ng_ERROR_CONTEXT *context)
 {
@@ -405,7 +412,7 @@ static int error_count = 0;
 static int resample_count = 0;
 static int resample_fails = 0;
 static int then_count = 0;
-static int after_if = 0;
+static bool after_if = false;
 
 static char current_fname[80];
 
@@ -439,9 +446,9 @@ STACK stack[N_STACK];
 #define N_IF_STACK 12
 int if_level;
 typedef struct {
-	USHORT *p_then;
-	USHORT *p_else;
-	int returned;
+	unsigned short *p_then;
+	unsigned short *p_else;
+	bool returned;
 } IF_STACK;
 IF_STACK if_stack[N_IF_STACK];
 
@@ -460,7 +467,6 @@ enum {
 
 int item_type;
 int item_terminator;
-#define N_ITEM_STRING 256
 char item_string[N_ITEM_STRING];
 
 static int ref_sorter(char **a, char **b)
@@ -493,7 +499,7 @@ static void CompileReport(void)
 	int procedure_num;
 	int prev_mnemonic;
 
-	if (f_report == NULL)
+	if (f_report == NULL || count_references == 0)
 		return;
 
 	// make a list of all the references and sort it
@@ -790,8 +796,7 @@ static int NextItem(int type)
 
 	if ((c == ')') || (c == ','))
 		c = ' ';
-
-	if (!feof(f_in))
+	else if (!feof(f_in))
 		unget_char(c);
 
 	if (type == tSTRING)
@@ -1195,9 +1200,9 @@ static int LoadWavefile(FILE *f, const char *fname)
 	int max = 0;
 	int length;
 	int sr1, sr2;
-	int failed;
+	bool failed;
 	int len;
-	int resample_wav = 0;
+	bool resample_wav = false;
 	const char *fname2;
 	char fname_temp[100];
 	char msg[120];
@@ -1212,7 +1217,7 @@ static int LoadWavefile(FILE *f, const char *fname)
 		int fd_temp;
 		char command[sizeof(path_home)+250];
 
-		failed = 0;
+		failed = false;
 
 #ifdef HAVE_MKSTEMP
 		strcpy(fname_temp, "/tmp/espeakXXXXXX");
@@ -1232,7 +1237,7 @@ static int LoadWavefile(FILE *f, const char *fname)
 
 		sprintf(command, "sox \"%s/%s.wav\" -r %d -c1 -t wav %s\n", phsrc, fname2, samplerate_native, fname_temp);
 		if (system(command) != 0)
-			failed = 1;
+			failed = true;
 
 		if (failed || (GetFileLength(fname_temp) <= 0)) {
 			if (resample_fails < 2)
@@ -1255,7 +1260,7 @@ static int LoadWavefile(FILE *f, const char *fname)
 		if (f_report != NULL)
 			fprintf(f_report, "resampled  %s\n", fname);
 		resample_count++;
-		resample_wav = 1;
+		resample_wav = true;
 		fseek(f, 40, SEEK_SET); // skip past the WAV header, up to before "data length"
 	}
 
@@ -1327,7 +1332,7 @@ static int LoadWavefile(FILE *f, const char *fname)
 		length++;
 	}
 
-	if (resample_wav != 0) {
+	if (resample_wav == true) {
 		fclose(f);
 		remove(fname_temp);
 	}
@@ -1389,16 +1394,17 @@ static int LoadEnvelope2(FILE *f, const char *fname)
 	unsigned char env[ENV_LEN];
 
 	n_points = 0;
-	fgets(line_buf, sizeof(line_buf), f); // skip first line
-	while (!feof(f)) {
-		if (fgets(line_buf, sizeof(line_buf), f) == NULL)
-			break;
+	if (fgets(line_buf, sizeof(line_buf), f) != NULL) { ; // skip first line, then loop
+		while (!feof(f)) {
+			if (fgets(line_buf, sizeof(line_buf), f) == NULL)
+				break;
 
-		env_lin[n_points] = 0;
-		n = sscanf(line_buf, "%f %f %d", &env_x[n_points], &env_y[n_points], &env_lin[n_points]);
-		if (n >= 2) {
-			env_x[n_points] *= (float)1.28; // convert range 0-100 to 0-128
-			n_points++;
+			env_lin[n_points] = 0;
+			n = sscanf(line_buf, "%f %f %d", &env_x[n_points], &env_y[n_points], &env_lin[n_points]);
+			if (n >= 2) {
+				env_x[n_points] *= (float)1.28; // convert range 0-100 to 0-128
+				n_points++;
+			}
 		}
 	}
 	if (n_points > 0) {
@@ -1433,7 +1439,7 @@ static int LoadEnvelope2(FILE *f, const char *fname)
 	}
 
 	displ = ftell(f_phdata);
-	fwrite(env, 1, 128, f_phdata);
+	fwrite(env, 1, ENV_LEN, f_phdata);
 
 	return displ;
 }
@@ -1617,20 +1623,20 @@ static void CompileSound(int keyword, int isvowel)
 static int CompileIf(int elif)
 {
 	int key;
-	int finish = 0;
+	bool finish = false;
 	int word = 0;
 	int word2;
 	int data;
 	int bitmap;
 	int brackets;
-	int not_flag;
-	USHORT *prog_last_if = NULL;
+	bool not_flag;
+	unsigned short *prog_last_if = NULL;
 
 	then_count = 2;
-	after_if = 1;
+	after_if = true;
 
 	while (!finish) {
-		not_flag = 0;
+		not_flag = false;
 		word2 = 0;
 		if (prog_out >= prog_out_max) {
 			error("Phoneme program too large");
@@ -1641,7 +1647,7 @@ static int CompileIf(int elif)
 			error("Expected a condition, not '%s'", item_string);
 
 		if ((item_type == 0) && (key == k_NOT)) {
-			not_flag = 1;
+			not_flag = true;
 			if ((key = NextItem(tCONDITION)) < 0)
 				error("Expected a condition, not '%s'", item_string);
 		}
@@ -1703,7 +1709,7 @@ static int CompileIf(int elif)
 				*prog_last_if |=  i_OR;
 			break;
 		case k_THEN:
-			finish = 1;
+			finish = true;
 			break;
 		default:
 			error("Expected AND, OR, THEN");
@@ -1716,7 +1722,7 @@ static int CompileIf(int elif)
 		if_stack[if_level].p_else = NULL;
 	}
 
-	if_stack[if_level].returned = 0;
+	if_stack[if_level].returned = false;
 	if_stack[if_level].p_then = prog_out;
 	*prog_out++ = i_JUMP_FALSE;
 
@@ -1725,7 +1731,7 @@ static int CompileIf(int elif)
 
 static void FillThen(int add)
 {
-	USHORT *p;
+	unsigned short *p;
 	int offset;
 
 	p = if_stack[if_level].p_then;
@@ -1753,20 +1759,20 @@ static void FillThen(int add)
 
 static int CompileElse(void)
 {
-	USHORT *ref;
-	USHORT *p;
+	unsigned short *ref;
+	unsigned short *p;
 
 	if (if_level < 1) {
 		error("ELSE not expected");
 		return 0;
 	}
 
-	if (if_stack[if_level].returned == 0)
+	if (if_stack[if_level].returned == false)
 		FillThen(1);
 	else
 		FillThen(0);
 
-	if (if_stack[if_level].returned == 0) {
+	if (if_stack[if_level].returned == false) {
 		ref = prog_out;
 		*prog_out++ = 0;
 
@@ -1792,7 +1798,7 @@ static int CompileElif(void)
 
 static int CompileEndif(void)
 {
-	USHORT *p;
+	unsigned short *p;
 	int chain;
 	int offset;
 
@@ -1976,8 +1982,8 @@ static int CompilePhoneme(int compile_phoneme)
 	prog_out = prog_buf;
 	prog_out_max = &prog_buf[MAX_PROG_BUF-1];
 	if_level = 0;
-	if_stack[0].returned = 0;
-	after_if = 0;
+	if_stack[0].returned = false;
+	after_if = false;
 	phoneme_flags = 0;
 
 	NextItem(tSTRING);
@@ -2045,10 +2051,11 @@ static int CompilePhoneme(int compile_phoneme)
 			case i_INSERT_PHONEME:
 			case i_REPLACE_NEXT_PHONEME:
 			case i_VOICING_SWITCH:
-			case i_CHANGE_IF | isDiminished:
-			case i_CHANGE_IF | isUnstressed:
-			case i_CHANGE_IF | isNotStressed:
-			case i_CHANGE_IF | isStressed:
+			case i_CHANGE_IF | STRESS_IS_DIMINISHED:
+			case i_CHANGE_IF | STRESS_IS_UNSTRESSED:
+			case i_CHANGE_IF | STRESS_IS_NOT_STRESSED:
+			case i_CHANGE_IF | STRESS_IS_SECONDARY:
+			case i_CHANGE_IF | STRESS_IS_PRIMARY:
 				value = NextItemBrackets(tPHONEMEMNEM, 0);
 				*prog_out++ = (keyword << 8) + value;
 				DecThenCount();
@@ -2068,7 +2075,7 @@ static int CompilePhoneme(int compile_phoneme)
 				if (phoneme_out->type == phVOWEL)
 					value = (value * vowel_length_factor)/100;
 
-				if (after_if == 0)
+				if (after_if == false)
 					phoneme_out->std_length = value/2;
 				else {
 					*prog_out++ = (i_SET_LENGTH << 8) + value/2;
@@ -2206,7 +2213,7 @@ static int CompilePhoneme(int compile_phoneme)
 				DecThenCount();
 				break;
 			case kFMT:
-				if_stack[if_level].returned = 1;
+				if_stack[if_level].returned = true;
 				DecThenCount();
 				if (phoneme_out->type == phVOWEL)
 					CompileSound(keyword, 1);
@@ -2214,7 +2221,7 @@ static int CompilePhoneme(int compile_phoneme)
 					CompileSound(keyword, 0);
 				break;
 			case kWAV:
-				if_stack[if_level].returned = 1;
+				if_stack[if_level].returned = true;
 				// fallthrough:
 			case kVOWELSTART:
 			case kVOWELENDING:
@@ -2251,7 +2258,7 @@ static int CompilePhoneme(int compile_phoneme)
 				endphoneme = 1;
 				if (if_level > 0)
 					error("Missing ENDIF");
-				if ((prog_out > prog_buf) && (if_stack[0].returned == 0))
+				if ((prog_out > prog_buf) && (if_stack[0].returned == false))
 					*prog_out++ = INSTN_RETURN;
 				break;
 			}
@@ -2290,7 +2297,7 @@ static int CompilePhoneme(int compile_phoneme)
 	if (prog_out > prog_buf) {
 		// write out the program for this phoneme
 		fflush(f_phindex);
-		phoneme_out->program = ftell(f_phindex) / sizeof(USHORT);
+		phoneme_out->program = ftell(f_phindex) / sizeof(unsigned short);
 
 		if (f_prog_log != NULL) {
 			phoneme_prog_log.addr = phoneme_out->program;
@@ -2299,8 +2306,8 @@ static int CompilePhoneme(int compile_phoneme)
 		}
 
 		if (compile_phoneme == 0)
-			proc_addr[n_procs++] =  ftell(f_phindex) / sizeof(USHORT);
-		fwrite(prog_buf, sizeof(USHORT), prog_out - prog_buf, f_phindex);
+			proc_addr[n_procs++] =  ftell(f_phindex) / sizeof(unsigned short);
+		fwrite(prog_buf, sizeof(unsigned short), prog_out - prog_buf, f_phindex);
 	}
 
 	return 0;
@@ -2715,9 +2722,9 @@ espeak_ng_STATUS espeak_ng_CompileIntonation(FILE *log, espeak_ng_ERROR_CONTEXT 
 	char c;
 	int keyword;
 	int n_tune_names = 0;
-	int done_split = 0;
-	int done_onset = 0;
-	int done_last = 0;
+	bool done_split = false;
+	bool done_onset = false;
+	bool done_last = false;
 	int n_preset_tunes = 0;
 	int found = 0;
 	int tune_number = 0;
@@ -2803,7 +2810,7 @@ espeak_ng_STATUS espeak_ng_CompileIntonation(FILE *log, espeak_ng_ERROR_CONTEXT 
 		switch (keyword)
 		{
 		case kTUNE:
-			done_split = 0;
+			done_split = false;
 
 			memcpy(&new_tune, &default_tune, sizeof(TUNE));
 			NextItem(tSTRING);
@@ -2828,11 +2835,11 @@ espeak_ng_STATUS espeak_ng_CompileIntonation(FILE *log, espeak_ng_ERROR_CONTEXT 
 			break;
 		case kENDTUNE:
 			if (!found) continue;
-			if (done_onset == 0) {
+			if (done_onset == false) {
 				new_tune.unstr_start[0] = new_tune.unstr_start[1];
 				new_tune.unstr_end[0] = new_tune.unstr_end[1];
 			}
-			if (done_last == 0) {
+			if (done_last == false) {
 				new_tune.unstr_start[2] = new_tune.unstr_start[1];
 				new_tune.unstr_end[2] = new_tune.unstr_end[1];
 			}
@@ -2846,13 +2853,13 @@ espeak_ng_STATUS espeak_ng_CompileIntonation(FILE *log, espeak_ng_ERROR_CONTEXT 
 			new_tune.onset = NextItem(tNUMBER);
 			new_tune.unstr_start[0] = NextItem(tSIGNEDNUMBER);
 			new_tune.unstr_end[0] = NextItem(tSIGNEDNUMBER);
-			done_onset = 1;
+			done_onset = true;
 			break;
 		case kTUNE_HEADLAST:
 			new_tune.head_last = NextItem(tNUMBER);
 			new_tune.unstr_start[2] = NextItem(tSIGNEDNUMBER);
 			new_tune.unstr_end[2] = NextItem(tSIGNEDNUMBER);
-			done_last = 1;
+			done_last = true;
 			break;
 		case kTUNE_HEADENV:
 			NextItem(tSTRING);
@@ -2916,7 +2923,7 @@ espeak_ng_STATUS espeak_ng_CompileIntonation(FILE *log, espeak_ng_ERROR_CONTEXT 
 				error("Bad envelope name: '%s'", item_string);
 				break;
 			}
-			done_split = 1;
+			done_split = true;
 			new_tune.split_nucleus_env = ix;
 			new_tune.split_nucleus_max = NextItem(tNUMBER);
 			new_tune.split_nucleus_min = NextItem(tNUMBER);

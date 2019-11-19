@@ -27,11 +27,8 @@ bin_PROGRAMS =
 lib_LTLIBRARIES =
 man1_MANS =
 
-noinst_bin_PROGRAMS =
-noinst_bindir =
-
-noinst_lib_LTLIBRARIES =
-noinst_libdir =
+check_PROGRAMS =
+check_LTLIBRARIES =
 
 ##### ChangeLog:
 
@@ -66,6 +63,7 @@ install-exec-hook:
 clean-local:
 	cd src && rm -f *.o *~ && cd ..
 	cd src/libespeak-ng/ && rm -f *.o *.lo && cd ../..
+	cd tests && rm -f *.o *.lo && cd ..
 if HAVE_GRADLE
 	cd android && $(GRADLE) clean
 endif
@@ -76,10 +74,11 @@ distclean-local:
 
 ##### custom rules:
 
-SUFFIXES=.html .md .ronn
+SUFFIXES=.html .md .ronn .check .test
 
 .md.html: _layouts/webpage.html
-	cat $< | sed -e 's/\.md)/.html)/g' -e 's/\.ronn/.html/g' | \
+	@echo "  MD        $@"
+	@cat $< | sed -e 's/\.md)/.html)/g' -e 's/\.ronn/.html/g' | \
 		kramdown --template _layouts/webpage.html > $@
 
 .ronn.html:
@@ -107,18 +106,13 @@ src/espeak-ng.1: src/espeak-ng.1.ronn
 src/speak-ng.1: src/speak-ng.1.ronn
 	ronn --roff $<
 
-docs:	docs/index.html \
-	docs/add_language.html \
-	docs/dictionary.html \
-	docs/intonation.html \
-	docs/languages.html \
-	docs/markup.html \
-	docs/mbrola.html \
-	docs/phonemes.html \
-	docs/phontab.html \
-	docs/voices.html \
+docs_MARKDOWN != ls docs/*.md docs/*/*.md docs/*/*/*.md
+docs_HTML = ${docs_MARKDOWN:.md=.html}
+
+docs:	$(docs_HTML) \
 	src/espeak-ng.1.html \
 	src/speak-ng.1.html \
+	CHANGELOG.html \
 	README.html
 
 ##### build targets:
@@ -167,6 +161,7 @@ src_libespeak_ng_la_SOURCES = \
 	src/libespeak-ng/setlengths.c \
 	src/libespeak-ng/spect.c \
 	src/libespeak-ng/speech.c \
+	src/libespeak-ng/ssml.c \
 	src/libespeak-ng/synthdata.c \
 	src/libespeak-ng/synthesize.c \
 	src/libespeak-ng/synth_mbrola.c \
@@ -218,7 +213,7 @@ src_espeak_ng_SOURCES = src/espeak-ng.c
 # Test version of libespeak-ng.so with access to the internal APIs, so they can
 # be accessed in the test code. This version should not be installed, as the
 # internal APIs are not guaranteed to be stable between releases.
-lib_LTLIBRARIES += src/libespeak-ng-test.la
+check_LTLIBRARIES += src/libespeak-ng-test.la
 
 src_libespeak_ng_test_la_LDFLAGS = $(src_libespeak_ng_la_LDFLAGS)
 src_libespeak_ng_test_la_CFLAGS  = \
@@ -226,32 +221,65 @@ src_libespeak_ng_test_la_CFLAGS  = \
 	${PCAUDIOLIB_CFLAGS} ${AM_CFLAGS}
 src_libespeak_ng_test_la_SOURCES = $(src_libespeak_ng_la_SOURCES)
 
-noinst_bin_PROGRAMS += tests/encoding.test
+check_PROGRAMS += tests/encoding.test
 
 tests_encoding_test_LDADD   = src/libespeak-ng.la
 tests_encoding_test_SOURCES = tests/encoding.c
 
-noinst_bin_PROGRAMS += tests/readclause.test
+check_PROGRAMS += tests/readclause.test
 
 tests_readclause_test_CFLAGS  = -Isrc/libespeak-ng ${AM_CFLAGS}
 tests_readclause_test_LDADD   = src/libespeak-ng-test.la
 tests_readclause_test_SOURCES = tests/readclause.c
 
-noinst_bin_PROGRAMS += tests/api.test
+check_PROGRAMS += tests/api.test
 
 tests_api_test_CFLAGS  = -Isrc/libespeak-ng ${AM_CFLAGS}
 tests_api_test_LDADD   = src/libespeak-ng-test.la
 tests_api_test_SOURCES = tests/api.c
 
-%.check: %.test
+.test.check:
 	@echo "  TEST      $<"
 	@ESPEAK_DATA_PATH=$(PWD) $< && echo "  PASSED    $<"
 
 check:	tests/encoding.check \
 	tests/readclause.check \
+	tests/translate.check \
+	tests/ssml.check \
+	tests/ssml-fuzzer.check \
 	tests/api.check \
-	tests/phoneme-output.check \
-	tests/languages.check
+	tests/language-phonemes.check \
+	tests/language-replace.check \
+	tests/language-pronunciation.check \
+	tests/language-numbers-cardinal.check \
+	tests/language-numbers-ordinal.check
+
+##### fuzzer:
+
+if !HAVE_LIBFUZZER
+# libfuzzrunner is a stub implementation of libFuzzer that calls the
+# LLVMFuzzerTestOneInput with the files passed to the fuzzer program.
+check_LTLIBRARIES += tests/libfuzzrunner.la
+tests_libfuzzrunner_la_CFLAGS  = -Isrc/libespeak-ng ${AM_CFLAGS}
+tests_libfuzzrunner_la_SOURCES = tests/fuzzrunner.c
+endif
+
+check_PROGRAMS += tests/ssml-fuzzer.test
+tests_ssml_fuzzer_test_CFLAGS  = ${AM_CFLAGS}
+tests_ssml_fuzzer_test_SOURCES = tests/ssml-fuzzer.c
+tests_ssml_fuzzer_test_LDADD   = src/libespeak-ng.la
+
+if HAVE_LIBFUZZER
+tests_ssml_fuzzer_test_CFLAGS += -fsanitize=fuzzer
+tests_ssml_fuzzer_test_LDFLAGS = -fsanitize=fuzzer
+else
+tests_ssml_fuzzer_test_LDADD += tests/libfuzzrunner.la
+endif
+
+tests/ssml-fuzzer.check: tests/ssml-fuzzer.test
+	@echo "  TEST      $<"
+	@ESPEAK_DATA_PATH=$(PWD) $< tests/ssml/*.ssml tests/ssml-fuzzer/*.ssml && echo "  PASSED    $<"
+
 
 ##### phoneme data:
 
@@ -296,7 +324,6 @@ phsource/phonemes.stamp: \
 	phsource/ph_farsi \
 	phsource/ph_finnish \
 	phsource/ph_french \
-	phsource/ph_french_ca \
 	phsource/ph_georgian \
 	phsource/ph_german \
 	phsource/ph_greek \
@@ -340,11 +367,14 @@ phsource/phonemes.stamp: \
 	phsource/ph_portugal \
 	phsource/ph_pt_brazil \
 	phsource/ph_punjabi \
+	phsource/ph_pyash \
 	phsource/ph_romanian \
 	phsource/ph_russian \
+	phsource/ph_russian_lv \
 	phsource/ph_s_gaelic \
 	phsource/ph_serbian \
 	phsource/ph_setswana \
+	phsource/ph_shan \
 	phsource/ph_sinhala \
 	phsource/ph_slovak \
 	phsource/ph_slovenian \
@@ -429,6 +459,7 @@ dictionaries: \
 	espeak-ng-data/ar_dict \
 	espeak-ng-data/as_dict \
 	espeak-ng-data/az_dict \
+	espeak-ng-data/ba_dict \
 	espeak-ng-data/bg_dict \
 	espeak-ng-data/bn_dict \
 	espeak-ng-data/bpy_dict \
@@ -449,11 +480,13 @@ dictionaries: \
 	espeak-ng-data/fr_dict \
 	espeak-ng-data/ga_dict \
 	espeak-ng-data/gd_dict \
+	espeak-ng-data/gn_dict \
 	espeak-ng-data/grc_dict \
 	espeak-ng-data/gu_dict \
 	espeak-ng-data/hak_dict \
 	espeak-ng-data/hi_dict \
 	espeak-ng-data/hr_dict \
+	espeak-ng-data/ht_dict \
 	espeak-ng-data/hu_dict \
 	espeak-ng-data/hy_dict \
 	espeak-ng-data/ia_dict \
@@ -463,6 +496,7 @@ dictionaries: \
 	espeak-ng-data/ja_dict \
 	espeak-ng-data/jbo_dict \
 	espeak-ng-data/ka_dict \
+	espeak-ng-data/kk_dict \
 	espeak-ng-data/kl_dict \
 	espeak-ng-data/kn_dict \
 	espeak-ng-data/ko_dict \
@@ -490,9 +524,12 @@ dictionaries: \
 	espeak-ng-data/pap_dict \
 	espeak-ng-data/pl_dict \
 	espeak-ng-data/pt_dict \
+	espeak-ng-data/py_dict \
+	espeak-ng-data/quc_dict \
 	espeak-ng-data/ro_dict \
 	espeak-ng-data/ru_dict \
 	espeak-ng-data/sd_dict \
+	espeak-ng-data/shn_dict \
 	espeak-ng-data/si_dict \
 	espeak-ng-data/sk_dict \
 	espeak-ng-data/sl_dict \
@@ -506,6 +543,7 @@ dictionaries: \
 	espeak-ng-data/tr_dict \
 	espeak-ng-data/tt_dict \
 	espeak-ng-data/ur_dict \
+	espeak-ng-data/uz_dict \
 	espeak-ng-data/vi_dict \
 	espeak-ng-data/zh_dict \
 	espeak-ng-data/zhy_dict
@@ -527,6 +565,9 @@ espeak-ng-data/as_dict: dictsource/as_list dictsource/as_rules dictsource/as_ext
 
 az: espeak-ng-data/az_dict
 espeak-ng-data/az_dict: dictsource/az_list dictsource/az_rules dictsource/az_extra dictsource/az_emoji
+
+ba: espeak-ng-data/ba_dict
+espeak-ng-data/ba_dict: dictsource/ba_list dictsource/ba_rules
 
 bg: espeak-ng-data/bg_dict
 espeak-ng-data/bg_dict: dictsource/bg_list dictsource/bg_listx dictsource/bg_rules dictsource/bg_extra dictsource/bg_emoji
@@ -585,11 +626,14 @@ espeak-ng-data/fr_dict: dictsource/fr_list dictsource/fr_rules dictsource/fr_ext
 hak: espeak-ng-data/hak_dict
 espeak-ng-data/hak_dict: dictsource/hak_list dictsource/hak_rules dictsource/hak_extra
 
+ht: espeak-ng-data/ht_dict
+espeak-ng-data/ht_dict: dictsource/ht_list dictsource/ht_rules dictsource/ht_extra
+
 ga: espeak-ng-data/ga_dict
 espeak-ng-data/ga_dict: dictsource/ga_list dictsource/ga_rules dictsource/ga_extra dictsource/ga_emoji
 
 gd: espeak-ng-data/gd_dict
-espeak-ng-data/gd_dict: dictsource/gd_list dictsource/gd_rules dictsource/gd_extra
+espeak-ng-data/gd_dict: dictsource/gd_list dictsource/gd_rules dictsource/gd_extra dictsource/gd_emoji
 
 gn: espeak-ng-data/gn_dict
 espeak-ng-data/gn_dict: dictsource/gn_list dictsource/gn_rules dictsource/gn_extra
@@ -632,6 +676,9 @@ espeak-ng-data/ja_dict: dictsource/ja_list dictsource/ja_rules dictsource/ja_ext
 
 ka: espeak-ng-data/ka_dict
 espeak-ng-data/ka_dict: dictsource/ka_list dictsource/ka_rules dictsource/ka_extra dictsource/ka_emoji
+
+kk: espeak-ng-data/kk_dict
+espeak-ng-data/kk_dict: dictsource/kk_list dictsource/kk_rules dictsource/kk_extra dictsource/kk_emoji
 
 kl: espeak-ng-data/kl_dict
 espeak-ng-data/kl_dict: dictsource/kl_list dictsource/kl_rules dictsource/kl_extra
@@ -714,6 +761,12 @@ espeak-ng-data/pl_dict: dictsource/pl_list dictsource/pl_rules dictsource/pl_ext
 pt: espeak-ng-data/pt_dict
 espeak-ng-data/pt_dict: dictsource/pt_list dictsource/pt_rules dictsource/pt_extra dictsource/pt_emoji
 
+py: espeak-ng-data/py_dict
+espeak-ng-data/py_dict: dictsource/py_list dictsource/py_rules dictsource/py_extra
+
+quc: espeak-ng-data/quc_dict
+espeak-ng-data/quc_dict: dictsource/quc_list dictsource/quc_rules dictsource/quc_extra dictsource/quc_emoji
+
 ro: espeak-ng-data/ro_dict
 espeak-ng-data/ro_dict: dictsource/ro_list dictsource/ro_rules dictsource/ro_extra dictsource/ro_emoji
 
@@ -727,7 +780,10 @@ espeak-ng-data/ru_dict: dictsource/ru_list dictsource/ru_rules dictsource/ru_ext
 endif
 
 sd: espeak-ng-data/sd_dict
-espeak-ng-data/sd_dict: dictsource/sd_list dictsource/sd_rules dictsource/sd_extra
+espeak-ng-data/sd_dict: dictsource/sd_list dictsource/sd_rules dictsource/sd_extra dictsource/sd_emoji
+
+shn: espeak-ng-data/shn_dict
+espeak-ng-data/shn_dict: dictsource/shn_list dictsource/shn_rules dictsource/shn_extra
 
 si: espeak-ng-data/si_dict
 espeak-ng-data/si_dict: dictsource/si_list dictsource/si_rules dictsource/si_extra dictsource/si_emoji
@@ -776,6 +832,9 @@ espeak-ng-data/tt_dict: dictsource/tt_list dictsource/tt_rules dictsource/tt_ext
 ur: espeak-ng-data/ur_dict
 espeak-ng-data/ur_dict: dictsource/ur_list dictsource/ur_rules dictsource/ur_extra dictsource/ur_emoji
 
+uz: espeak-ng-data/uz_dict
+espeak-ng-data/uz_dict: dictsource/uz_list dictsource/uz_rules dictsource/uz_extra
+
 vi: espeak-ng-data/vi_dict
 espeak-ng-data/vi_dict: dictsource/vi_list dictsource/vi_rules dictsource/vi_extra dictsource/vi_emoji
 
@@ -789,14 +848,22 @@ espeak-ng-data/zh_dict: dictsource/zh_list dictsource/zh_rules dictsource/zh_ext
 endif
 
 zhy: espeak-ng-data/zhy_dict
-dictsource/zhy_list:
-	ln -svf extra/zhy_list dictsource/
+dictsource/zhy_listx:
+	ln -svf extra/zhy_listx dictsource/
 if HAVE_ZHY_EXTENDED_DICTIONARY
-espeak-ng-data/zhy_dict: dictsource/zhy_rules dictsource/zhy_extra dictsource/zhy_list
+espeak-ng-data/zhy_dict: dictsource/zhy_list dictsource/zhy_rules dictsource/zhy_extra dictsource/zhy_listx dictsource/zhy_emoji
 else
-espeak-ng-data/zhy_dict: dictsource/zhy_rules dictsource/zhy_extra
+espeak-ng-data/zhy_dict: dictsource/zhy_list dictsource/zhy_rules dictsource/zhy_extra dictsource/zhy_emoji
 endif
 	cd dictsource && ESPEAK_DATA_PATH=$(PWD) LD_LIBRARY_PATH=../src:${LD_LIBRARY_PATH} ../src/espeak-ng --compile=yue && cd ..
+
+dictsource/zhy_emoji:
+	@echo "  EMOJI     $@"
+	@if test x"${CLDR_PATH}" = x ; then \
+		touch $@ ; \
+	else \
+		tools/emoji dictsource/en_emoji yue ${CLDR_PATH} > $@ ; \
+	fi
 
 ##### mbrola:
 
@@ -804,30 +871,38 @@ mbrola: \
 	espeak-ng-data/mbrola_ph/af1_phtrans \
 	espeak-ng-data/mbrola_ph/ar1_phtrans \
 	espeak-ng-data/mbrola_ph/ar2_phtrans \
-	espeak-ng-data/mbrola_ph/zh_phtrans \
+	espeak-ng-data/mbrola_ph/ca_phtrans \
 	espeak-ng-data/mbrola_ph/cr1_phtrans \
 	espeak-ng-data/mbrola_ph/cs_phtrans \
 	espeak-ng-data/mbrola_ph/de2_phtrans \
 	espeak-ng-data/mbrola_ph/de4_phtrans \
 	espeak-ng-data/mbrola_ph/de6_phtrans \
+	espeak-ng-data/mbrola_ph/de8_phtrans \
 	espeak-ng-data/mbrola_ph/ee1_phtrans \
 	espeak-ng-data/mbrola_ph/en1_phtrans \
 	espeak-ng-data/mbrola_ph/es_phtrans \
-	espeak-ng-data/mbrola_ph/fr1_phtrans \
+	espeak-ng-data/mbrola_ph/es3_phtrans \
+	espeak-ng-data/mbrola_ph/es4_phtrans \
+	espeak-ng-data/mbrola_ph/fr_phtrans \
+	espeak-ng-data/mbrola_ph/gr1_phtrans \
 	espeak-ng-data/mbrola_ph/gr2_phtrans \
 	espeak-ng-data/mbrola_ph/grc-de6_phtrans \
 	espeak-ng-data/mbrola_ph/hn1_phtrans \
 	espeak-ng-data/mbrola_ph/hu1_phtrans \
 	espeak-ng-data/mbrola_ph/ic1_phtrans \
 	espeak-ng-data/mbrola_ph/id1_phtrans \
-	espeak-ng-data/mbrola_ph/in1_phtrans \
+	espeak-ng-data/mbrola_ph/in_phtrans \
 	espeak-ng-data/mbrola_ph/ir1_phtrans \
+	espeak-ng-data/mbrola_ph/it1_phtrans \
 	espeak-ng-data/mbrola_ph/it3_phtrans \
+	espeak-ng-data/mbrola_ph/jp_phtrans \
 	espeak-ng-data/mbrola_ph/la1_phtrans \
 	espeak-ng-data/mbrola_ph/lt_phtrans \
+	espeak-ng-data/mbrola_ph/ma1_phtrans \
 	espeak-ng-data/mbrola_ph/mx1_phtrans \
 	espeak-ng-data/mbrola_ph/mx2_phtrans \
 	espeak-ng-data/mbrola_ph/nl_phtrans \
+	espeak-ng-data/mbrola_ph/nz1_phtrans \
 	espeak-ng-data/mbrola_ph/pl1_phtrans \
 	espeak-ng-data/mbrola_ph/pt1_phtrans \
 	espeak-ng-data/mbrola_ph/ptbr_phtrans \
@@ -835,10 +910,12 @@ mbrola: \
 	espeak-ng-data/mbrola_ph/ro1_phtrans \
 	espeak-ng-data/mbrola_ph/sv_phtrans \
 	espeak-ng-data/mbrola_ph/sv2_phtrans \
+	espeak-ng-data/mbrola_ph/tl1_phtrans \
 	espeak-ng-data/mbrola_ph/tr1_phtrans \
 	espeak-ng-data/mbrola_ph/us_phtrans \
 	espeak-ng-data/mbrola_ph/us3_phtrans \
-	espeak-ng-data/mbrola_ph/vz_phtrans
+	espeak-ng-data/mbrola_ph/vz_phtrans \
+	espeak-ng-data/mbrola_ph/zh_phtrans
 
 espeak-ng-data/mbrola_ph/af1_phtrans: phsource/mbrola/af1 src/espeak-ng
 	mkdir -p espeak-ng-data/mbrola_ph
@@ -852,9 +929,9 @@ espeak-ng-data/mbrola_ph/ar2_phtrans: phsource/mbrola/ar2 src/espeak-ng
 	mkdir -p espeak-ng-data/mbrola_ph
 	ESPEAK_DATA_PATH=$(PWD) src/espeak-ng --compile-mbrola=phsource/mbrola/ar2
 
-espeak-ng-data/mbrola_ph/zh_phtrans: phsource/mbrola/zh src/espeak-ng
+espeak-ng-data/mbrola_ph/ca_phtrans: phsource/mbrola/ca src/espeak-ng
 	mkdir -p espeak-ng-data/mbrola_ph
-	ESPEAK_DATA_PATH=$(PWD) src/espeak-ng --compile-mbrola=phsource/mbrola/zh
+	ESPEAK_DATA_PATH=$(PWD) src/espeak-ng --compile-mbrola=phsource/mbrola/ca
 
 espeak-ng-data/mbrola_ph/cr1_phtrans: phsource/mbrola/cr1 src/espeak-ng
 	mkdir -p espeak-ng-data/mbrola_ph
@@ -876,6 +953,10 @@ espeak-ng-data/mbrola_ph/de6_phtrans: phsource/mbrola/de6 src/espeak-ng
 	mkdir -p espeak-ng-data/mbrola_ph
 	ESPEAK_DATA_PATH=$(PWD) src/espeak-ng --compile-mbrola=phsource/mbrola/de6
 
+espeak-ng-data/mbrola_ph/de8_phtrans: phsource/mbrola/de8 src/espeak-ng
+	mkdir -p espeak-ng-data/mbrola_ph
+	ESPEAK_DATA_PATH=$(PWD) src/espeak-ng --compile-mbrola=phsource/mbrola/de8
+
 espeak-ng-data/mbrola_ph/ee1_phtrans: phsource/mbrola/ee1 src/espeak-ng
 	mkdir -p espeak-ng-data/mbrola_ph
 	ESPEAK_DATA_PATH=$(PWD) src/espeak-ng --compile-mbrola=phsource/mbrola/ee1
@@ -888,9 +969,21 @@ espeak-ng-data/mbrola_ph/es_phtrans: phsource/mbrola/es src/espeak-ng
 	mkdir -p espeak-ng-data/mbrola_ph
 	ESPEAK_DATA_PATH=$(PWD) src/espeak-ng --compile-mbrola=phsource/mbrola/es
 
-espeak-ng-data/mbrola_ph/fr1_phtrans: phsource/mbrola/fr1 src/espeak-ng
+espeak-ng-data/mbrola_ph/es3_phtrans: phsource/mbrola/es3 src/espeak-ng
 	mkdir -p espeak-ng-data/mbrola_ph
-	ESPEAK_DATA_PATH=$(PWD) src/espeak-ng --compile-mbrola=phsource/mbrola/fr1
+	ESPEAK_DATA_PATH=$(PWD) src/espeak-ng --compile-mbrola=phsource/mbrola/es3
+
+espeak-ng-data/mbrola_ph/es4_phtrans: phsource/mbrola/es4 src/espeak-ng
+	mkdir -p espeak-ng-data/mbrola_ph
+	ESPEAK_DATA_PATH=$(PWD) src/espeak-ng --compile-mbrola=phsource/mbrola/es4
+
+espeak-ng-data/mbrola_ph/fr_phtrans: phsource/mbrola/fr src/espeak-ng
+	mkdir -p espeak-ng-data/mbrola_ph
+	ESPEAK_DATA_PATH=$(PWD) src/espeak-ng --compile-mbrola=phsource/mbrola/fr
+
+espeak-ng-data/mbrola_ph/gr1_phtrans: phsource/mbrola/gr1 src/espeak-ng
+	mkdir -p espeak-ng-data/mbrola_ph
+	ESPEAK_DATA_PATH=$(PWD) src/espeak-ng --compile-mbrola=phsource/mbrola/gr1
 
 espeak-ng-data/mbrola_ph/gr2_phtrans: phsource/mbrola/gr2 src/espeak-ng
 	mkdir -p espeak-ng-data/mbrola_ph
@@ -916,23 +1009,37 @@ espeak-ng-data/mbrola_ph/id1_phtrans: phsource/mbrola/id1 src/espeak-ng
 	mkdir -p espeak-ng-data/mbrola_ph
 	ESPEAK_DATA_PATH=$(PWD) src/espeak-ng --compile-mbrola=phsource/mbrola/id1
 
-espeak-ng-data/mbrola_ph/in1_phtrans: phsource/mbrola/in1 src/espeak-ng
+espeak-ng-data/mbrola_ph/in_phtrans: phsource/mbrola/in src/espeak-ng
 	mkdir -p espeak-ng-data/mbrola_ph
-	ESPEAK_DATA_PATH=$(PWD) src/espeak-ng --compile-mbrola=phsource/mbrola/in1
+	ESPEAK_DATA_PATH=$(PWD) src/espeak-ng --compile-mbrola=phsource/mbrola/in
 
 espeak-ng-data/mbrola_ph/ir1_phtrans: phsource/mbrola/ir1 src/espeak-ng
 	mkdir -p espeak-ng-data/mbrola_ph
 	ESPEAK_DATA_PATH=$(PWD) src/espeak-ng --compile-mbrola=phsource/mbrola/ir1
 
+espeak-ng-data/mbrola_ph/it1_phtrans: phsource/mbrola/it1 src/espeak-ng
+	mkdir -p espeak-ng-data/mbrola_ph
+	ESPEAK_DATA_PATH=$(PWD) src/espeak-ng --compile-mbrola=phsource/mbrola/it1
+
 espeak-ng-data/mbrola_ph/it3_phtrans: phsource/mbrola/it3 src/espeak-ng
 	mkdir -p espeak-ng-data/mbrola_ph
 	ESPEAK_DATA_PATH=$(PWD) src/espeak-ng --compile-mbrola=phsource/mbrola/it3
+
+espeak-ng-data/mbrola_ph/jp_phtrans: phsource/mbrola/jp src/espeak-ng
+	mkdir -p espeak-ng-data/mbrola_ph
+	ESPEAK_DATA_PATH=$(PWD) src/espeak-ng --compile-mbrola=phsource/mbrola/jp
 
 espeak-ng-data/mbrola_ph/la1_phtrans: phsource/mbrola/la1 src/espeak-ng
 	mkdir -p espeak-ng-data/mbrola_ph
 	ESPEAK_DATA_PATH=$(PWD) src/espeak-ng --compile-mbrola=phsource/mbrola/la1
 
 espeak-ng-data/mbrola_ph/lt_phtrans: phsource/mbrola/lt src/espeak-ng
+	mkdir -p espeak-ng-data/mbrola_ph
+	ESPEAK_DATA_PATH=$(PWD) src/espeak-ng --compile-mbrola=phsource/mbrola/lt
+
+espeak-ng-data/mbrola_ph/ma1_phtrans: phsource/mbrola/ma1 src/espeak-ng
+	mkdir -p espeak-ng-data/mbrola_ph
+	ESPEAK_DATA_PATH=$(PWD) src/espeak-ng --compile-mbrola=phsource/mbrola/ma1
 
 espeak-ng-data/mbrola_ph/mx1_phtrans: phsource/mbrola/mx1 src/espeak-ng
 	mkdir -p espeak-ng-data/mbrola_ph
@@ -945,6 +1052,10 @@ espeak-ng-data/mbrola_ph/mx2_phtrans: phsource/mbrola/mx2 src/espeak-ng
 espeak-ng-data/mbrola_ph/nl_phtrans: phsource/mbrola/nl src/espeak-ng
 	mkdir -p espeak-ng-data/mbrola_ph
 	ESPEAK_DATA_PATH=$(PWD) src/espeak-ng --compile-mbrola=phsource/mbrola/nl
+
+espeak-ng-data/mbrola_ph/nz1_phtrans: phsource/mbrola/nz1 src/espeak-ng
+	mkdir -p espeak-ng-data/mbrola_ph
+	ESPEAK_DATA_PATH=$(PWD) src/espeak-ng --compile-mbrola=phsource/mbrola/nz1
 
 espeak-ng-data/mbrola_ph/pl1_phtrans: phsource/mbrola/pl1 src/espeak-ng
 	mkdir -p espeak-ng-data/mbrola_ph
@@ -974,6 +1085,10 @@ espeak-ng-data/mbrola_ph/sv2_phtrans: phsource/mbrola/sv2 src/espeak-ng
 	mkdir -p espeak-ng-data/mbrola_ph
 	ESPEAK_DATA_PATH=$(PWD) src/espeak-ng --compile-mbrola=phsource/mbrola/sv2
 
+espeak-ng-data/mbrola_ph/tl1_phtrans: phsource/mbrola/tl1 src/espeak-ng
+	mkdir -p espeak-ng-data/mbrola_ph
+	ESPEAK_DATA_PATH=$(PWD) src/espeak-ng --compile-mbrola=phsource/mbrola/tl1
+
 espeak-ng-data/mbrola_ph/tr1_phtrans: phsource/mbrola/tr1 src/espeak-ng
 	mkdir -p espeak-ng-data/mbrola_ph
 	ESPEAK_DATA_PATH=$(PWD) src/espeak-ng --compile-mbrola=phsource/mbrola/tr1
@@ -989,3 +1104,7 @@ espeak-ng-data/mbrola_ph/us3_phtrans: phsource/mbrola/us3 src/espeak-ng
 espeak-ng-data/mbrola_ph/vz_phtrans: phsource/mbrola/vz src/espeak-ng
 	mkdir -p espeak-ng-data/mbrola_ph
 	ESPEAK_DATA_PATH=$(PWD) src/espeak-ng --compile-mbrola=phsource/mbrola/vz
+
+espeak-ng-data/mbrola_ph/zh_phtrans: phsource/mbrola/zh src/espeak-ng
+	mkdir -p espeak-ng-data/mbrola_ph
+	ESPEAK_DATA_PATH=$(PWD) src/espeak-ng --compile-mbrola=phsource/mbrola/zh

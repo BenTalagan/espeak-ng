@@ -17,8 +17,12 @@
  * along with this program; if not, see: <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SPEECH_H
-#define SPEECH_H
+#ifndef ESPEAK_NG_SPEECH_H
+#define ESPEAK_NG_SPEECH_H
+
+#include <espeak-ng/espeak_ng.h>
+
+#include "mbrola.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -55,10 +59,6 @@ extern "C"
    #define PATH_ESPEAK_DATA  "/usr/share/espeak-ng-data"
 #endif
 
-typedef unsigned short USHORT;
-typedef unsigned char UCHAR;
-typedef double DOUBLEX;
-
 typedef struct {
 	const char *mnem;
 	int value;
@@ -70,8 +70,7 @@ void cancel_audio(void);
 
 extern char path_home[N_PATH_HOME];    // this is the espeak-ng-data directory
 
-extern ESPEAK_NG_API void strncpy0(char *to, const char *from, int size);
-extern ESPEAK_NG_API int  GetFileLength(const char *filename);
+extern ESPEAK_NG_API int GetFileLength(const char *filename);
 
 #ifdef __cplusplus
 }

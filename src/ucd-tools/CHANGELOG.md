@@ -7,6 +7,12 @@ These are eSpeak NG specific modifications to the `ucd-tools` project:
 *  `data/espeak-ng` data files for eSpeak NG extended data.
 *  espeak-ng PropList property lookup as part of the `ucd_property` API.
 
+## 11.0.0 - 2018-07-08
+
+*  Make the ispunct ctype compatibility implementation conformant.
+*  Update to Unicode Character Data 11.0.0.
+*  Update to Unicode Emoji 11.0.
+
 ## 10.0.0 - 2017-06-25
 
 *  Add `iswblank` and `iswxdigit` compatibility.

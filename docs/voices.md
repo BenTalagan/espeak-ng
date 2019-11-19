@@ -31,7 +31,7 @@
   - [stressAmp](#stressamp)
   - [intonation](#intonation)
   - [dictmin](#dictmin)
-  - [letterVowel](#letterVowel)
+
 ----------
 
 A Voice file specifies a language (and possibly a language variant or
@@ -42,7 +42,7 @@ Voice files are located in the `espeak-ng-data/voices` directory, and are
 grouped by the [ISO 639-5](https://en.wikipedia.org/wiki/ISO_639-5)
 language family of the language being specified in the voice files.
 See also Wikipedia's
-[List of language families] (https://en.wiktionary.org/wiki/Wiktionary:List_of_families)
+[List of language families](https://en.wiktionary.org/wiki/Wiktionary:List_of_families)
 for more details.
 
 The `default` voice is used if none is specified in the speak command. You
@@ -379,7 +379,7 @@ listed in [Phonemes](phonemes.md).
 
 Four integer parameters. These correspond to:
 
-1. langopts->stress_rule (values in translate.h)
+1. langopts->stress_rule (values in [translate.h](../src/libespeak-ng/translate.h))
 2. langopts->stress_flags
 3. langopts->unstressed_wd1 (stress for $u word of 1 syllable)
 4. langopts->unstressed_wd2 (stress for $u word of >1 syllable) 
@@ -440,9 +440,3 @@ Used for some languages to detect if additional language data is
 installed. If the size of the compiled dictionary data for the language
 (the file `espeak-ng-data/*_dict`) is less than this size then a
 warning is given.
-
-### letterVowel
-
-	letterVowel <letter>
-
-Used for some languages to handle a certain letter as a vowel instead of consonant.

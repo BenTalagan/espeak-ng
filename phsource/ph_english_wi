@@ -60,6 +60,15 @@ phoneme I2
 endphoneme
 
 
+phoneme I2#   // used for [I] in -ed adjectives which may be [E] in some accents
+  vwl  starttype #@  endtype #@
+  unstressed
+
+  IfNextVowelAppend(;)
+  ChangePhoneme(E)
+endphoneme
+
+
 phoneme i   //  optional variant of [I] for end of words
   vwl  starttype #i  endtype #i
   length 150

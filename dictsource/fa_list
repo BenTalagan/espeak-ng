@@ -1,5 +1,5 @@
-// *   Farsi Language fa (or Parsi or Persian) fa_list Version 3.134
-// *   This file writen by Shadyar Khodayari and Ehsan Esmaili who has managed  collecting exceptional words. 06-24-2017
+// *   Farsi Language fa (or Parsi or Persian) fa_list Version 3.136
+// *   This file writen by Shadyar Khodayari and Ehsan Esmaili who has managed  collecting exceptional words. 06-05-2019
 //*********
 // *   This program is free software; you can redistribute it and/or modify  *
 // *   it under the terms of the GNU General Public License as published by  *
@@ -28,11 +28,10 @@
 
 // letter names, as they are spoken as a single character in text
 // precede by _  to distinguish from pronunciation as a language word
-// Special Persian Simbles.
+// Special Persian Symbls.
 ﷼	RijAl
 
 //Farsi Alphabet
-ٴ	hamzeje_bAlA   //this character "ٔ" is defrent of "ء" and "ۀ" for example "دانشنامهٔ "
 آ	'A
 ا	'alef
 ب	'be:
@@ -76,9 +75,9 @@ _و	'vAv
 ً	'an
 ٌ	'on
 ٍ	'en
-،	viRgul
+_،	viRgul
 ؛	noqteviRgul
-ـ	keSi'dane,hoRuf
+ـ	'keSide_
 ئ	'je,hamze:
 ؤ	'vAv,hamze:
 ۀ	'hehamze:
@@ -87,6 +86,26 @@ _و	'vAv
 ء	'hamze:
 ة	'tAje-,ta?nis
 ي	'je_aRabi
+
+// symbols used in Standard Persian keybord layout
+٬	'dZodAkonandeje_hezArgAn
+٫	'momajez
+٪	'darsad
+ٔ	hamzeje_bAlA   //this character "ٔ" is defrent of "ء" and "ۀ" for example "دانشنامهٔ "
+×	'zaRbdaR
+‍	'taq1simbaR
+
+//Farsi Numbers used in Standard Persian keybord layout
+۰	'sefRe_fARsi
+۱	'jeke_fARsi
+۲	'doe_fARsi
+۳	'seje_fARsi
+۴	'tSAhARe_fARsi
+۵	'pandZe_fARsi
+۶	'SeSe_fARsi
+۷	'hafte_fARsi
+۸	'haSte_fARsi
+۹	'nohe_fARsi
 
 
 // Urdu for Persian users added by users
@@ -197,10 +216,12 @@ $	dolAR
 [	beRAketbAz
 ]	beRAketbaste:
 (	paRAntezbAz
-_)	paRAntezbaste:
+)	paRAntezbaste:
 *	setARe:
 //this code is recognized as (ZWNJ) U+200c (half space) at eSpeak 1.46.22 and later (ZWNJ) is recognized as hyphen
-	_-	nim_fAsele:
+U+200C	nim_fAsele:
+//this code is recognized as Space
+U+20	fAsele_
 .	noqte:
 :	'donoqte:
 <	alAmate'kutSektaR
@@ -216,16 +237,12 @@ _)	paRAntezbaste:
 
 		// ABBREVIATIONS
 //**************
-قظ	q::abl_az_:zohR	$only
 ق‌ظ	q::abl_az_:zohR	$only
 ق.ظ	q::abl_az_:zohR	$only
-بظ	ba:?d_az_:zohR	$only
 ب‌ظ	ba:?d_az_:zohR	$only
 ب.ظ	ba:?d_az_:zohR	$only
-هش	hedZRije_:Samsi	$only
 ه‌ش	hedZRije_:Samsi	$only
 ه.ش	hedZRije_:Samsi	$only
-هق	hedZRije_:qamaRi	$only
 ه‌ق	hedZRije_:qamaRi	$only
 ه.ق	hedZRije_:qamaRi	$only
 ق‌م	q::abl_az_:milAd	$only
@@ -2543,6 +2560,7 @@ _)	paRAntezbaste:
 بدواً	badvan
 بدوبدو	bodobodo
 بدوبیراه	badobiRAh
+بدوم	bedavam
 بدوی	badvi
 بدپیله	badpile
 بدپیلگی	badpilegi
@@ -2572,6 +2590,7 @@ _)	paRAntezbaste:
 برابرنهاد	baRAbaRnahAd
 برابرنگر	baRAbaRnegaR
 برات	baRAt
+براتکش	baRAtkeS
 براحتی	beRAhati
 برادر	baRAdaR
 برادرخواند	baRAdaRxAnd
@@ -2707,6 +2726,7 @@ _)	paRAntezbaste:
 برهه	boRhe:
 برهوت	baRahut
 برو	boRo
+بروات	baRavAt
 بروبر	beRRobeR
 بروبرو	boRoboRo
 بروبوم	baRobum
@@ -3331,6 +3351,7 @@ _)	paRAntezbaste:
 بیوفا	bivafA
 بیوه	bive:
 بیوگرافی	bijogeRAfi
+بیوگی	bivegi
 بیپاسخ	bipAsox
 بیکباره	bejekbARe:
 بیکس	bikas
@@ -3646,6 +3667,7 @@ _)	paRAntezbaste:
 ترکان	toRkAn
 ترکاند	taRakAnd
 ترکتازی	toRktAzi
+ترکد	teRekad
 ترکستان	toRkestAn
 ترکش	taRkeS
 ترکمانچای	toRkamAntSAj
@@ -3813,7 +3835,7 @@ _)	paRAntezbaste:
 تلیسه	talise
 تلیله	talile
 تم	tem
-تماشاگرپسند	tamASgaRpasand
+تماشاگرپسند	tamASAgaRpasand
 تماشاگه	tamASAgah
 تمام	tamAm
 تماما	tamAman
@@ -4347,6 +4369,7 @@ _)	paRAntezbaste:
 جنگدیده	dZangdide
 جنگل	dZangal
 جنگی	dZangi
+جنید	dZonejd
 جنین	dZenin
 جهان	dZahAn
 جهت	dZahat
@@ -4377,6 +4400,7 @@ _)	paRAntezbaste:
 جوگندمی	dZovgandomi
 جوی	dZu:j
 جویان	dZujAn
+جویند	dZujand
 جکوزی	dZakuzi
 جگر	dZegaR
 جگربند	dZegaRband
@@ -4912,7 +4936,7 @@ _)	paRAntezbaste:
 خودسترونی	xodsetaRvani
 خودمو	xodamo
 خودکشی	xodkoSi
-خودگشانی	xodgoSni
+خودگشانی	xodgoSAni
 خورجین	xoRdZin
 خورخه	xoRxe:
 خورد	xoRd
@@ -5106,6 +5130,7 @@ _)	paRAntezbaste:
 درندشت	daRandaSt
 درنهایت	daRnahAjat
 درنگ	deRang
+درنگی	deRangi
 دره	daRRe:
 درهم	daRham
 درهمکنش	daRhamkoneS
@@ -5872,6 +5897,7 @@ _)	paRAntezbaste:
 رول	Rol
 رولت	Rolet
 رولحاف	RulahAf
+رولزرویس	RolzRojs
 رولور	RovelveR
 روم	Ravam
 روماتیسم	RomAtism
@@ -6297,7 +6323,7 @@ _)	paRAntezbaste:
 سرافرازانه	saRafRAzAne
 سرافکنده	saRafkande:
 سرامیک	seRAmik
-سرانجام	saRanjAm
+سرانجام	saRandZAm
 سرانگشت	saRangoSt
 سراپرده	saRApaRde:
 سراپردۀ	saRApaRdeje
@@ -6835,7 +6861,7 @@ _)	paRAntezbaste:
 شرکت	SeRkat
 شریعت	SaRi?at
 شریعتمدار	SaRi?atmadAR
-شست	'Sost
+شست	'Sast
 شستشو	SosteSu
 شستم	'Sostam
 شستن	Sostan
@@ -6997,7 +7023,7 @@ _)	paRAntezbaste:
 شکردان	SekaRdAn
 شکرسخن	SekaRsoxan
 شکرشکن	SekaRSekan
-شکرگزار	tSokRgozAR
+شکرگزار	SokRgozAR
 شکریان	SokRijAn
 شکست	Sekast
 شکستنی	Sekastani
@@ -7376,6 +7402,7 @@ _)	paRAntezbaste:
 عزرائیل	ezRAi:l
 عزلت	?ozlat
 عزّت	ezzat
+عسر	?osR
 عسل	a:sal
 عسلویه	?asaluje
 عشا	eSA?
@@ -8161,6 +8188,7 @@ _)	paRAntezbaste:
 قلک	q1ollak
 قلی	q1oli
 قلیان	q1aljAn
+قلیون	q1aljun
 قم	q1om
 قمار	q1omAR
 قماش	q1omAS
@@ -8231,6 +8259,7 @@ _)	paRAntezbaste:
 قیمومیت	q1ejmumijat
 قیه	q1ije
 قیود	q1ojud
+قیوم	q1ajjum
 قیومیت	q1ajjumijat
 قیچک	q1ejtSak
 قیچی	q1ejtSi
@@ -9081,6 +9110,7 @@ _)	paRAntezbaste:
 مرضع	moRze?
 مرضیه	maRzije:
 مرضیۀ	maRzijeje
+مرعی	maR?A
 مرغ	moRq1
 مرغابی	moRq1Abi
 مرفه	moRaffah
@@ -9408,6 +9438,7 @@ _)	paRAntezbaste:
 مطرب	motReb
 مطربان	motRebAn
 مطرح	matRah
+مطلا	motallA
 مطلب	'matlab
 مطلع	mottale:?
 مطلق	motlaq1
@@ -9847,6 +9878,7 @@ _)	paRAntezbaste:
 موثق	movassaq1
 موج	mo:dZ
 موجب	modZeb
+موجد	mudZed
 موجر	mudZeR
 موجه	movadZdZah
 موجود	modZu:d
@@ -10206,6 +10238,7 @@ _)	paRAntezbaste:
 ناوبر	nAvbaR
 ناوبری	nAvbaRi
 ناودان	nAvdAn
+ناودون	nAvdun
 ناودیس	nAvdis
 ناوش	nAveS
 ناوپا	nAvpA
@@ -10281,6 +10314,7 @@ _)	paRAntezbaste:
 نخیل	naxil
 ندا	nedA
 ندامت	nedAmat
+ندبه	nodbe:
 ندرت	nodRat
 ندرتا	nodRatan
 ندم	nadam
@@ -10586,6 +10620,7 @@ _)	paRAntezbaste:
 نوشت	neveSt
 نوشتار	neveStAR
 نوشتجات	neveStedZAt
+نوشد	nuSad
 نوشدارو	nuSdARu
 نوشروان	nuSeRvAn
 نوشیدم	noSidam
@@ -10986,6 +11021,7 @@ _)	paRAntezbaste:
 هول	ho:l
 هولاکو	holAku
 هولاکوخان	holAkuxAn
+هولمز	holmz
 هولوکاست	holokAst
 هولوگراف	hologeRAf
 هولوگرام	hologeRAm
@@ -11548,6 +11584,7 @@ _)	paRAntezbaste:
 پرونده	paRvande:
 پروندۀ	paRvandeje
 پروه	paZuh
+پروپوزال	poRopozAl
 پروژسترون	peRoZesteRon
 پروژه	poRoZe:
 پروژکتور	poRoZektoR
@@ -11914,7 +11951,6 @@ _)	paRAntezbaste:
 چادرشب	tSAdoRSab
 چادرنماز	tSAdoRnamAz
 چادرچاقچوری	tSAdoRtSAq1tSuRi
-چارآبششان	tSARAbSoSAn
 چارت	tSARt
 چارتر	tSARteR
 چارجینگ	tSARdZing
@@ -13024,8 +13060,10 @@ _)	paRAntezbaste:
 گماشد	gomASd
 گمبد	gombad
 گمبرون	gombeRon
+گمت	gomat
 گمراه	gomRAh
 گمرک	gomRok
+گمش	gomaS
 گمشو	gom_So
 گمنام	gomnAm
 گمیشان	gomiSAn
@@ -13198,6 +13236,7 @@ _)	paRAntezbaste:
 یونیت	junit
 یونیزه	jonize
 یونیسف	junisef
+یونیفرم	junifoRm
 یونیورسال	juniveRsAl
 یونیورسیتی	juniveRsiti
 یونیکس	juniks

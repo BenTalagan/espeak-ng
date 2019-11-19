@@ -32,10 +32,12 @@
 #include <espeak-ng/espeak_ng.h>
 #include <espeak-ng/speak_lib.h>
 
+#include "wavegen.h"
+
+#include "synthesize.h"
 #include "speech.h"
 #include "phoneme.h"
 #include "voice.h"
-#include "synthesize.h"
 
 #ifdef INCLUDE_KLATT
 #include "klatt.h"
@@ -80,6 +82,7 @@ static RESONATOR rbreath[N_PEAKS];
 static int harm_sqrt_n = 0;
 
 #define N_LOWHARM  30
+#define MAX_HARMONIC 400 // 400 * 50Hz = 20 kHz, more than enough
 static int harm_inc[N_LOWHARM]; // only for these harmonics do we interpolate amplitude between steps
 static int *harmspect;
 static int hswitch = 0;
@@ -119,12 +122,10 @@ int wcmdq_head = 0;
 int wcmdq_tail = 0;
 
 // pitch,speed,
-int embedded_default[N_EMBEDDED_VALUES]    = { 0,     50, 175, 100, 50,  0,  0, 0, 175, 0, 0, 0, 0, 0, 0 };
+int embedded_default[N_EMBEDDED_VALUES]    = { 0,     50, espeakRATE_NORMAL, 100, 50,  0,  0, 0, espeakRATE_NORMAL, 0, 0, 0, 0, 0, 0 };
 static int embedded_max[N_EMBEDDED_VALUES] = { 0, 0x7fff, 750, 300, 99, 99, 99, 0, 750, 0, 0, 0, 0, 4, 0 };
 
 int current_source_index = 0;
-
-extern FILE *f_wave;
 
 #if HAVE_SONIC_H
 static sonicStream sonicSpeedupStream = NULL;
@@ -888,7 +889,7 @@ static int Wavegen()
 		if (echo_head >= N_ECHO_BUF)
 			echo_head = 0;
 
-		if (out_ptr >= out_end)
+		if (out_ptr + 2 > out_end)
 			return 1;
 	}
 }
@@ -921,7 +922,7 @@ static int PlaySilence(int length, bool resume)
 		if (echo_head >= N_ECHO_BUF)
 			echo_head = 0;
 
-		if (out_ptr >= out_end)
+		if (out_ptr + 2 > out_end)
 			return 1;
 	}
 	return 0;
@@ -974,7 +975,7 @@ static int PlayWave(int length, bool resume, unsigned char *data, int scale, int
 		if (echo_head >= N_ECHO_BUF)
 			echo_head = 0;
 
-		if (out_ptr >= out_end)
+		if (out_ptr + 2 > out_end)
 			return 1;
 	}
 	return 0;
@@ -1151,7 +1152,7 @@ static void SetSynth(int length, int modn, frame_t *fr1, frame_t *fr2, voice_t *
 		return;
 
 	int ix;
-	DOUBLEX next;
+	double next;
 	int length2;
 	int length4;
 	int qix;
@@ -1393,7 +1394,7 @@ static int SpeedUp(short *outbuf, int length_in, int length_out, int end_of_text
 #endif
 
 // Call WavegenFill2, and then speed up the output samples.
-int WavegenFill()
+int WavegenFill(void)
 {
 	int finished;
 	unsigned char *p_start;

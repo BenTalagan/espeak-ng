@@ -19,7 +19,6 @@
 
 .group a
         a        a
-
      @) a (_S1   a
 
      @) acak (_S4  adZak
@@ -30,24 +29,27 @@
 
      @) avru (pa avr'u
 
+.group â
+	â	 a
+
+
 .group b
         b        b
-        bb       _:_!b   // Doubled voiceless consonants
-                        // are spelled with pause before last one
+        bb       b:
 
 .group c
         c        dZ
-        cc       _:_!dZ
+        cc       dZ:
         ce (_S2  dZ%E
 
 .group ç
         ç        tS
-        çç       _:_!tS
+        çç       tS:
         çe (_S2  tS%E
 
 .group d
         d        d
-        dd       _:_!d
+        dd       d:
 	da (_S2  da
 	de (_S2  de
 	dan (_S3  dan
@@ -104,7 +106,7 @@
 
 .group g
         g        g
-        gg       _:_!g
+        gg       g:
         g (L03   J
    L03) g (K     J
 
@@ -159,7 +161,7 @@
 
 .group k
         k        k
-        kk       _:_!k
+        kk       k:
 	ken (_S3  %cen
 
 .group l
@@ -210,9 +212,12 @@
 .group ö
         ö        W
 
+.group ô
+	ô	o
+
 .group p
         p        p
-        pp       _:_!p
+        pp       p:
 
 .group q
         q        k
@@ -253,7 +258,7 @@
 
 .group t
         t        t
-        tt       _:_!t
+        tt       t:
 
 	ta (_S2  ta
 	te (_S2  te
@@ -289,6 +294,10 @@
      @) üyor (_S4  yj%oR
      @) ün (_S2  yn
 
+
+
+.group û
+	û	u  
 
 .group v
         v        v

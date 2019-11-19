@@ -16,9 +16,6 @@
  * along with this program; if not, see: <http://www.gnu.org/licenses/>.
  */
 
-#ifndef EVENT_H
-#define EVENT_H
-
 /*
    Manage events (sentence, word, mark, end,...), is responsible of calling the external
    callback as soon as the relevant audio sample is played.
@@ -38,6 +35,11 @@
    Note: the timeout is checked against the real progress of the audio stream, which depends on pauses or underruns. If the real progress is lower than the expected one, a new timeout starts.
 
  */
+
+#ifndef ESPEAK_NG_EVENT_H
+#define ESPEAK_NG_EVENT_H
+
+#include <espeak-ng/espeak_ng.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -62,6 +64,7 @@ espeak_ng_STATUS event_declare(espeak_EVENT *event);
 void event_terminate(void);
 
 // general functions
+struct timespec;
 void clock_gettime2(struct timespec *ts);
 void add_time_in_ms(struct timespec *ts, int time_in_ms);
 

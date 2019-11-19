@@ -30,19 +30,13 @@
 #include <espeak-ng/espeak_ng.h>
 #include <espeak-ng/speak_lib.h>
 
-#include "speech.h"
 #include "phoneme.h"
 #include "voice.h"
 #include "synthesize.h"
 #include "spect.h"
 #include "ieee80.h"
 
-extern unsigned char pk_shape1[];
-extern int pk_select;
-extern char voice_name[];
-
 static int frame_width;
-int pk_select;
 
 static int default_freq[N_PEAKS] =
 { 200, 500, 1200, 3000, 3500, 4000, 6900, 7800, 9000 };
@@ -193,7 +187,7 @@ static espeak_ng_STATUS LoadFrame(SpectFrame *frame, FILE *stream, int file_form
 		}
 	}
 
-	spect_data = malloc(sizeof(USHORT) * frame->nx);
+	spect_data = malloc(sizeof(unsigned short) * frame->nx);
 
 	if (spect_data == NULL)
 		return ENOMEM;
@@ -235,6 +229,7 @@ double GetFrameRms(SpectFrame *frame, int seq_amplitude)
 	return frame->rms;
 }
 
+#pragma GCC visibility push(default)
 SpectSeq *SpectSeqCreate()
 {
 	SpectSeq *spect = malloc(sizeof(SpectSeq));
@@ -245,7 +240,6 @@ SpectSeq *SpectSeqCreate()
 	spect->frames = NULL;
 	spect->name = NULL;
 
-	pk_select = 1;
 	spect->grid = 1;
 	spect->duration = 0;
 	spect->pitch1 = 0;
@@ -272,6 +266,7 @@ void SpectSeqDestroy(SpectSeq *spect)
 	free(spect->name);
 	free(spect);
 }
+#pragma GCC visibility pop
 
 static float GetFrameLength(SpectSeq *spect, int frame)
 {
@@ -288,6 +283,7 @@ static float GetFrameLength(SpectSeq *spect, int frame)
 	return (spect->frames[ix]->time - spect->frames[frame]->time) * 1000.0 + adjust;
 }
 
+#pragma GCC visibility push(default)
 espeak_ng_STATUS LoadSpectSeq(SpectSeq *spect, const char *filename)
 {
 	short n, temp;
@@ -405,3 +401,4 @@ espeak_ng_STATUS LoadSpectSeq(SpectSeq *spect, const char *filename)
 	fclose(stream);
 	return ENS_OK;
 }
+#pragma GCC visibility pop

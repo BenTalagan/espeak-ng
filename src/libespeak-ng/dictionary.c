@@ -31,11 +31,24 @@
 #include <espeak-ng/speak_lib.h>
 #include <espeak-ng/encoding.h>
 
+#include "dictionary.h"
+#include "numbers.h"
+#include "readclause.h"
+#include "synthdata.h"
+
 #include "speech.h"
 #include "phoneme.h"
 #include "voice.h"
 #include "synthesize.h"
 #include "translate.h"
+
+typedef struct {
+	int points;
+	const char *phonemes;
+	int end_type;
+	char *del_fwd;
+} MatchRecord;
+
 
 int dictionary_skipwords;
 char dictionary_name[40];
@@ -86,7 +99,7 @@ void strncpy0(char *to, const char *from, int size)
 }
 #pragma GCC visibility pop
 
-int Reverse4Bytes(int word)
+static int Reverse4Bytes(int word)
 {
 	// reverse the order of bytes from little-endian to big-endian
 #ifdef ARCH_BIG
@@ -111,7 +124,6 @@ static void InitGroups(Translator *tr)
 	int ix;
 	char *p;
 	char *p_name;
-	unsigned int *pw;
 	unsigned char c, c2;
 	int len;
 
@@ -125,29 +137,26 @@ static void InitGroups(Translator *tr)
 	memset(tr->groups3, 0, sizeof(tr->groups3));
 
 	p = tr->data_dictrules;
-	while (*p != 0) {
+	// If there are no rules in the dictionary, compile_dictrules will not
+	// write a RULE_GROUP_START (written in the for loop), but will write
+	// a RULE_GROUP_END.
+	if (*p != RULE_GROUP_END) while (*p != 0) {
 		if (*p != RULE_GROUP_START) {
-			fprintf(stderr, "Bad rules data in '%s_dict' at 0x%x\n", dictionary_name, (unsigned int)(p - tr->data_dictrules));
+			fprintf(stderr, "Bad rules data in '%s_dict' at 0x%x (%c)\n", dictionary_name, (unsigned int)(p - tr->data_dictrules), *p);
 			break;
 		}
 		p++;
 
 		if (p[0] == RULE_REPLACEMENTS) {
-			pw = (unsigned int *)(((intptr_t)p+4) & ~3); // advance to next word boundary
-			tr->langopts.replace_chars = pw;
-			while (pw[0] != 0)
-				pw += 2; // find the end of the replacement list, each entry is 2 words.
-			p = (char *)(pw+1);
+			p = (char *)(((intptr_t)p+4) & ~3); // advance to next word boundary
+			tr->langopts.replace_chars = (unsigned char *)p;
 
-#ifdef ARCH_BIG
-			pw = (unsigned int *)(tr->langopts.replace_chars);
-			while (*pw != 0) {
-				*pw = Reverse4Bytes(*pw);
-				pw++;
-				*pw = Reverse4Bytes(*pw);
-				pw++;
+			while ( !is_str_totally_null(p, 4) ) {
+				p++;
 			}
-#endif
+
+			while (*p != RULE_GROUP_END) p++;
+			p++;
 			continue;
 		}
 
@@ -199,8 +208,10 @@ int LoadDictionary(Translator *tr, const char *name, int no_error)
 	int size;
 	char fname[sizeof(path_home)+20];
 
-	strncpy(dictionary_name, name, 40); // currently loaded dictionary name
-	strncpy(tr->dictionary_name, name, 40);
+	if (dictionary_name != name)
+		strncpy(dictionary_name, name, 40); // currently loaded dictionary name
+	if (tr->dictionary_name != name)
+		strncpy(tr->dictionary_name, name, 40);
 
 	// Load a pronunciation data file into memory
 	// bytes 0-3:  offset to rules data
@@ -437,7 +448,7 @@ char *WritePhMnemonic(char *phon_out, PHONEME_TAB *ph, PHONEME_LIST *plist, int 
 	int c;
 	int mnem;
 	int len;
-	int first;
+	bool first;
 	int ix = 0;
 	char *p;
 	PHONEME_DATA phdata;
@@ -486,9 +497,9 @@ char *WritePhMnemonic(char *phon_out, PHONEME_TAB *ph, PHONEME_LIST *plist, int 
 		}
 	}
 
-	first = 1;
+	first = true;
 	for (mnem = ph->mnemonic; (c = mnem & 0xff) != 0; mnem = mnem >> 8) {
-		if ((c == '/') && (option_phoneme_variants == 0))
+		if (c == '/')
 			break; // discard phoneme variant indicator
 
 		if (use_ipa) {
@@ -509,7 +520,7 @@ char *WritePhMnemonic(char *phon_out, PHONEME_TAB *ph, PHONEME_LIST *plist, int 
 			ix += utf8_out(c, &phon_out[ix]);
 		} else
 			phon_out[ix++] = c;
-		first = 0;
+		first = false;
 	}
 
 	phon_out = &phon_out[ix];
@@ -570,7 +581,7 @@ const char *GetTranslatedPhonemeString(int phoneme_mode)
 		plist = &phoneme_list[ix];
 
 		WritePhMnemonic(phon_buf2, plist->ph, plist, use_ipa, &flags);
-		if (plist->newword)
+		if (plist->newword & PHLIST_START_OF_WORD && !(plist->newword & (PHLIST_START_OF_SENTENCE | PHLIST_START_OF_CLAUSE)))
 			*buf++ = ' ';
 
 		if ((!plist->newword) || (separate_phonemes == ' ')) {
@@ -584,11 +595,11 @@ const char *GetTranslatedPhonemeString(int phoneme_mode)
 		if (plist->synthflags & SFLAG_SYLLABLE) {
 			if ((stress = plist->stresslevel) > 1) {
 				c = 0;
-				if (stress > 5) stress = 5;
+				if (stress > STRESS_IS_PRIORITY) stress = STRESS_IS_PRIORITY;
 
 				if (use_ipa) {
 					c = 0x2cc; // ipa, secondary stress
-					if (stress > 3)
+					if (stress > STRESS_IS_SECONDARY)
 						c = 0x02c8; // ipa, primary stress
 				} else
 					c = stress_chars[stress];
@@ -853,7 +864,7 @@ static int GetVowelStress(Translator *tr, unsigned char *phonemes, signed char *
 	int stress = -1;
 	int primary_posn = 0;
 
-	vowel_stress[0] = 1;
+	vowel_stress[0] = STRESS_IS_UNSTRESSED;
 	while (((phcode = *phonemes++) != 0) && (count < (N_WORD_PHONEMES/2)-1)) {
 		if ((ph = phoneme_tab[phcode]) == NULL)
 			continue;
@@ -864,20 +875,20 @@ static int GetVowelStress(Translator *tr, unsigned char *phonemes, signed char *
 			if (phcode == phonSTRESS_PREV) {
 				// primary stress on preceeding vowel
 				j = count - 1;
-				while ((j > 0) && (*stressed_syllable == 0) && (vowel_stress[j] < 4)) {
-					if ((vowel_stress[j] != 0) && (vowel_stress[j] != 1)) {
+				while ((j > 0) && (*stressed_syllable == 0) && (vowel_stress[j] < STRESS_IS_PRIMARY)) {
+					if ((vowel_stress[j] != STRESS_IS_DIMINISHED) && (vowel_stress[j] != STRESS_IS_UNSTRESSED)) {
 						// don't promote a phoneme which must be unstressed
-						vowel_stress[j] = 4;
+						vowel_stress[j] = STRESS_IS_PRIMARY;
 
-						if (max_stress < 4) {
-							max_stress = 4;
+						if (max_stress < STRESS_IS_PRIMARY) {
+							max_stress = STRESS_IS_PRIMARY;
 							primary_posn = j;
 						}
 
 						/* reduce any preceding primary stress markers */
 						for (ix = 1; ix < j; ix++) {
-							if (vowel_stress[ix] == 4)
-								vowel_stress[ix] = 3;
+							if (vowel_stress[ix] == STRESS_IS_PRIMARY)
+								vowel_stress[ix] = STRESS_IS_SECONDARY;
 						}
 						break;
 					}
@@ -896,13 +907,13 @@ static int GetVowelStress(Translator *tr, unsigned char *phonemes, signed char *
 
 		if ((ph->type == phVOWEL) && !(ph->phflags & phNONSYLLABIC)) {
 			vowel_stress[count] = (char)stress;
-			if ((stress >= 4) && (stress >= max_stress)) {
+			if ((stress >= STRESS_IS_PRIMARY) && (stress >= max_stress)) {
 				primary_posn = count;
 				max_stress = stress;
 			}
 
 			if ((stress < 0) && (control & 1) && (ph->phflags & phUNSTRESSED))
-				vowel_stress[count] = 1; // weak vowel, must be unstressed
+				vowel_stress[count] = STRESS_IS_UNSTRESSED; // weak vowel, must be unstressed
 
 			count++;
 			stress = -1;
@@ -910,12 +921,12 @@ static int GetVowelStress(Translator *tr, unsigned char *phonemes, signed char *
 			// previous consonant phoneme is syllablic
 			vowel_stress[count] = (char)stress;
 			if ((stress == 0) && (control & 1))
-				vowel_stress[count++] = 1; // syllabic consonant, usually unstressed
+				vowel_stress[count++] = STRESS_IS_UNSTRESSED; // syllabic consonant, usually unstressed
 		}
 
 		*ph_out++ = phcode;
 	}
-	vowel_stress[count] = 1;
+	vowel_stress[count] = STRESS_IS_UNSTRESSED;
 	*ph_out = 0;
 
 	// has the position of the primary stress been specified by $1, $2, etc?
@@ -923,27 +934,27 @@ static int GetVowelStress(Translator *tr, unsigned char *phonemes, signed char *
 		if (*stressed_syllable >= count)
 			*stressed_syllable = count-1; // the final syllable
 
-		vowel_stress[*stressed_syllable] = 4;
-		max_stress = 4;
+		vowel_stress[*stressed_syllable] = STRESS_IS_PRIMARY;
+		max_stress = STRESS_IS_PRIMARY;
 		primary_posn = *stressed_syllable;
 	}
 
-	if (max_stress == 5) {
+	if (max_stress == STRESS_IS_PRIORITY) {
 		// priority stress, replaces any other primary stress marker
 		for (ix = 1; ix < count; ix++) {
-			if (vowel_stress[ix] == 4) {
+			if (vowel_stress[ix] == STRESS_IS_PRIMARY) {
 				if (tr->langopts.stress_flags & S_PRIORITY_STRESS)
-					vowel_stress[ix] = 1;
+					vowel_stress[ix] = STRESS_IS_UNSTRESSED;
 				else
-					vowel_stress[ix] = 3;
+					vowel_stress[ix] = STRESS_IS_SECONDARY;
 			}
 
-			if (vowel_stress[ix] == 5) {
-				vowel_stress[ix] = 4;
+			if (vowel_stress[ix] == STRESS_IS_PRIORITY) {
+				vowel_stress[ix] = STRESS_IS_PRIMARY;
 				primary_posn = ix;
 			}
 		}
-		max_stress = 4;
+		max_stress = STRESS_IS_PRIMARY;
 	}
 
 	*stressed_syllable = primary_posn;
@@ -969,7 +980,7 @@ void ChangeWordStress(Translator *tr, char *word, int new_stress)
 	strcpy((char *)phonetic, word);
 	max_stress = GetVowelStress(tr, phonetic, vowel_stress, &vowel_count, &stressed_syllable, 0);
 
-	if (new_stress >= 4) {
+	if (new_stress >= STRESS_IS_PRIMARY) {
 		// promote to primary stress
 		for (ix = 1; ix < vowel_count; ix++) {
 			if (vowel_stress[ix] >= max_stress) {
@@ -990,7 +1001,7 @@ void ChangeWordStress(Translator *tr, char *word, int new_stress)
 	p = phonetic;
 	while (*p != 0) {
 		if ((phoneme_tab[*p]->type == phVOWEL) && !(phoneme_tab[*p]->phflags & phNONSYLLABIC)) {
-			if ((vowel_stress[ix] == 0) || (vowel_stress[ix] > 1))
+			if ((vowel_stress[ix] == STRESS_IS_DIMINISHED) || (vowel_stress[ix] > STRESS_IS_UNSTRESSED))
 				*word++ = stress_phonemes[(unsigned char)vowel_stress[ix]];
 
 			ix++;
@@ -1028,13 +1039,11 @@ void SetWordStress(Translator *tr, char *output, unsigned int *dictionary_flags,
 	int v_stress;
 	int stressed_syllable; // position of stressed syllable
 	int max_stress_posn;
-	int unstressed_word = 0;
 	char *max_output;
 	int final_ph;
 	int final_ph2;
 	int mnem;
 	int opt_length;
-	int done;
 	int stressflags;
 	int dflags = 0;
 	int first_primary;
@@ -1046,13 +1055,6 @@ void SetWordStress(Translator *tr, char *output, unsigned int *dictionary_flags,
 	unsigned char phonetic[N_WORD_PHONEMES];
 
 	static char consonant_types[16] = { 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0 };
-
-	/* stress numbers  STRESS_BASE +
-	    0  diminished, unstressed within a word
-	    1  unstressed, weak
-	    2
-	    3  secondary stress
-	    4  main stress */
 
 	stressflags = tr->langopts.stress_flags;
 
@@ -1070,31 +1072,33 @@ void SetWordStress(Translator *tr, char *output, unsigned int *dictionary_flags,
 	}
 	if (ix == 0) return;
 	final_ph = phonetic[ix-1];
-	final_ph2 =  phonetic[ix-2];
+	final_ph2 = phonetic[(ix > 1) ? ix-2 : ix-1];
 
 	max_output = output + (N_WORD_PHONEMES-3); // check for overrun
 
+
 	// any stress position marked in the xx_list dictionary ?
+	bool unstressed_word = false;
 	stressed_syllable = dflags & 0x7;
 	if (dflags & 0x8) {
 		// this indicates a word without a primary stress
 		stressed_syllable = dflags & 0x3;
-		unstressed_word = 1;
+		unstressed_word = true;
 	}
 
 	max_stress = max_stress_input = GetVowelStress(tr, phonetic, vowel_stress, &vowel_count, &stressed_syllable, 1);
 	if ((max_stress < 0) && dictionary_flags)
-		max_stress = 0;
+		max_stress = STRESS_IS_DIMINISHED;
 
 	// heavy or light syllables
 	ix = 1;
 	for (p = phonetic; *p != 0; p++) {
 		if ((phoneme_tab[p[0]]->type == phVOWEL) && !(phoneme_tab[p[0]]->phflags & phNONSYLLABIC)) {
 			int weight = 0;
-			int lengthened = 0;
+			bool lengthened = false;
 
 			if (phoneme_tab[p[1]]->code == phonLENGTHEN)
-				lengthened = 1;
+				lengthened = true;
 
 			if (lengthened || (phoneme_tab[p[0]]->phflags & phLONG)) {
 				// long vowel, increase syllable weight
@@ -1124,16 +1128,16 @@ void SetWordStress(Translator *tr, char *output, unsigned int *dictionary_flags,
 		// stress on second syllable
 		if ((stressed_syllable == 0) && (vowel_count > 2)) {
 			stressed_syllable = 2;
-			if (max_stress == 0)
-				vowel_stress[stressed_syllable] = 4;
-			max_stress = 4;
+			if (max_stress == STRESS_IS_DIMINISHED)
+				vowel_stress[stressed_syllable] = STRESS_IS_PRIMARY;
+			max_stress = STRESS_IS_PRIMARY;
 		}
 		break;
 	case 10:  // penultimate, but final if only 1 or 2 syllables
 		if (stressed_syllable == 0) {
 			if (vowel_count < 4) {
-				vowel_stress[vowel_count - 1] = 4;
-				max_stress = 4;
+				vowel_stress[vowel_count - 1] = STRESS_IS_PRIMARY;
+				max_stress = STRESS_IS_PRIMARY;
 				break;
 			}
 		}
@@ -1143,7 +1147,7 @@ void SetWordStress(Translator *tr, char *output, unsigned int *dictionary_flags,
 
 		if (stressed_syllable == 0) {
 			// no explicit stress - stress the penultimate vowel
-			max_stress = 4;
+			max_stress = STRESS_IS_PRIMARY;
 
 			if (vowel_count > 2) {
 				stressed_syllable = vowel_count - 2;
@@ -1174,7 +1178,7 @@ void SetWordStress(Translator *tr, char *output, unsigned int *dictionary_flags,
 						stressed_syllable = vowel_count - 1;
 				}
 
-				if ((vowel_stress[stressed_syllable] == 0) || (vowel_stress[stressed_syllable] == 1)) {
+				if ((vowel_stress[stressed_syllable] == STRESS_IS_DIMINISHED) || (vowel_stress[stressed_syllable] == STRESS_IS_UNSTRESSED)) {
 					// but this vowel is explicitly marked as unstressed
 					if (stressed_syllable > 1)
 						stressed_syllable--;
@@ -1187,7 +1191,7 @@ void SetWordStress(Translator *tr, char *output, unsigned int *dictionary_flags,
 			// only set the stress if it's not already marked explicitly
 			if (vowel_stress[stressed_syllable] < 0) {
 				// don't stress if next and prev syllables are stressed
-				if ((vowel_stress[stressed_syllable-1] < 4) || (vowel_stress[stressed_syllable+1] < 4))
+				if ((vowel_stress[stressed_syllable-1] < STRESS_IS_PRIMARY) || (vowel_stress[stressed_syllable+1] < STRESS_IS_PRIMARY))
 					vowel_stress[stressed_syllable] = max_stress;
 			}
 		}
@@ -1200,13 +1204,13 @@ void SetWordStress(Translator *tr, char *output, unsigned int *dictionary_flags,
 
 			while (stressed_syllable > 0) {
 				// find the last vowel which is not unstressed
-				if (vowel_stress[stressed_syllable] < 0) {
-					vowel_stress[stressed_syllable] = 4;
+				if (vowel_stress[stressed_syllable] < STRESS_IS_DIMINISHED) {
+					vowel_stress[stressed_syllable] = STRESS_IS_PRIMARY;
 					break;
 				} else
 					stressed_syllable--;
 			}
-			max_stress = 4;
+			max_stress = STRESS_IS_PRIMARY;
 		}
 		break;
 	case 4: // stress on antipenultimate vowel
@@ -1215,9 +1219,9 @@ void SetWordStress(Translator *tr, char *output, unsigned int *dictionary_flags,
 			if (stressed_syllable < 1)
 				stressed_syllable = 1;
 
-			if (max_stress == 0)
-				vowel_stress[stressed_syllable] = 4;
-			max_stress = 4;
+			if (max_stress == STRESS_IS_DIMINISHED)
+				vowel_stress[stressed_syllable] = STRESS_IS_PRIMARY;
+			max_stress = STRESS_IS_PRIMARY;
 		}
 		break;
 	case 5:
@@ -1237,8 +1241,8 @@ void SetWordStress(Translator *tr, char *output, unsigned int *dictionary_flags,
 				else
 					stressed_syllable = guess_ru[vowel_count];
 			}
-			vowel_stress[stressed_syllable] = 4;
-			max_stress = 4;
+			vowel_stress[stressed_syllable] = STRESS_IS_PRIMARY;
+			max_stress = STRESS_IS_PRIMARY;
 		}
 		break;
 	case 6: // LANG=hi stress on the last heaviest syllable
@@ -1248,7 +1252,7 @@ void SetWordStress(Translator *tr, char *output, unsigned int *dictionary_flags,
 
 			// find the heaviest syllable, excluding the final syllable
 			for (ix = 1; ix < (vowel_count-1); ix++) {
-				if (vowel_stress[ix] < 0) {
+				if (vowel_stress[ix] < STRESS_IS_DIMINISHED) {
 					if ((wt = syllable_weight[ix]) >= max_weight) {
 						max_weight = wt;
 						stressed_syllable = ix;
@@ -1264,38 +1268,38 @@ void SetWordStress(Translator *tr, char *output, unsigned int *dictionary_flags,
 				stressed_syllable = 1;
 			}
 
-			vowel_stress[stressed_syllable] = 4;
-			max_stress = 4;
+			vowel_stress[stressed_syllable] = STRESS_IS_PRIMARY;
+			max_stress = STRESS_IS_PRIMARY;
 		}
 		break;
 	case 7: // LANG=tr, the last syllable for any vowel marked explicitly as unstressed
 		if (stressed_syllable == 0) {
 			stressed_syllable = vowel_count - 1;
 			for (ix = 1; ix < vowel_count; ix++) {
-				if (vowel_stress[ix] == 1) {
+				if (vowel_stress[ix] == STRESS_IS_UNSTRESSED) {
 					stressed_syllable = ix-1;
 					break;
 				}
 			}
-			vowel_stress[stressed_syllable] = 4;
-			max_stress = 4;
+			vowel_stress[stressed_syllable] = STRESS_IS_PRIMARY;
+			max_stress = STRESS_IS_PRIMARY;
 		}
 		break;
 	case 9: // mark all as stressed
 		for (ix = 1; ix < vowel_count; ix++) {
-			if (vowel_stress[ix] < 0)
-				vowel_stress[ix] = 4;
+			if (vowel_stress[ix] < STRESS_IS_DIMINISHED)
+				vowel_stress[ix] = STRESS_IS_PRIMARY;
 		}
 		break;
 	case 12: // LANG=kl (Greenlandic)
 		long_vowel = 0;
 		for (ix = 1; ix < vowel_count; ix++) {
-			if (vowel_stress[ix] == 4)
-				vowel_stress[ix] = 3; // change marked stress (consonant clusters) to secondary (except the last)
+			if (vowel_stress[ix] == STRESS_IS_PRIMARY)
+				vowel_stress[ix] = STRESS_IS_SECONDARY; // change marked stress (consonant clusters) to secondary (except the last)
 
 			if (vowel_length[ix] > 0) {
 				long_vowel = ix;
-				vowel_stress[ix] = 3; // give secondary stress to all long vowels
+				vowel_stress[ix] = STRESS_IS_SECONDARY; // give secondary stress to all long vowels
 			}
 		}
 
@@ -1312,66 +1316,79 @@ void SetWordStress(Translator *tr, char *output, unsigned int *dictionary_flags,
 					stressed_syllable = vowel_count - 1;
 			}
 		}
-		vowel_stress[stressed_syllable] = 4;
-		max_stress = 4;
+		vowel_stress[stressed_syllable] = STRESS_IS_PRIMARY;
+		max_stress = STRESS_IS_PRIMARY;
 		break;
 	case 13: // LANG=ml, 1st unless 1st vowel is short and 2nd is long
 		if (stressed_syllable == 0) {
 			stressed_syllable = 1;
 			if ((vowel_length[1] == 0) && (vowel_count > 2) && (vowel_length[2] > 0))
 				stressed_syllable = 2;
-			vowel_stress[stressed_syllable] = 4;
-			max_stress = 4;
+			vowel_stress[stressed_syllable] = STRESS_IS_PRIMARY;
+			max_stress = STRESS_IS_PRIMARY;
 		}
 		break;
 	}
 
-	if ((stressflags & S_FINAL_VOWEL_UNSTRESSED) && ((control & 2) == 0) && (vowel_count > 2) && (max_stress_input < 3) && (vowel_stress[vowel_count - 1] == 4)) {
+	if ((stressflags & S_FINAL_VOWEL_UNSTRESSED) && ((control & 2) == 0) && (vowel_count > 2) && (max_stress_input < STRESS_IS_SECONDARY) && (vowel_stress[vowel_count - 1] == STRESS_IS_PRIMARY)) {
 		// Don't allow stress on a word-final vowel
 		// Only do this if there is no suffix phonemes to be added, and if a stress position was not given explicitly
 		if (phoneme_tab[final_ph]->type == phVOWEL) {
-			vowel_stress[vowel_count - 1] = 1;
-			vowel_stress[vowel_count - 2] = 4;
+			vowel_stress[vowel_count - 1] = STRESS_IS_UNSTRESSED;
+			vowel_stress[vowel_count - 2] = STRESS_IS_PRIMARY;
 		}
 	}
 
 	// now guess the complete stress pattern
-	if (max_stress < 4)
-		stress = 4; // no primary stress marked, use for 1st syllable
+	if (max_stress < STRESS_IS_PRIMARY)
+		stress = STRESS_IS_PRIMARY; // no primary stress marked, use for 1st syllable
 	else
-		stress = 3;
+		stress = STRESS_IS_SECONDARY;
 
-	if (unstressed_word == 0) {
+	if (unstressed_word == false) {
 		if ((stressflags & S_2_SYL_2) && (vowel_count == 3)) {
 			// Two syllable word, if one syllable has primary stress, then give the other secondary stress
-			if (vowel_stress[1] == 4)
-				vowel_stress[2] = 3;
-			if (vowel_stress[2] == 4)
-				vowel_stress[1] = 3;
+			if (vowel_stress[1] == STRESS_IS_PRIMARY)
+				vowel_stress[2] = STRESS_IS_SECONDARY;
+			if (vowel_stress[2] == STRESS_IS_PRIMARY)
+				vowel_stress[1] = STRESS_IS_SECONDARY;
 		}
 
-		if ((stressflags & S_INITIAL_2) && (vowel_stress[1] < 0)) {
+		if ((stressflags & S_INITIAL_2) && (vowel_stress[1] < STRESS_IS_DIMINISHED)) {
 			// If there is only one syllable before the primary stress, give it a secondary stress
-			if ((vowel_count > 3) && (vowel_stress[2] >= 4))
-				vowel_stress[1] = 3;
+			if ((vowel_count > 3) && (vowel_stress[2] >= STRESS_IS_PRIMARY))
+				vowel_stress[1] = STRESS_IS_SECONDARY;
 		}
 	}
 
-	done = 0;
+	bool done = false;
 	first_primary = 0;
 	for (v = 1; v < vowel_count; v++) {
-		if (vowel_stress[v] < 0) {
-			if ((stressflags & S_FINAL_NO_2) && (stress < 4) && (v == vowel_count-1)) {
+		if (vowel_stress[v] < STRESS_IS_DIMINISHED) {
+			if ((stressflags & S_FINAL_NO_2) && (stress < STRESS_IS_PRIMARY) && (v == vowel_count-1)) {
 				// flag: don't give secondary stress to final vowel
-			} else if ((stressflags & 0x8000) && (done == 0)) {
+			} else if ((stressflags & 0x8000) && (done == false)) {
 				vowel_stress[v] = (char)stress;
-				done = 1;
-				stress = 3; // use secondary stress for remaining syllables
-			} else if ((vowel_stress[v-1] <= 1) && ((vowel_stress[v+1] <= 1) || ((stress == 4) && (vowel_stress[v+1] <= 2)))) {
+				done = true;
+				stress = STRESS_IS_SECONDARY; // use secondary stress for remaining syllables
+			} else if ((vowel_stress[v-1] <= STRESS_IS_UNSTRESSED) && ((vowel_stress[v+1] <= STRESS_IS_UNSTRESSED) || ((stress == STRESS_IS_PRIMARY) && (vowel_stress[v+1] <= STRESS_IS_NOT_STRESSED)))) {
 				// trochaic: give stress to vowel surrounded by unstressed vowels
 
-				if ((stress == 3) && (stressflags & S_NO_AUTO_2))
+				if ((stress == STRESS_IS_SECONDARY) && (stressflags & S_NO_AUTO_2))
 					continue; // don't use secondary stress
+
+				// don't put secondary stress on a light syllable if the rest of the word (excluding last syllable) contains a heavy syllable
+				if ((v > 1) && (stressflags & S_2_TO_HEAVY) && (syllable_weight[v] == 0)) {
+					bool skip = false;
+					for (int i = v; i < vowel_count - 1; i++) {
+						if (syllable_weight[i] > 0) {
+							skip = true;
+							break;
+						}
+					}
+					if (skip == true)
+						continue;
+				}
 
 				if ((v > 1) && (stressflags & S_2_TO_HEAVY) && (syllable_weight[v] == 0) && (syllable_weight[v+1] > 0)) {
 					// don't put secondary stress on a light syllable which is followed by a heavy syllable
@@ -1381,17 +1398,17 @@ void SetWordStress(Translator *tr, char *output, unsigned int *dictionary_flags,
 				// should start with secondary stress on the first syllable, or should it count back from
 				// the primary stress and put secondary stress on alternate syllables?
 				vowel_stress[v] = (char)stress;
-				done = 1;
-				stress = 3; // use secondary stress for remaining syllables
+				done = true;
+				stress = STRESS_IS_SECONDARY; // use secondary stress for remaining syllables
 			}
 		}
 
-		if (vowel_stress[v] >= 4) {
+		if (vowel_stress[v] >= STRESS_IS_PRIMARY) {
 			if (first_primary == 0)
 				first_primary = v;
 			else if (stressflags & S_FIRST_PRIMARY) {
 				// reduce primary stresses after the first to secondary
-				vowel_stress[v] = 3;
+				vowel_stress[v] = STRESS_IS_SECONDARY;
 			}
 		}
 	}
@@ -1403,7 +1420,7 @@ void SetWordStress(Translator *tr, char *output, unsigned int *dictionary_flags,
 			tonic = tr->langopts.unstressed_wd2; // more than one syllable, used secondary stress as the main stress
 	}
 
-	max_stress = 0;
+	max_stress = STRESS_IS_DIMINISHED;
 	max_stress_posn = 0;
 	for (v = 1; v < vowel_count; v++) {
 		if (vowel_stress[v] >= max_stress) {
@@ -1416,7 +1433,7 @@ void SetWordStress(Translator *tr, char *output, unsigned int *dictionary_flags,
 		// find position of highest stress, and replace it by 'tonic'
 
 		// don't disturb an explicitly set stress by 'unstress-at-end' flag
-		if ((tonic > max_stress) || (max_stress <= 4))
+		if ((tonic > max_stress) || (max_stress <= STRESS_IS_PRIMARY))
 			vowel_stress[max_stress_posn] = (char)tonic;
 		max_stress = tonic;
 	}
@@ -1434,7 +1451,7 @@ void SetWordStress(Translator *tr, char *output, unsigned int *dictionary_flags,
 		if ((tr->langopts.vowel_pause & 0x30) && (ph->type == phVOWEL)) {
 			// word starts with a vowel
 
-			if ((tr->langopts.vowel_pause & 0x20) && (vowel_stress[1] >= 4))
+			if ((tr->langopts.vowel_pause & 0x20) && (vowel_stress[1] >= STRESS_IS_PRIMARY))
 				*output++ = phonPAUSE_NOLINK; // not to be replaced by link
 			else
 				*output++ = phonPAUSE_VSHORT; // break, but no pause
@@ -1454,26 +1471,26 @@ void SetWordStress(Translator *tr, char *output, unsigned int *dictionary_flags,
 			v_stress = vowel_stress[v];
 			tr->prev_last_stress = v_stress;
 
-			if (v_stress <= 1) {
+			if (v_stress <= STRESS_IS_UNSTRESSED) {
 				if ((v > 1) && (max_stress >= 2) && (stressflags & S_FINAL_DIM) && (v == (vowel_count-1))) {
 					// option: mark unstressed final syllable as diminished
-					v_stress = 0;
+					v_stress = STRESS_IS_DIMINISHED;
 				} else if ((stressflags & S_NO_DIM) || (v == 1) || (v == (vowel_count-1))) {
 					// first or last syllable, or option 'don't set diminished stress'
-					v_stress = 1;
-				} else if ((v == (vowel_count-2)) && (vowel_stress[vowel_count-1] <= 1)) {
+					v_stress = STRESS_IS_UNSTRESSED;
+				} else if ((v == (vowel_count-2)) && (vowel_stress[vowel_count-1] <= STRESS_IS_UNSTRESSED)) {
 					// penultimate syllable, followed by an unstressed final syllable
-					v_stress = 1;
+					v_stress = STRESS_IS_UNSTRESSED;
 				} else {
 					// unstressed syllable within a word
-					if ((vowel_stress[v-1] < 0) || ((stressflags & S_MID_DIM) == 0)) {
-						v_stress = 0; // change to 0 (diminished stress)
+					if ((vowel_stress[v-1] < STRESS_IS_DIMINISHED) || ((stressflags & S_MID_DIM) == 0)) {
+						v_stress = STRESS_IS_DIMINISHED;
 						vowel_stress[v] = v_stress;
 					}
 				}
 			}
 
-			if ((v_stress == 0) || (v_stress > 1))
+			if ((v_stress == STRESS_IS_DIMINISHED) || (v_stress > STRESS_IS_UNSTRESSED))
 				*output++ = stress_phonemes[v_stress]; // mark stress of all vowels except 1 (unstressed)
 
 			if (vowel_stress[v] > max_stress)
@@ -1481,15 +1498,15 @@ void SetWordStress(Translator *tr, char *output, unsigned int *dictionary_flags,
 
 			if ((*p == phonLENGTHEN) && ((opt_length = tr->langopts.param[LOPT_IT_LENGTHEN]) & 1)) {
 				// remove lengthen indicator from non-stressed syllables
-				int shorten = 0;
+				bool shorten = false;
 
 				if (opt_length & 0x10) {
 					// only allow lengthen indicator on the highest stress syllable in the word
 					if (v != max_stress_posn)
-						shorten = 1;
-				} else if (v_stress < 4) {
-					// only allow lengthen indicator if stress >= 4.
-					shorten = 1;
+						shorten = true;
+				} else if (v_stress < STRESS_IS_PRIMARY) {
+					// only allow lengthen indicator if stress >= STRESS_IS_PRIMARY.
+					shorten = true;
 				}
 
 				if (shorten)
@@ -1515,7 +1532,6 @@ void AppendPhonemes(Translator *tr, char *string, int size, const char *ph)
 
 	const char *p;
 	unsigned char c;
-	int unstress_mark;
 	int length;
 
 	length = strlen(ph) + strlen(string);
@@ -1523,21 +1539,21 @@ void AppendPhonemes(Translator *tr, char *string, int size, const char *ph)
 		return;
 
 	// any stressable vowel ?
-	unstress_mark = 0;
+	bool unstress_mark = false;
 	p = ph;
 	while ((c = *p++) != 0) {
 		if (c >= n_phoneme_tab) continue;
 
 		if (phoneme_tab[c]->type == phSTRESS) {
 			if (phoneme_tab[c]->std_length < 4)
-				unstress_mark = 1;
+				unstress_mark = true;
 		} else {
 			if (phoneme_tab[c]->type == phVOWEL) {
 				if (((phoneme_tab[c]->phflags & phUNSTRESSED) == 0) &&
-				    (unstress_mark == 0)) {
+				    (unstress_mark == false)) {
 					tr->word_stressed_count++;
 				}
-				unstress_mark = 0;
+				unstress_mark = false;
 				tr->word_vowel_count++;
 			}
 		}
@@ -1590,7 +1606,7 @@ static void MatchRule(Translator *tr, char *word[], char *word_start, int group_
 	int n_bytes;
 	int add_points;
 	int command;
-	int check_atstart;
+	bool check_atstart;
 	unsigned int *flags;
 
 	MatchRecord match;
@@ -1627,7 +1643,7 @@ static void MatchRule(Translator *tr, char *word[], char *word_start, int group_
 		letter_w = 0;
 		distance_right = -6; // used to reduce points for matches further away the current letter
 		distance_left = -2;
-		check_atstart = 0;
+		check_atstart = false;
 
 		match.points = 1;
 		match.end_type = 0;
@@ -1661,7 +1677,7 @@ static void MatchRule(Translator *tr, char *word[], char *word_start, int group_
 					failed = 2; // matched OK
 					break;
 				case RULE_PRE_ATSTART: // pre rule with implied 'start of word'
-					check_atstart = 1;
+					check_atstart = true;
 					unpron_ignore = 0;
 					match_type = RULE_PRE;
 					break;
@@ -2113,7 +2129,7 @@ static void MatchRule(Translator *tr, char *word[], char *word_start, int group_
 
 		if ((failed == 2) && (unpron_ignore == 0)) {
 			// do we also need to check for 'start of word' ?
-			if ((check_atstart == 0) || (pre_ptr[-1] == ' ')) {
+			if ((check_atstart == false) || (pre_ptr[-1] == ' ')) {
 				if (check_atstart)
 					match.points += 4;
 
@@ -2452,7 +2468,7 @@ int TransposeAlphabet(Translator *tr, char *text)
 	const char *map;
 	char *p = text;
 	char *p2;
-	int all_alpha = 1;
+	bool all_alpha = true;
 	int bits;
 	int acc;
 	int pairs_start;
@@ -2479,12 +2495,12 @@ int TransposeAlphabet(Translator *tr, char *text)
 					if (map[c - min] > 0)
 						buf[bufix++] = map[c - min];
 					else {
-						all_alpha = 0;
+						all_alpha = false;
 						break;
 					}
 				}
 			} else {
-				all_alpha = 0;
+				all_alpha = false;
 				break;
 			}
 		}
@@ -2587,7 +2603,7 @@ static const char *LookupDict2(Translator *tr, const char *word, const char *wor
 	// This corresponds to the last matching entry in the *_list file.
 
 	while (*p != 0) {
-		next = p + p[0];
+		next = p + (p[0] & 0xff);
 
 		if (((p[1] & 0x7f) != wlen) || (memcmp(word, &p[2], wlen & 0x3f) != 0)) {
 			// bit 6 of wlen indicates whether the word has been compressed; so we need to match on this also.
@@ -2777,14 +2793,14 @@ static const char *LookupDict2(Translator *tr, const char *word, const char *wor
 
 		if (option_phonemes & espeakPHONEMES_TRACE) {
 			char ph_decoded[N_WORD_PHONEMES];
-			int textmode;
+			bool textmode;
 
 			DecodePhonemes(phonetic, ph_decoded);
 
 			if ((dictionary_flags & FLAG_TEXTMODE) == 0)
-				textmode = 0;
+				textmode = false;
 			else
-				textmode = 1;
+				textmode = true;
 
 			if (textmode == translator->langopts.textmode) {
 				// only show this line if the word translates to phonemes, not replacement text
@@ -2802,7 +2818,7 @@ static const char *LookupDict2(Translator *tr, const char *word, const char *wor
 		}
 
 		ix = utf8_in(&c, word);
-		if ((word[ix] == 0) && !IsAlpha(c))
+		if (flags != NULL && (word[ix] == 0) && !IsAlpha(c))
 			flags[0] |= FLAG_MAX3;
 		return word_end;
 
@@ -2960,8 +2976,12 @@ int Lookup(Translator *tr, const char *word, char *ph_out)
 	if (flags[0] & FLAG_TEXTMODE) {
 		say_as = option_sayas;
 		option_sayas = 0; // don't speak replacement word as letter names
-		strncpy0(text, word1, sizeof(text));
-		flags0 = TranslateWord(tr, text, NULL, NULL);
+		// NOTE: TranslateRoman checks text[-2], so pad the start of text to prevent
+		// it reading data on the stack.
+		text[0] = ' ';
+		text[1] = ' ';
+		strncpy0(text+2, word1, sizeof(text)-2);
+		flags0 = TranslateWord(tr, text+2, NULL, NULL);
 		strcpy(ph_out, word_phonemes);
 		option_sayas = say_as;
 	}
@@ -3005,7 +3025,11 @@ int RemoveEnding(Translator *tr, char *word, int end_type, char *word_copy)
 	};
 
 	static const char *add_e_additions[] = {
-		"c", "rs", "ir", "ur", "ath", "ns", "u", NULL
+		"c", "rs", "ir", "ur", "ath", "ns", "u",
+		"spong", // sponge
+		"rang", // strange
+		"larg", // large
+		NULL
 	};
 
 	for (word_end = word; *word_end != ' '; word_end++) {

@@ -28,7 +28,9 @@
 #include <espeak-ng/speak_lib.h>
 #include <espeak-ng/encoding.h>
 
-#include "speech.h"
+#include "intonation.h"
+#include "synthdata.h"
+
 #include "phoneme.h"
 #include "voice.h"
 #include "synthesize.h"
@@ -287,18 +289,6 @@ static TONE_NUCLEUS tone_nucleus_table[N_TONE_NUCLEUS_TABLE] = {
 	{ PITCHfall,   70, 18, PITCHfall,   70, 24, NULL, 32, 20, 0 },      // 12 test
 };
 
-// index by 0=. 1=, 2=?, 3=! 4=none, 5=emphasized
-unsigned char punctuation_to_tone[INTONATION_TYPES][PUNCT_INTONATIONS] = {
-	{  0,  1,  2,  3, 0, 4 },
-	{  0,  1,  2,  3, 0, 4 },
-	{  5,  6,  2,  3, 0, 4 },
-	{  5,  7,  1,  3, 0, 4 },
-	{  8,  9, 10,  3, 0, 0 },
-	{  8,  8, 10,  3, 0, 0 },
-	{ 11, 11, 11, 11, 0, 0 }, // 6 test
-	{ 12, 12, 12, 12, 0, 0 }
-};
-
 int n_tunes = 0;
 TUNE *tunes = NULL;
 
@@ -429,7 +419,7 @@ static int SetHeadIntonation(SYLLABLE *syllable_tab, TUNE *tune, int syl_ix, int
 	int increment = 0;
 	int n_steps = 0;
 	int stage; // onset, head, last
-	int initial;
+	bool initial;
 	int overflow_ix = 0;
 	int pitch_range;
 	int pitch_range_abs;
@@ -437,14 +427,14 @@ static int SetHeadIntonation(SYLLABLE *syllable_tab, TUNE *tune, int syl_ix, int
 	int n_unstressed = 0;
 	int unstressed_ix = 0;
 	int unstressed_inc;
-	int used_onset = 0;
+	bool used_onset = false;
 	int head_final = end_ix;
 	int secondary = 2;
 
 	pitch_range = (tune->head_end - tune->head_start) << 8;
 	pitch_range_abs = abs(pitch_range);
 	drops = drops_0; // this should be controled by tune->head_drops
-	initial = 1;
+	initial = true;
 
 	stage = 0;
 	if (tune->onset == 255)
@@ -468,7 +458,7 @@ static int SetHeadIntonation(SYLLABLE *syllable_tab, TUNE *tune, int syl_ix, int
 			// a primary stress
 
 			if ((initial) || (stress == 5)) {
-				initial = 0;
+				initial = false;
 				overflow_ix = 0;
 
 				if (tune->onset == 255) {
@@ -478,7 +468,7 @@ static int SetHeadIntonation(SYLLABLE *syllable_tab, TUNE *tune, int syl_ix, int
 					// a pitch has been specified for the onset syllable, don't include it in the pitch incrementing
 					n_steps = count_increments(syllable_tab, syl_ix+1, head_final, 4);
 					pitch = tune->onset << 8;
-					used_onset = 1;
+					used_onset = true;
 				}
 
 				if (n_steps > tune->head_max_steps)
@@ -495,7 +485,7 @@ static int SetHeadIntonation(SYLLABLE *syllable_tab, TUNE *tune, int syl_ix, int
 			} else {
 				if (used_onset) {
 					stage = 1;
-					used_onset = 0;
+					used_onset = false;
 					pitch = tune->head_start << 8;
 					n_steps++;
 				} else if (n_steps > 0)
@@ -538,14 +528,14 @@ static int SetHeadIntonation(SYLLABLE *syllable_tab, TUNE *tune, int syl_ix, int
 /* Calculate pitches until next RESET or tonic syllable, or end.
     Increment pitch if stress is >= min_stress.
     Used for tonic segment */
-static int calc_pitch_segment(SYLLABLE *syllable_tab, int ix, int end_ix, TONE_HEAD *th, TONE_NUCLEUS *tn, int min_stress, int continuing)
+static int calc_pitch_segment(SYLLABLE *syllable_tab, int ix, int end_ix, TONE_HEAD *th, TONE_NUCLEUS *tn, int min_stress, bool continuing)
 {
 	int stress;
 	int pitch = 0;
 	int increment = 0;
 	int n_primary = 0;
 	int n_steps = 0;
-	int initial;
+	bool initial;
 	int overflow = 0;
 	int n_overflow;
 	int pitch_range;
@@ -561,7 +551,7 @@ static int calc_pitch_segment(SYLLABLE *syllable_tab, int ix, int end_ix, TONE_H
 	pitch_range_abs = abs(pitch_range);
 
 	if (continuing) {
-		initial = 0;
+		initial = false;
 		overflow = 0;
 		n_overflow = 5;
 		overflow_tab = continue_tab;
@@ -569,7 +559,7 @@ static int calc_pitch_segment(SYLLABLE *syllable_tab, int ix, int end_ix, TONE_H
 	} else {
 		n_overflow = th->n_overflow;
 		overflow_tab = th->overflow;
-		initial = 1;
+		initial = true;
 	}
 
 	while (ix < end_ix) {
@@ -580,7 +570,7 @@ static int calc_pitch_segment(SYLLABLE *syllable_tab, int ix, int end_ix, TONE_H
 			// a primary stress
 
 			if ((initial) || (stress == 5)) {
-				initial = 0;
+				initial = false;
 				overflow = 0;
 				n_steps = n_primary = count_increments(syllable_tab, ix, end_ix, min_stress);
 
@@ -729,13 +719,13 @@ static int calc_pitches(SYLLABLE *syllable_tab, int control, int start, int end,
 	TONE_HEAD *th;
 	TONE_NUCLEUS *tn;
 	int drop;
-	int continuing = 0;
+	bool continuing = false;
 
 	if (control == 0)
 		return calc_pitches2(syllable_tab, start, end, tune_number);
 
 	if (start > 0)
-		continuing = 1;
+		continuing = true;
 
 	th = &tone_head_table[tune_number];
 	tn = &tone_nucleus_table[tune_number];
@@ -789,8 +779,8 @@ static void CalcPitches_Tone(Translator *tr)
 	int final_stressed = 0;
 
 	int tone_ph;
-	int pause;
-	int tone_promoted;
+	bool pause;
+	bool tone_promoted;
 	PHONEME_TAB *tph;
 	PHONEME_TAB *prev_tph; // forget across word boundary
 	PHONEME_TAB *prevw_tph; // remember across word boundary
@@ -825,8 +815,8 @@ static void CalcPitches_Tone(Translator *tr)
 			p->tone_ph = PhonemeCode('7'); // change default tone (tone 1) to falling tone at end of clause
 	}
 
-	pause = 1;
-	tone_promoted = 0;
+	pause = true;
+	tone_promoted = false;
 
 	prev_p = p = &phoneme_list[0];
 	prev_tph = prevw_tph = phoneme_tab[phonPAUSE];
@@ -834,7 +824,7 @@ static void CalcPitches_Tone(Translator *tr)
 	// perform tone sandhi
 	for (ix = 0; ix < n_phoneme_list; ix++, p++) {
 		if ((p->type == phPAUSE) && (p->ph->std_length > 50)) {
-			pause = 1; // there is a pause since the previous vowel
+			pause = true; // there is a pause since the previous vowel
 			prevw_tph = phoneme_tab[phonPAUSE]; // forget previous tone
 		}
 
@@ -863,14 +853,14 @@ static void CalcPitches_Tone(Translator *tr)
 				if (tone_ph == 0) {
 					if (pause || tone_promoted) {
 						tone_ph = PhonemeCode2('5', '5'); // no previous vowel, use tone 1
-						tone_promoted = 1;
+						tone_promoted = true;
 					} else
 						tone_ph = PhonemeCode2('1', '1'); // default tone 5
 
 					p->tone_ph = tone_ph;
 					tph = phoneme_tab[tone_ph];
 				} else
-					tone_promoted = 0;
+					tone_promoted = false;
 
 				if (ix == final_stressed) {
 					if ((tph->mnemonic == 0x3535 ) || (tph->mnemonic == 0x3135)) {
@@ -904,7 +894,7 @@ static void CalcPitches_Tone(Translator *tr)
 
 			prev_p = p;
 			prevw_tph = prev_tph = tph;
-			pause = 0;
+			pause = false;
 		}
 	}
 

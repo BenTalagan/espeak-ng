@@ -1,7 +1,7 @@
 
 // Italian translation rules
 // This file is UTF-8 encoded
-// Last update: 2017 november 2 by Christian Leo Mameli <llajta2012@gmail.com>
+// Last update: 2019 october 19 by Christian Leo Mameli <llajta2012@gmail.com>
 // letter groups
 // A  any vowel
 // C  any consonant
@@ -48,6 +48,8 @@
 	abb) assa (L07_	'assa
 	_L04Z) auguri (_	'awguRI
 	astano (_	'astano   // verbs
+	ass) aggia (L07_	'adZ:a/
+	acchi) appa (L07_	'ap:a
 
 .group à
 	à	''a
@@ -76,6 +78,7 @@
 	ch (a	tS
 	ch (o	tS
 	ch (u	tS
+	ch (_	tS
 	ci (A	tS
 	cci (A	tS:
 	@) co (lA_	=ko
@@ -103,6 +106,7 @@
 	chiedi (L04_	kj'EdI
 	chiudi (L04_	kj'udI
 	canta (L07_	k'anta
+	cerca (L07_	tS'e@-*ka
 	conta (L07_	k'onta
 	ra) cconta (L07_	k:'Onta
 
@@ -121,6 +125,7 @@
 	@) dinano (_	=dina/no   // verbs
 	i) dano (_	=dano  // verbs
 	i) dino (_	=dino
+	_) data (L07_	d'ata
 	due (_	d'ue   // numbers
 	dieci (_	dj'EtSi
 	day (_	d'eI   // foreign
@@ -174,8 +179,8 @@
 	e (ssa_	e
 	e (tr	E
 	e (ti	E
-	e (vi_	E
-	e (vo_	E
+	e (vA_	E
+	av) ev (A_+	ev
 	@) e (volA_	'e
 	e (zA	E
 	CC) eggia (no_	'EdZ:a
@@ -205,7 +210,8 @@
 .group f
 	f	f
 	ff	f:
-	@A)	f (ilo_  =f
+	@A) fi (lo_	=fi
+	filia (_	fil'ia
 	i)	f (erA_	=f
 	fobi (A_	fob'i;
 	fob (A_	=fob
@@ -238,6 +244,7 @@
 	gl (ì	l^
 	gli (A	l^
 	_) gl	gl
+
 	gli (cA	gli
 	gli (chA	gli
 	gn	n^
@@ -275,7 +282,7 @@
 	l) i (A	%i
 	r)	i (A	%i
 	_C) ie (_	'ie
-	i (o	i
+	C) i (o_	i
 	@) ia (_	=i%a
 	@) ià (_	j'a
 	X) ia (_	'ia
@@ -291,7 +298,7 @@
 	metr) ie (_	'ie
 	t) ia (_	'ia
 	t) ie (_	'ie
-        @)      io (_S1q   =i%o // ?
+	@) io (_S1q	=i%o // ?
 	a) i (+	j
 	à) i (+	j
 	o)	i (+	j
@@ -339,6 +346,7 @@
 	imer (L04_	'Ime@-*
 	ass) ister (L04_	'iste@-*
 	r) ider (L04_	'ide@-*
+	cons) idera (L07_	'ide@-*a
 	ivano (_	'ivano   // verbs
 	i (ficano_	'i
 	ifichino (_	'ifikino
@@ -351,6 +359,7 @@
 	j            dZ
 	@) j (_	j
 	A) j (A	j
+	_) ju (ve	ju // latin
 
 .group k
 	k	k
@@ -363,6 +372,7 @@
 	@A) lo (gA_	=lo
 	@A) lo (ghY_	=lo
 	_) l' (P2t	l
+	scu) laccia (L07_	l'atS:a/
 	lasciati (_	l,a/S'atI
 		lascia (L07_	l'aSa
 	_) lecca (L07_	l'ek:a
@@ -378,6 +388,7 @@
 	_) m' (P2t	m
 	_) mezz' (P5t	mEdz:
 	metter (L04_	m'ette@-* // Pron.s Verbs
+	metti (L04_	m'e:t:i
 	mmetter (L04_	m:'et:e@-*
 	manda (L05_	m'anda
 	mostra (L07_	m'Ost@-*a
@@ -479,6 +490,7 @@
 		over (L04_	'ovE@-*
 	d) over (L04_	Ov'E@-*
 	m) order (L04_	'O:@-*de@-*
+	s) ogna (L07_	'on^a
 	ovano (_ 'ovano   // verbs
 	osano (_	'ozano
 	o (CCano_	'O
@@ -505,6 +517,9 @@
 	tera) pi (A_	p'i
 	tro) pi (A_	p'i
 	pensa (L07_	p'Ensa
+	premer (L04_	p@-*'Eme@-*
+	pervader (L07_	pe@-*v'ade@-*
+	picchia (L07	p'ik:i,a
 
 .group q
 	q	k
@@ -537,6 +552,7 @@
 	rrai (_	R*'a:I
 	@) rvano (_	=@-*v,ano
 	CA) rcano (_	=@-*k,ano   // verbs
+	riserva (taL07_	@-*iz,e@-*v'a
 
 .group s
 	s	s
@@ -549,6 +565,8 @@
 	scii	Sij
 	sci (ì	S%i
 	sch (Y	sk
+	A) sio (_	zi/o
+	A) sio	zio
 	sh	S   // foreign words
 	@A)	sia (_	z'ia
 	@A) sie (_	z'ie
@@ -748,4 +766,5 @@
         A_)  - (_D        _
 	C_)  - (_D        _
 	's (_S2t	s
+
 

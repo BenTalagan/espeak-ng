@@ -9,23 +9,70 @@ The espeak-ng project is a fork of the espeak project.
 
 ### 1.49.3 - (In Development)
 
-bug fixes:
+*  Add a `--disable-rpath` option to prevent libtool hardcoding rpaths in the executable.
+*  Renamed the `hy-arevmda` language to `hyw`, following the 2018-03-30 change to the
+   BCP 47 language subtag registry making the newly registered `hyw` language code the
+   preferred value for `hy-arevmda`. This change keeps support for detecting the
+   `hy-arevela` and `hy-arevmda` language tags.
+*  Support any length replacement rule strings for the source part of the rule (replacing
+   from the 'source' string to the 'target' string).
+*  Add more tests to check the various parts of espeak-ng.
+*  Various changes to clean up the codebase.
+*  Fix various compiler warnings (`-Winitialized`, `-Wmissing-prototypes`, `-Wreturn-type`,
+   and `-Wunused`).
 
-*  Fix several issues with the emoji support.
+security:
+
+*  Fix several crashes in the emoji support.
+*  Fix several static analysis issues detected by Coverity Scan.
+*  Fix several static analysis issues detected by Microsoft Visual C++ `/analyze`.
+*  `oss-fuzz` support for the SSML logic.
+*  Fix running `make check` with `-fsanitize=address` (LLVM AddressSanitizer).
+
+documentation:
+
+*  document the Kirshenbaum phoneme transcription scheme (used as the basis of espeak phonemes).
+*  document the X-SAMPA phoneme transcription scheme.
+*  document the Conlang X-SAMPA phoneme transcription scheme.
+
+emoji:
+
+*  Update the emoji to Unicode 11.0.
+*  Update the emoji translations to CLDR 33.1.
+*  gd (Scottish Gaelic)
+*  sd (Sindhi)
+*  yue (Chinese (Cantonese))
 
 new languages:
 
+*  ba (Bashkir) -- tc-dl, Valdis Vitolins
 *  hak (Hakka Chinese) -- Chen Chien-ting
+*  ht (Haitian Creole) -- Valdis Vitolins
+*  kk (Kazakh) -- boracasli14, Valdis Vitolins
+*  py (Pyash) -- Logan Streondj
+*  quc (K'iche') -- Valdis Vitolins
+*  ru-lv (Russian Latvia) -- Valdis Vitolins
+*  shn (Shan Tay Yai) -- ronaldaug
+*  uz (Uzbek) -- Valdis Vitolins
 
 updated languages:
 
 *  af (Afrikaans) -- Christo de Klerk
+*  ar (Arabic) -- Valdis Vitolins, Mark Readdie, Hesham Assabahi
+*  cmn (Chinese Mandarin) -- materia-cccp
+*  de (German) -- Reece Dunn, Karl Eick
+*  en (English) -- Reece Dunn
+*  fa (Farsi/Persian) -- Shadyar Khodayari
 *  fi (Finnish) -- Juho Hiltunen
-*  fr (French) -- Shallowmallow
+*  fr (French) -- Shallowmallow, Karl Eick, maiido, Reece Dunn
+*  ku (Kurdish) -- rojanu
 *  it (Italian) -- chrislm
 *  lv (Latvian) -- Valdis Vitolins
 *  my (Myanmar/Burmese) -- Min Maung
+*  ru (Russian) -- Valdis Vitolins, Reece Dunn
+*  sd (Sindhi) -- Ejaz Shah
 *  ur (Urdu) -- Ejaz Shah
+*  vi (Vietnamese) -- Anh Hoang Nguyen
 
 ### 1.49.2 - 2017-09-24
 
@@ -68,6 +115,9 @@ updated languages:
 *  it (Italian) -- chrislm
 *  ky (Kyrgyz) -- JRMeyer
 *  lv (Latvian) -- Valdis Vitolins
+*  mk (Macedonian) -- Reece Dunn. Updated the romanization support:
+   *  Don't map đ and ć to Serbian ђ and ћ (use Macedonian ѓ and ќ instead).
+   *  Support additional romanizations: ISO 9, BGN/PCGN, Cadastre, and MJMS/SSO.
 *  mr (Marathi) -- Vardhan
 *  or (Oriya) -- Vardhan
 *  ur (Urdu) -- Ejaz Shah

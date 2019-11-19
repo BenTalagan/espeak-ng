@@ -135,8 +135,9 @@ endphoneme
 
 phoneme n
   vcd alv nas
+  lengthmod 4
   ipa n
-  IF nextPh(isVelar) THEN // /n/ is velarized to /N/ when before velar stops
+  IF nextPhW(isVelar) THEN // /n/ is velarized to /N/ when before velar stops
     ChangePhoneme(N)
   ENDIF
   CALL base1/n
@@ -307,6 +308,15 @@ phoneme I#   // used for [I] which may be [@] in some accents
   IF MbrolaSynth THEN
     ChangePhoneme(I)
   ENDIF
+
+  IfNextVowelAppend(;)
+  ChangePhoneme(I2)
+endphoneme
+
+
+phoneme I2#   // used for [I] in -ed adjectives which may be [E] in some accents
+  vwl  starttype #@  endtype #@
+  unstressed
 
   IfNextVowelAppend(;)
   ChangePhoneme(I2)

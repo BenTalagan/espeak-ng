@@ -48,6 +48,12 @@
 #include <espeak-ng/speak_lib.h>
 #include <espeak-ng/encoding.h>
 
+#include "dictionary.h"
+#include "mbrola.h"
+#include "readclause.h"
+#include "synthdata.h"
+#include "wavegen.h"
+
 #include "speech.h"
 #include "phoneme.h"
 #include "voice.h"
@@ -117,12 +123,12 @@ static int dispatch_audio(short *outbuf, int length, espeak_EVENT *event)
 				if (out_samplerate != 0) {
 					// sound was previously open with a different sample rate
 					audio_object_close(my_audio);
+					out_samplerate = 0;
 #ifdef HAVE_SLEEP
 					sleep(1);
 #endif
 				}
 #endif
-				out_samplerate = voice_samplerate;
 #ifdef HAVE_PCAUDIOLIB_AUDIO_H
 				int error = audio_object_open(my_audio, AUDIO_OBJECT_FORMAT_S16LE, voice_samplerate, 1);
 				if (error != 0) {
@@ -131,12 +137,25 @@ static int dispatch_audio(short *outbuf, int length, espeak_EVENT *event)
 					return -1;
 				}
 #endif
+				out_samplerate = voice_samplerate;
 #ifdef USE_ASYNC
 				if ((my_mode & ENOUTPUT_MODE_SYNCHRONOUS) == 0)
 					event_init();
 #endif
 			}
 		}
+
+#ifdef HAVE_PCAUDIOLIB_AUDIO_H
+		if (out_samplerate == 0) {
+			int error = audio_object_open(my_audio, AUDIO_OBJECT_FORMAT_S16LE, voice_samplerate, 1);
+			if (error != 0) {
+				fprintf(stderr, "error: %s\n", audio_object_strerror(my_audio, error));
+				err = ENS_AUDIO_ERROR;
+				return -1;
+			}
+			out_samplerate = voice_samplerate;
+		}
+#endif
 
 #ifdef HAVE_PCAUDIOLIB_AUDIO_H
 		if (outbuf && length && a_wave_can_be_played) {
@@ -327,6 +346,25 @@ ESPEAK_NG_API void espeak_ng_InitializePath(const char *path)
 	strcpy(path_home, PATH_ESPEAK_DATA);
 }
 
+const int param_defaults[N_SPEECH_PARAM] = {
+	0,   // silence (internal use)
+	espeakRATE_NORMAL, // rate wpm
+	100, // volume
+	50,  // pitch
+	50,  // range
+	0,   // punctuation
+	0,   // capital letters
+	0,   // wordgap
+	0,   // options
+	0,   // intonation
+	0,
+	0,
+	0,   // emphasis
+	0,   // line length
+	0,   // voice type
+};
+
+
 ESPEAK_NG_API espeak_ng_STATUS espeak_ng_Initialize(espeak_ng_ERROR_CONTEXT *context)
 {
 	int param;
@@ -359,7 +397,7 @@ ESPEAK_NG_API espeak_ng_STATUS espeak_ng_Initialize(espeak_ng_ERROR_CONTEXT *con
 	for (param = 0; param < N_SPEECH_PARAM; param++)
 		param_stack[0].parameter[param] = saved_parameters[param] = param_defaults[param];
 
-	SetParameter(espeakRATE, 175, 0);
+	SetParameter(espeakRATE, espeakRATE_NORMAL, 0);
 	SetParameter(espeakVOLUME, 100, 0);
 	SetParameter(espeakCAPITALS, option_capitals, 0);
 	SetParameter(espeakPUNCTUATION, option_punctuation, 0);
@@ -521,7 +559,7 @@ espeak_ng_STATUS sync_espeak_Synth(unsigned int unique_identifier, const void *t
 
 	}
 	if (skip_characters || skip_words || skip_sentences)
-		skipping_text = 1;
+		skipping_text = true;
 
 	end_character_position = end_position;
 
@@ -550,7 +588,7 @@ espeak_ng_STATUS sync_espeak_Synth_Mark(unsigned int unique_identifier, const vo
 
 	if (index_mark != NULL) {
 		strncpy0(skip_marker, index_mark, sizeof(skip_marker));
-		skipping_text = 1;
+		skipping_text = true;
 	}
 
 	end_character_position = end_position;
@@ -895,10 +933,14 @@ ESPEAK_NG_API espeak_ng_STATUS espeak_ng_Terminate(void)
 
 	free(event_list);
 	event_list = NULL;
+
 	free(outbuf);
 	outbuf = NULL;
+
 	FreePhData();
 	FreeVoiceList();
+
+	DeleteTranslator(translator);
 	translator = NULL;
 
 	if (p_decoder != NULL) {
@@ -909,6 +951,7 @@ ESPEAK_NG_API espeak_ng_STATUS espeak_ng_Terminate(void)
 	return ENS_OK;
 }
 
+const char *version_string = PACKAGE_VERSION;
 ESPEAK_API const char *espeak_Info(const char **ptr)
 {
 	if (ptr != NULL)

@@ -32,7 +32,13 @@
 #include <espeak-ng/speak_lib.h>
 #include <espeak-ng/encoding.h>
 
-#include "speech.h"
+#include "dictionary.h"
+#include "intonation.h"
+#include "mbrola.h"
+#include "setlengths.h"
+#include "synthdata.h"
+#include "wavegen.h"
+
 #include "phoneme.h"
 #include "voice.h"
 #include "synthesize.h"
@@ -44,9 +50,6 @@ static void SmoothSpect(void);
 // list of phonemes in a clause
 int n_phoneme_list = 0;
 PHONEME_LIST phoneme_list[N_PHONEME_LIST+1];
-
-int mbrola_delay;
-char mbrola_name[20];
 
 SPEED_FACTORS speed;
 
@@ -675,7 +678,7 @@ static void SmoothSpect(void)
 	int ix;
 	int len;
 	int pk;
-	int modified;
+	bool modified;
 	int allowed;
 	int diff;
 
@@ -711,7 +714,7 @@ static void SmoothSpect(void)
 				break; // doesn't follow on from previous frame
 
 			frame = frame2 = (frame_t *)q[2];
-			modified = 0;
+			modified = false;
 
 			if (frame->frflags & FRFLAG_BREAK)
 				break;
@@ -740,16 +743,16 @@ static void SmoothSpect(void)
 				allowed = (allowed * len)/256;
 
 				if (diff > allowed) {
-					if (modified == 0) {
+					if (modified == false) {
 						frame2 = CopyFrame(frame, 0);
-						modified = 1;
+						modified = true;
 					}
 					frame2->ffreq[pk] = frame1->ffreq[pk] + allowed;
 					q[2] = (intptr_t)frame2;
 				} else if (diff < -allowed) {
-					if (modified == 0) {
+					if (modified == false) {
 						frame2 = CopyFrame(frame, 0);
-						modified = 1;
+						modified = true;
 					}
 					frame2->ffreq[pk] = frame1->ffreq[pk] - allowed;
 					q[2] = (intptr_t)frame2;
@@ -785,7 +788,7 @@ static void SmoothSpect(void)
 			}
 
 			frame = frame2 = (frame_t *)q[3];
-			modified = 0;
+			modified = false;
 
 			if (frame1->frflags & FRFLAG_BREAK)
 				break;
@@ -807,16 +810,16 @@ static void SmoothSpect(void)
 				allowed = (allowed * len)/256;
 
 				if (diff > allowed) {
-					if (modified == 0) {
+					if (modified == false) {
 						frame2 = CopyFrame(frame, 0);
-						modified = 1;
+						modified = true;
 					}
 					frame2->ffreq[pk] = frame1->ffreq[pk] + allowed;
 					q[3] = (intptr_t)frame2;
 				} else if (diff < -allowed) {
-					if (modified == 0) {
+					if (modified == false) {
 						frame2 = CopyFrame(frame, 0);
-						modified = 1;
+						modified = true;
 					}
 					frame2->ffreq[pk] = frame1->ffreq[pk] - allowed;
 					q[3] = (intptr_t)frame2;
@@ -1147,7 +1150,7 @@ int Generate(PHONEME_LIST *phoneme_list, int *n_ph, bool resume)
 	unsigned char *amp_env;
 	PHONEME_TAB *ph;
 	int use_ipa = 0;
-	int done_phoneme_marker;
+	bool done_phoneme_marker;
 	int vowelstart_prev;
 	char phoneme_name[16];
 	static int sourceix = 0;
@@ -1210,10 +1213,10 @@ int Generate(PHONEME_LIST *phoneme_list, int *n_ph, bool resume)
 
 			sourceix = (p->sourceix & 0x7ff) + clause_start_char;
 
-			if (p->newword & 4)
+			if (p->newword & PHLIST_START_OF_SENTENCE)
 				DoMarker(espeakEVENT_SENTENCE, sourceix, 0, count_sentences); // start of sentence
 
-			if (p->newword & 1)
+			if (p->newword & PHLIST_START_OF_WORD)
 				DoMarker(espeakEVENT_WORD, sourceix, p->sourceix >> 11, clause_start_word + word_count++); // NOTE, this count doesn't include multiple-word pronunciations in *_list. eg (of a)
 		}
 
@@ -1222,14 +1225,14 @@ int Generate(PHONEME_LIST *phoneme_list, int *n_ph, bool resume)
 		if ((p->prepause > 0) && !(p->ph->phflags & phPREVOICE))
 			DoPause(p->prepause, 1);
 
-		done_phoneme_marker = 0;
+		done_phoneme_marker = false;
 		if (option_phoneme_events && (p->ph->code != phonEND_WORD)) {
 			if ((p->type == phVOWEL) && (prev->type == phLIQUID || prev->type == phNASAL)) {
 				// For vowels following a liquid or nasal, do the phoneme event after the vowel-start
 			} else {
 				WritePhMnemonic(phoneme_name, p->ph, p, use_ipa, NULL);
 				DoPhonemeMarker(espeakEVENT_PHONEME, sourceix, 0, phoneme_name);
-				done_phoneme_marker = 1;
+				done_phoneme_marker = true;
 			}
 		}
 
@@ -1490,7 +1493,7 @@ int Generate(PHONEME_LIST *phoneme_list, int *n_ph, bool resume)
 				DoSpect2(ph, 1, &fmtp, p, modulation);
 			}
 
-			if ((option_phoneme_events) && (done_phoneme_marker == 0)) {
+			if ((option_phoneme_events) && (done_phoneme_marker == false)) {
 				WritePhMnemonic(phoneme_name, p->ph, p, use_ipa, NULL);
 				DoPhonemeMarker(espeakEVENT_PHONEME, sourceix, 0, phoneme_name);
 			}
@@ -1551,7 +1554,7 @@ int SpeakNextClause(int control)
 	}
 
 	if (text_decoder_eof(p_decoder)) {
-		skipping_text = 0;
+		skipping_text = false;
 		return 0;
 	}
 

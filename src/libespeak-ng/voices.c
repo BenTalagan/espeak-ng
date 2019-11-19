@@ -38,6 +38,11 @@
 #include <espeak-ng/speak_lib.h>
 #include <espeak-ng/encoding.h>
 
+#include "dictionary.h"
+#include "readclause.h"
+#include "synthdata.h"
+#include "wavegen.h"
+
 #include "speech.h"
 #include "phoneme.h"
 #include "voice.h"
@@ -57,7 +62,7 @@ static int formant_rate_22050[9] = { 240, 170, 170, 170, 170, 170, 170, 170, 170
 int formant_rate[9]; // values adjusted for actual sample rate
 
 #define DEFAULT_LANGUAGE_PRIORITY  5
-#define N_VOICES_LIST  250
+#define N_VOICES_LIST  300
 static int n_voices_list = 0;
 static espeak_VOICE *voices_list[N_VOICES_LIST];
 
@@ -109,11 +114,7 @@ enum {
 
 	// these need a phoneme table to have been specified
 	V_REPLACE,
-	V_CONSONANTS,
-
-	// these are alpha features that need to be tested and categorized
-	V_LETTER_VOWEL
-
+	V_CONSONANTS
 };
 
 static MNEM_TAB options_tab[] = {
@@ -172,8 +173,6 @@ static MNEM_TAB keyword_tab[] = {
 	{ "l_length_mods",    0x100+LOPT_LENGTH_MODS },
 	{ "apostrophe",       0x100+LOPT_APOSTROPHE },
 
-	// these are alpha features that need to be tested and categorized
-	{ "letterVowel", V_LETTER_VOWEL },
 	{ NULL, 0 }
 };
 
@@ -390,9 +389,9 @@ void VoiceReset(int tone_only)
 	voice->samplerate = samplerate_native;
 	memset(voice->klattv, 0, sizeof(voice->klattv));
 
-	speed.fast_settings[0] = 450;
+	speed.fast_settings[0] = espeakRATE_MAXIMUM;
 	speed.fast_settings[1] = 800;
-	speed.fast_settings[2] = 175;
+	speed.fast_settings[2] = espeakRATE_NORMAL;
 
 	voice->roughness = 2;
 
@@ -496,8 +495,8 @@ voice_t *LoadVoice(const char *vname, int control)
 	int value2;
 	int langix = 0;
 	int tone_only = control & 2;
-	int language_set = 0;
-	int phonemes_set = 0;
+	bool language_set = false;
+	bool phonemes_set = false;
 	int stress_amps_set = 0;
 	int stress_lengths_set = 0;
 	int stress_add_set = 0;
@@ -627,9 +626,9 @@ voice_t *LoadVoice(const char *vname, int control)
 			}
 
 			// only act on the first language line
-			if (language_set == 0) {
+			if (language_set == false) {
 				language_type = strtok(language_name, "-");
-				language_set = 1;
+				language_set = true;
 				strcpy(translator_name, language_type);
 				strcpy(new_dictionary, language_type);
 				strcpy(phonemes_name, language_type);
@@ -698,7 +697,7 @@ voice_t *LoadVoice(const char *vname, int control)
 			stress_add_set = Read8Numbers(p, stress_add);
 			break;
 		case V_INTONATION: // intonation
-			sscanf(p, "%d %d", &option_tone_flags, &option_tone2);
+			sscanf(p, "%d", &option_tone_flags);
 			if ((option_tone_flags & 0xff) != 0) {
 				if (langopts)
 					langopts->intonation_group = option_tone_flags & 0xff;
@@ -752,10 +751,10 @@ voice_t *LoadVoice(const char *vname, int control)
 				fprintf(stderr, "Cannot set stressopt: language not set, or is invalid.\n");
 			break;
 		case V_REPLACE:
-			if (phonemes_set == 0) {
+			if (phonemes_set == false) {
 				// must set up a phoneme table before we can lookup phoneme mnemonics
 				SelectPhonemeTableName(phonemes_name);
-				phonemes_set = 1;
+				phonemes_set = true;
 			}
 			PhonemeReplacement(p);
 			break;
@@ -864,27 +863,6 @@ voice_t *LoadVoice(const char *vname, int control)
 		case V_MAINTAINER:
 		case V_STATUS:
 			break;
-
-		case V_LETTER_VOWEL: {
-			char str[5] = "";
-			char c = '0';
-			char *endptr = NULL;
-			sscanf(p, "%s", str);
-			// assume a hex value if string starts with "0x"
-			if (str[0] == '0' && str[1] == 'x') {
-				c = strtoul(str, &endptr, 16);
-				if (errno == ERANGE)
-					fprintf(stderr, "letterVowel out of range.\n");
-			}
-			else  {// otherwise, assume a single letter
-				c = str[0];
-				if (c < 97 || c > 122) // valid values are a-z, ascii 97-122
-					fprintf(stderr, "letterVowel out of range.\n");
-			}
- 			new_translator->letter_bits[c] = (new_translator->letter_bits[c] & 0x40) | 0x81; // keep value for group 6 (front vowels e,i,y)
-			break;
-			}
-
 		default:
 			if ((key & 0xff00) == 0x100) {
 				if (langopts)
@@ -1423,8 +1401,10 @@ static void GetVoices(const char *path, int len_path_voices, int is_language_fil
 		return;
 
 	do {
-		if (n_voices_list >= (N_VOICES_LIST-2))
+		if (n_voices_list >= (N_VOICES_LIST-2)) {
+			fprintf(stderr, "Warning: maximum number %d of (N_VOICES_LIST = %d - 1) reached\n", n_voices_list + 1, N_VOICES_LIST);
 			break; // voices list is full
+		}
 
 		if (FindFileData.cFileName[0] != '.') {
 			sprintf(fname, "%s%c%s", path, PATHSEP, FindFileData.cFileName);
@@ -1456,8 +1436,10 @@ static void GetVoices(const char *path, int len_path_voices, int is_language_fil
 		return;
 
 	while ((ent = readdir(dir)) != NULL) {
-		if (n_voices_list >= (N_VOICES_LIST-2))
+		if (n_voices_list >= (N_VOICES_LIST-2)) {
+			fprintf(stderr, "Warning: maximum number %d of (N_VOICES_LIST = %d - 1) reached\n", n_voices_list + 1, N_VOICES_LIST);
 			break; // voices list is full
+		}
 
 		if (ent->d_name[0] == '.')
 			continue;
@@ -1487,6 +1469,42 @@ static void GetVoices(const char *path, int len_path_voices, int is_language_fil
 }
 
 #pragma GCC visibility push(default)
+
+ESPEAK_NG_API espeak_ng_STATUS espeak_ng_SetVoiceByFile(const char *filename)
+{
+	int ix;
+	espeak_VOICE voice_selector;
+	char *variant_name;
+	static char buf[60];
+
+	strncpy0(buf, filename, sizeof(buf));
+
+	variant_name = ExtractVoiceVariantName(buf, 0, 1);
+
+	for (ix = 0;; ix++) {
+		// convert voice name to lower case  (ascii)
+		if ((buf[ix] = tolower(buf[ix])) == 0)
+			break;
+	}
+
+	memset(&voice_selector, 0, sizeof(voice_selector));
+	voice_selector.name = (char *)filename; // include variant name in voice stack ??
+
+	// first check for a voice with this filename
+	// This may avoid the need to call espeak_ListVoices().
+
+	if (LoadVoice(buf, 0x10) != NULL) {
+		if (variant_name[0] != 0)
+			LoadVoice(variant_name, 2);
+
+		DoVoiceChange(voice);
+		voice_selector.languages = voice->language_name;
+		SetVoiceStack(&voice_selector, variant_name);
+		return ENS_OK;
+	}
+
+	return ENS_VOICE_NOT_FOUND;
+}
 
 ESPEAK_NG_API espeak_ng_STATUS espeak_ng_SetVoiceByName(const char *name)
 {

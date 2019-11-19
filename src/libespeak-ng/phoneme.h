@@ -17,6 +17,11 @@
  * along with this program; if not, see: <http://www.gnu.org/licenses/>.
  */
 
+#ifndef ESPEAK_NG_PHONEME_H
+#define ESPEAK_NG_PHONEME_H
+
+#include <espeak-ng/espeak_ng.h>
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -172,23 +177,23 @@ phoneme_feature_t phoneme_feature_from_string(const char *feature);
 #define phFLAGBIT_LOCAL 31 // used during compilation
 
 // phoneme properties
-#define phUNSTRESSED   (1 << phFLAGBIT_UNSTRESSED)
-#define phVOICELESS    (1 << phFLAGBIT_VOICELESS)
-#define phVOICED       (1 << phFLAGBIT_VOICED)
-#define phSIBILANT     (1 << phFLAGBIT_SIBILANT)
-#define phNOLINK       (1 << phFLAGBIT_NOLINK)
-#define phTRILL        (1 << phFLAGBIT_TRILL)
-#define phPALATAL      (1 << phFLAGBIT_PALATAL)
-#define phBRKAFTER     (1 << phFLAGBIT_BRKAFTER)
-#define phNONSYLLABIC  (1 << phFLAGBIT_NONSYLLABIC)
-#define phLONG         (1 << phFLAGBIT_LONG)
-#define phLENGTHENSTOP (1 << phFLAGBIT_LENGTHENSTOP)
-#define phRHOTIC       (1 << phFLAGBIT_RHOTIC)
-#define phNOPAUSE      (1 << phFLAGBIT_NOPAUSE)
-#define phPREVOICE     (1 << phFLAGBIT_PREVOICE)
-#define phFLAG1        (1 << phFLAGBIT_FLAG1)
-#define phFLAG2        (1 << phFLAGBIT_FLAG2)
-#define phLOCAL        (1 << phFLAGBIT_LOCAL)
+#define phUNSTRESSED   (1U << phFLAGBIT_UNSTRESSED)
+#define phVOICELESS    (1U << phFLAGBIT_VOICELESS)
+#define phVOICED       (1U << phFLAGBIT_VOICED)
+#define phSIBILANT     (1U << phFLAGBIT_SIBILANT)
+#define phNOLINK       (1U << phFLAGBIT_NOLINK)
+#define phTRILL        (1U << phFLAGBIT_TRILL)
+#define phPALATAL      (1U << phFLAGBIT_PALATAL)
+#define phBRKAFTER     (1U << phFLAGBIT_BRKAFTER)
+#define phNONSYLLABIC  (1U << phFLAGBIT_NONSYLLABIC)
+#define phLONG         (1U << phFLAGBIT_LONG)
+#define phLENGTHENSTOP (1U << phFLAGBIT_LENGTHENSTOP)
+#define phRHOTIC       (1U << phFLAGBIT_RHOTIC)
+#define phNOPAUSE      (1U << phFLAGBIT_NOPAUSE)
+#define phPREVOICE     (1U << phFLAGBIT_PREVOICE)
+#define phFLAG1        (1U << phFLAGBIT_FLAG1)
+#define phFLAG2        (1U << phFLAGBIT_FLAG2)
+#define phLOCAL        (1U << phFLAGBIT_LOCAL)
 
 // fixed phoneme code numbers, these can be used from the program code
 #define phonCONTROL     1
@@ -218,8 +223,6 @@ phoneme_feature_t phoneme_feature_from_string(const char *feature);
 #define phonSTRESS_TONIC 26
 #define phonPAUSE_CLAUSE 27
 #define phonVOWELTYPES   28  // 28 to 33
-
-extern const unsigned char pause_phonemes[8];  // 0, vshort, short, pause, long, glottalstop
 
 #define N_PHONEME_TABS     150     // number of phoneme tables
 #define N_PHONEME_TAB      256     // max phonemes in a phoneme table
@@ -277,17 +280,12 @@ typedef struct {
 #define PH(c1, c2) (c2<<8)+c1          // combine two characters into an integer for phoneme name
 #define PH3(c1, c2, c3) (c3<<16)+(c2<<8)+c1
 #define PhonemeCode2(c1, c2) PhonemeCode((c2<<8)+c1)
-int LookupPhonemeString(const char *string);
-int PhonemeCode(unsigned int mnem);
-
-const char *EncodePhonemes(const char *p, char *outptr, int *bad_phoneme);
-void DecodePhonemes(const char *inptr, char *outptr);
-
-extern const char *WordToString(unsigned int word);
 
 extern PHONEME_TAB_LIST phoneme_tab_list[N_PHONEME_TABS];
 extern int phoneme_tab_number;
 
 #ifdef __cplusplus
 }
+#endif
+
 #endif
