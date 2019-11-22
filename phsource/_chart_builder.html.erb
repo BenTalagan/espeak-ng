@@ -60,7 +60,7 @@
   <tr>
     <th></th>
   <% langs.each do |l| %>
-    <th style="white-space:nowrap"><button type='button' class='toggler' data-class='<%= l.name %>'>❤</button> <span class='<%= l %>'><%= l.name %></span></th>
+    <th style="white-space:nowrap"><button type='button' class='toggler' data-class='<%= l.name %>'>❤</button> <span class=''><%= l.name %></span></th>
   <% end %>  
   </tr>
   
@@ -87,9 +87,9 @@
           </div>
         </td>
         <% elsif l.parent && chart_sources[l.parent.name][ph] %>
-          <td class='inherited'><div class='inherited'>Inherited from <%= l.parent.name %></div></td>
+          <td class='inherited'><div class='inherited <%= l.name %>'>Inherited from <%= l.parent.name %></div></td>
         <% else %>
-          <td class='absent'><div class='absent'>Absent</div></td>
+          <td class='absent'><div class='absent  <%= l.name %>'>Absent</div></td>
         <% end %>
       
       </td>
