@@ -1,0 +1,47 @@
+<html>
+
+<head>
+  <script
+    src="https://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
+</head>
+
+<body>
+  
+  <style>
+    .comment {
+      background-color:lightgrey;
+      padding:5px;
+    }
+    .header {
+      min-width:150px;
+    }
+  </style>
+    
+  <table>
+    <tr>
+      <th class="header"></th>
+      <% SPECS.keys.each do |k| %>
+        <th class="header"><%= k %></th>
+      <% end %>
+    </tr>
+    
+    <% lines.each do |l| %>
+      <tr>
+        <% if l.type == :example %>
+          <td><%= l.content %></td>
+          <% l.translations.each do |k,v| %>
+            <td><%= v %></td>
+          <% end %>
+        <% else %>
+          <td class="comment" colspan="<%= SPECS.keys.count + 1 %>"><%= l.content %></td>
+        <% end %>
+      </tr>
+    <% end %>
+  </table>
+  
+  
+</body>
+
+</html>

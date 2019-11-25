@@ -137,7 +137,7 @@ phoneme z/2    // used for 's suffix
   vcd alv frc sib
   lengthmod 6
   IF prevPh(isSibilant) THEN
-    InsertPhoneme(I2)
+    InsertPhoneme(I2) // insert schwi, "roses"
   ENDIF
 
   IF NOT prevPh(isVoiced) THEN
@@ -248,7 +248,7 @@ phoneme @2
   unstressed
   length 120
   IF nextPh(isVowel) THEN
-    ChangePhoneme(I2)
+    ChangePhoneme(I2) // Schwi before vowels "the age"
   ENDIF
   FMT(vowel/@_low2)
 endphoneme
@@ -260,7 +260,7 @@ phoneme @5
   unstressed
   length 140
   IF nextPh(isVowel) OR nextPh(isPause) THEN
-    ChangePhoneme(U)
+    ChangePhoneme(U) // Ex : "to Isengard" (vowel), "nowhere to go to" (pause)
   ENDIF
   ChangePhoneme(@)
 endphoneme
@@ -297,6 +297,69 @@ phoneme U
 
   FMT(vowel/uu)
 endphoneme
+
+
+phoneme aa   //   'bath' etc.
+  vwl  starttype #a  endtype #a
+  ipa ɑː
+  length 200
+  FMT(vwl_en_rp/aa)
+endphoneme
+
+phoneme a#
+  vwl  starttype #@  endtype #@
+  ipa ɐ
+  unstressed
+  length 150
+  IfNextVowelAppend(r-)
+  FMT(vowel/@_low)
+endphoneme
+
+phoneme a
+ vwl  starttype #a  endtype #a
+ ipa æ
+ length 175
+ ChangeIfDiminished(a#)
+ FMT(vowel/&)
+endphoneme
+
+phoneme A:
+  vwl  starttype #a  endtype #a
+  length 240
+  IfNextVowelAppend(r-)
+  FMT(vwl_en_rp/aa)
+endphoneme
+
+phoneme A@
+  vwl  starttype #a  endtype #a
+  ipa ɑː
+  length 240
+  IfNextVowelAppend(r-)
+  FMT(vwl_en_rp/aa)
+endphoneme
+
+phoneme A#    // [a] in British [A:] in American
+  vwl  starttype #a  endtype #a
+  ChangePhoneme(a)
+endphoneme
+
+
+
+// G : Taken from  EN (keep it)
+//   : en-us + en-gb + en-rp
+//   : example : goose
+phoneme u:
+  vwl  starttype #u  endtype #u
+  length 210
+  IF nextPh(l/2) THEN
+    FMT(vwl_en/u_L)
+  ENDIF
+  IF prevPhW(j) AND NOT thisPh(isWordEnd) THEN
+    length 160
+  ENDIF
+  FMT(vdiph2/uw_2)
+endphoneme
+
 
 
 

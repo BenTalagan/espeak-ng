@@ -319,6 +319,9 @@ phsource/phonemes.stamp: \
 	phsource/ph_english_us \
 	phsource/ph_english_wi \
 	phsource/ph_english_wm \
+  phsource/ph_tengwar_english \
+  phsource/ph_tengwar_english_gb \
+  phsource/ph_tengwar_english_us \
 	phsource/ph_esperanto \
 	phsource/ph_estonian \
 	phsource/ph_farsi \
