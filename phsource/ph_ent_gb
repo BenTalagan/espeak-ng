@@ -1,0 +1,57 @@
+
+// G: (BEN): Taken from en-gb
+//        ex: trap
+phoneme a
+  vwl  starttype #a  endtype #a
+  length 160
+  ChangeIfDiminished(a#)
+  IF thisPh(isUnstressed) THEN
+    FMT(vowel/a_8)
+  ENDIF
+  FMT(vowel/a)
+endphoneme
+
+// G: (BEN): Taken from en-gb
+//       ex : bath
+phoneme aa
+  vwl  starttype #a  endtype #a
+  ipa a
+  length 200
+  
+  IF MbrolaSynth THEN
+    ChangePhoneme(A:)
+  ENDIF
+
+  IfNextVowelAppend(r-) // Ben : I don't see how this could happen at all. 
+  FMT(vowel/a_6, 88)
+endphoneme
+
+// G: (BEN): Taken from en-gb
+//       ex : **a**bout
+phoneme a#
+  vwl  starttype #@  endtype #@
+  ipa ɐ
+  unstressed
+  length 150
+  
+  IF NOT thisPh(isUnstressed) THEN
+    ChangePhoneme(a)          // syllable has an explicit stress
+  ENDIF
+
+  FMT(vowel/a#_3)
+endphoneme
+
+phoneme A:
+  vwl  starttype #a  endtype #a
+  length 230
+  IfNextVowelAppend(r-)
+  FMT(vowel/aa_2)
+endphoneme
+
+phoneme A@
+  vwl  starttype #a  endtype #a
+  ipa ɑː
+  length 230
+  IfNextVowelAppend(r-)
+  FMT(vowel/aa_2)
+endphoneme

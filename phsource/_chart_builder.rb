@@ -1,8 +1,11 @@
 #!/usr/bin/env ruby
 # encoding: UTF-8
 
+Dir.chdir(File.dirname(__FILE__))
+
 require "erb"
 require "securerandom"
+
 
 EN_PHONEMES_SORTED = [
   
@@ -201,7 +204,7 @@ end
 
 def compile(code)
   code = code.gsub(/(\/\/.*)$/) { "" }
-  code = code.lines.each{ |l| l.strip }.join("\n").strip
+  code = code.lines.map{ |l| l.gsub(/\s+/, " ").strip }.join("\n").strip
   code
 end
 

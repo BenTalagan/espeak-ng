@@ -1,0 +1,62 @@
+phoneme a
+  vwl  starttype #e  endtype #@
+  ipa æ
+  length 210
+
+  ChangeIfDiminished(a#)
+
+  IF nextPh(isNasal) AND NOT KlattSynth THEN
+    FMT(vnasal/ee_n2)
+  ELSEIF nextPh(r) AND thisPh(isStressed) THEN
+    length 190
+    FMT(vwl_en_us/ar)
+  ENDIF
+  FMT(vwl_en_us/a)
+endphoneme
+
+phoneme aa
+  import_phoneme ent-us/a
+endphoneme
+
+phoneme a#
+  vwl  starttype #@  endtype #@
+  ipa ɐ
+  unstressed
+  length 150
+
+  IF thisPh(isStressed) THEN
+    ChangePhoneme(a)
+  ENDIF
+
+  IF nextPhW(r) THEN
+    ChangePhoneme(3)
+  ENDIF
+  
+  FMT(vowel/a#_3)
+endphoneme
+
+phoneme A#
+  vwl  starttype #a  endtype #a
+  ChangePhoneme(A:)
+endphoneme
+
+phoneme A:
+  vwl  starttype #a  endtype #a
+  length 220
+  IF nextPhW(r) THEN
+    FMT(vwl_en_us/aar)
+  ENDIF
+  FMT(vowel/aa_8)
+endphoneme
+
+phoneme A@
+  vwl  starttype #a  endtype #a
+  ipa ɑː|ɹ
+  IF nextPh(r-) THEN
+    ipa ɑː
+  ENDIF
+  length 260
+  IfNextVowelAppend(r-)
+  FMT(vwl_en_us/aar)
+endphoneme
+

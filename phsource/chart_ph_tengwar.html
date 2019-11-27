@@ -171,15 +171,21 @@
             
               
               
+                <div class='sameas'>Same as in ph_english_rp</div>
+              
             
               
               
             
             
-            <pre><span class='blue'>phoneme</span> a
-vwl
-ipa ☠
-<span class='grey'>// TODO</span>
+            <pre><span class='grey'>// G: (BEN) : Taken from the english RP</span>
+<span class='grey'>//        ex : trap</span>
+<span class='blue'>phoneme</span> a
+  vwl  starttype #a  endtype #a
+  ipa æ
+  length 175
+  <span class='red'>ChangeIfDiminished</span>(a#)
+  FMT(vowel/&)
 <span class='blue'>endphoneme</span>
 </pre>                
           </div>
@@ -191,7 +197,37 @@ ipa ☠
      
         
         
-          <td class='inherited'><div class='inherited ph_ent_gb'>Inherited from ph_ent</div></td>
+         <td>
+          <div class="code ph_ent_gb">
+            
+            
+            
+              
+              
+                <div class='sameas'>Same as in ph_english</div>
+              
+            
+              
+              
+            
+              
+              
+            
+            
+            <pre><span class='grey'>// G: (BEN): Taken from en-gb</span>
+<span class='grey'>//        ex: trap</span>
+<span class='blue'>phoneme</span> a
+  vwl  starttype #a  endtype #a
+  length 160
+  <span class='red'>ChangeIfDiminished</span>(a#)
+  <span class='green'>IF</span> thisPh(isUnstressed) <span class='green'>THEN</span>
+    FMT(vowel/a_8)
+  <span class='green'>ENDIF</span>
+  FMT(vowel/a)
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -199,7 +235,41 @@ ipa ☠
      
         
         
-          <td class='inherited'><div class='inherited ph_ent_us'>Inherited from ph_ent</div></td>
+         <td>
+          <div class="code ph_ent_us">
+            
+            
+            
+              
+              
+            
+              
+              
+            
+              
+              
+                <div class='sameas'>Same as in ph_english_us</div>
+              
+            
+            
+            <pre><span class='blue'>phoneme</span> a
+  vwl  starttype #e  endtype #@
+  ipa æ
+  length 210
+
+  <span class='red'>ChangeIfDiminished</span>(a#)
+
+  <span class='green'>IF</span> nextPh(isNasal) AND <span class='green'>NOT</span> KlattSynth <span class='green'>THEN</span>
+    FMT(vnasal/ee_n2)
+  <span class='green'>ELSEIF</span> nextPh(r) AND thisPh(isStressed) <span class='green'>THEN</span>
+    length 190
+    FMT(vwl_en_us/ar)
+  <span class='green'>ENDIF</span>
+  FMT(vwl_en_us/a)
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -311,15 +381,20 @@ ipa ☠
             
               
               
+                <div class='sameas'>Same as in ph_english_rp</div>
+              
             
               
               
             
             
-            <pre><span class='blue'>phoneme</span> aa
-vwl
-ipa ☠
-<span class='grey'>// TODO</span>
+            <pre><span class='grey'>// G: (BEN) : Taken from the english RP</span>
+<span class='grey'>//        ex : bath</span>
+<span class='blue'>phoneme</span> aa
+  vwl  starttype #a  endtype #a
+  ipa ɑː
+  length 200
+  FMT(vwl_en_rp/aa)
 <span class='blue'>endphoneme</span>
 </pre>                
           </div>
@@ -331,7 +406,40 @@ ipa ☠
      
         
         
-          <td class='inherited'><div class='inherited ph_ent_gb'>Inherited from ph_ent</div></td>
+         <td>
+          <div class="code ph_ent_gb">
+            
+            
+            
+              
+              
+                <div class='sameas'>Same as in ph_english</div>
+              
+            
+              
+              
+            
+              
+              
+            
+            
+            <pre><span class='grey'>// G: (BEN): Taken from en-gb</span>
+<span class='grey'>//       ex : bath</span>
+<span class='blue'>phoneme</span> aa
+  vwl  starttype #a  endtype #a
+  ipa a
+  length 200
+  
+  <span class='green'>IF</span> MbrolaSynth <span class='green'>THEN</span>
+    <span class='red'>ChangePhoneme</span>(A:)
+  <span class='green'>ENDIF</span>
+
+  <span class='red'>IfNextVowelAppend</span>(r-) <span class='grey'>// Ben : I don't see how this could happen at all. </span>
+  FMT(vowel/a_6, 88)
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -339,7 +447,27 @@ ipa ☠
      
         
         
-          <td class='inherited'><div class='inherited ph_ent_us'>Inherited from ph_ent</div></td>
+         <td>
+          <div class="code ph_ent_us">
+            
+            
+            
+              
+              
+            
+              
+              
+            
+              
+              
+            
+            
+            <pre><span class='blue'>phoneme</span> aa
+  <span class='red'>import_phoneme</span> ent-us/a
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -466,15 +594,23 @@ ipa ☠
             
               
               
+                <div class='sameas'>Same as in ph_english_rp</div>
+              
             
               
               
             
             
-            <pre><span class='blue'>phoneme</span> a# <span class='grey'>// **a**bout. This may be \[@\] or may be a more open schwa.</span>
-vwl
-ipa ☠
-<span class='grey'>// TODO</span>
+            <pre><span class='grey'>// G: (BEN) : Taken from the english RP</span>
+<span class='grey'>//    Unstressed a, like in **a**bout, or at the end of words, may trigger a linking r</span>
+<span class='grey'>//    This may be \[@\] or may be a more open schwa.</span>
+<span class='blue'>phoneme</span> a#
+  vwl  starttype #@  endtype #@
+  ipa ɐ
+  unstressed
+  length 150
+  <span class='red'>IfNextVowelAppend</span>(r-)
+  FMT(vowel/@_low)
 <span class='blue'>endphoneme</span>
 </pre>                
           </div>
@@ -486,7 +622,40 @@ ipa ☠
      
         
         
-          <td class='inherited'><div class='inherited ph_ent_gb'>Inherited from ph_ent</div></td>
+         <td>
+          <div class="code ph_ent_gb">
+            
+            
+            
+              
+              
+                <div class='sameas'>Same as in ph_english</div>
+              
+            
+              
+              
+            
+              
+              
+            
+            
+            <pre><span class='grey'>// G: (BEN): Taken from en-gb</span>
+<span class='grey'>//       ex : **a**bout</span>
+<span class='blue'>phoneme</span> a#
+  vwl  starttype #@  endtype #@
+  ipa ɐ
+  unstressed
+  length 150
+  
+  <span class='green'>IF</span> <span class='green'>NOT</span> thisPh(isUnstressed) <span class='green'>THEN</span>
+    <span class='red'>ChangePhoneme</span>(a)          <span class='grey'>// syllable has an explicit stress</span>
+  <span class='green'>ENDIF</span>
+
+  FMT(vowel/a#_3)
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -494,7 +663,42 @@ ipa ☠
      
         
         
-          <td class='inherited'><div class='inherited ph_ent_us'>Inherited from ph_ent</div></td>
+         <td>
+          <div class="code ph_ent_us">
+            
+            
+            
+              
+              
+            
+              
+              
+            
+              
+              
+                <div class='sameas'>Same as in ph_english_us</div>
+              
+            
+            
+            <pre><span class='blue'>phoneme</span> a#
+  vwl  starttype #@  endtype #@
+  ipa ɐ
+  unstressed
+  length 150
+
+  <span class='green'>IF</span> thisPh(isStressed) <span class='green'>THEN</span>
+    <span class='red'>ChangePhoneme</span>(a)
+  <span class='green'>ENDIF</span>
+
+  <span class='green'>IF</span> nextPhW(r) <span class='green'>THEN</span>
+    <span class='red'>ChangePhoneme</span>(3)
+  <span class='green'>ENDIF</span>
+  
+  FMT(vowel/a#_3)
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -574,6 +778,8 @@ ipa ☠
             
               
               
+                <div class='sameas'>Same as in ph_english</div>
+              
             
               
               
@@ -582,10 +788,15 @@ ipa ☠
               
             
             
-            <pre><span class='blue'>phoneme</span> a#2  <span class='grey'>// for word 'an'</span>
-vwl
-ipa ☠
-<span class='grey'>// TODO</span>
+            <pre><span class='grey'>// G: (BEN): For all.</span>
+<span class='grey'>//   ex : "an"</span>
+<span class='blue'>phoneme</span> a#2
+  vwl
+  <span class='green'>IF</span> next2Ph(isVowel) <span class='green'>THEN</span>
+    <span class='red'>ChangePhoneme</span>(a#)
+  <span class='green'>ELSE</span>
+    <span class='red'>ChangePhoneme</span>(a)
+  <span class='green'>ENDIF</span>
 <span class='blue'>endphoneme</span>
 </pre>                
           </div>
@@ -681,6 +892,8 @@ ipa ☠
             
               
               
+                <div class='sameas'>Same as in ph_english</div>
+              
             
               
               
@@ -689,10 +902,12 @@ ipa ☠
               
             
             
-            <pre><span class='blue'>phoneme</span> a2  <span class='grey'>// don't reduce to a#</span>
-vwl
-ipa ☠
-<span class='grey'>// TODO</span>
+            <pre><span class='grey'>// G: (BEN): For all versions.</span>
+<span class='grey'>//   This is a "a" that does not reduce.</span>
+<span class='grey'>//   Seems very rare, only found in "diffraction"</span>
+<span class='blue'>phoneme</span> a2
+  vwl
+  <span class='red'>ChangePhoneme</span>(a)
 <span class='blue'>endphoneme</span>
 </pre>                
           </div>
@@ -800,6 +1015,8 @@ ipa ☠
             
               
               
+                <div class='sameas'>Same as in ph_english</div>
+              
             
               
               
@@ -808,10 +1025,11 @@ ipa ☠
               
             
             
-            <pre><span class='blue'>phoneme</span> A#    <span class='grey'>// [a] in British [A:] in American</span>
-  vwl
-  ipa ☠
-  <span class='grey'>// TODO</span>
+            <pre><span class='grey'>// G: An "a" that lenghtens in american accent ([a] in British but [A:] in American)</span>
+<span class='grey'>//   ex: The first a of "mama"</span>
+<span class='blue'>phoneme</span> A#  
+  vwl  starttype #a  endtype #a
+  <span class='red'>ChangePhoneme</span>(a)
 <span class='blue'>endphoneme</span>
 </pre>                
           </div>
@@ -831,7 +1049,30 @@ ipa ☠
      
         
         
-          <td class='inherited'><div class='inherited ph_ent_us'>Inherited from ph_ent</div></td>
+         <td>
+          <div class="code ph_ent_us">
+            
+            
+            
+              
+              
+            
+              
+              
+            
+              
+              
+                <div class='sameas'>Same as in ph_english_us</div>
+              
+            
+            
+            <pre><span class='blue'>phoneme</span> A#
+  vwl  starttype #a  endtype #a
+  <span class='red'>ChangePhoneme</span>(A:)
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -942,15 +1183,21 @@ ipa ☠
             
               
               
+                <div class='sameas'>Same as in ph_english_rp</div>
+              
             
               
               
             
             
-            <pre><span class='blue'>phoneme</span> A:
-  vwl
-  ipa ☠
-  <span class='grey'>// TODO</span>
+            <pre><span class='grey'>// G: (BEN): Long [a] (often seen in foreign words)</span>
+<span class='grey'>//    ex: camouflage</span>
+<span class='grey'>//</span>
+<span class='blue'>phoneme</span> A:
+  vwl  starttype #a  endtype #a
+  length 240
+  <span class='red'>IfNextVowelAppend</span>(r-) <span class='grey'>// grandpa igor</span>
+  FMT(vwl_en_rp/aa)
 <span class='blue'>endphoneme</span>
 </pre>                
           </div>
@@ -962,7 +1209,32 @@ ipa ☠
      
         
         
-          <td class='inherited'><div class='inherited ph_ent_gb'>Inherited from ph_ent</div></td>
+         <td>
+          <div class="code ph_ent_gb">
+            
+            
+            
+              
+              
+                <div class='sameas'>Same as in ph_english</div>
+              
+            
+              
+              
+            
+              
+              
+            
+            
+            <pre><span class='blue'>phoneme</span> A:
+  vwl  starttype #a  endtype #a
+  length 230
+  <span class='red'>IfNextVowelAppend</span>(r-)
+  FMT(vowel/aa_2)
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -970,7 +1242,34 @@ ipa ☠
      
         
         
-          <td class='inherited'><div class='inherited ph_ent_us'>Inherited from ph_ent</div></td>
+         <td>
+          <div class="code ph_ent_us">
+            
+            
+            
+              
+              
+            
+              
+              
+            
+              
+              
+                <div class='sameas'>Same as in ph_english_us</div>
+              
+            
+            
+            <pre><span class='blue'>phoneme</span> A:
+  vwl  starttype #a  endtype #a
+  length 220
+  <span class='green'>IF</span> nextPhW(r) <span class='green'>THEN</span>
+    FMT(vwl_en_us/aar)
+  <span class='green'>ENDIF</span>
+  FMT(vowel/aa_8)
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -1085,15 +1384,21 @@ ipa ☠
             
               
               
+                <div class='sameas'>Same as in ph_english_rp</div>
+              
             
               
               
             
             
-            <pre><span class='blue'>phoneme</span> A@
-  vwl
-  ipa ☠
-  <span class='grey'>// TODO</span>
+            <pre><span class='grey'>// G: (BEN): Long [a] followed by a r</span>
+<span class='grey'>//    ex: bar</span>
+<span class='blue'>phoneme</span> A@
+  vwl  starttype #a  endtype #a
+  ipa ɑː <span class='grey'>// bar open</span>
+  length 240
+  <span class='red'>IfNextVowelAppend</span>(r-)
+  FMT(vwl_en_rp/aa)
 <span class='blue'>endphoneme</span>
 </pre>                
           </div>
@@ -1105,7 +1410,33 @@ ipa ☠
      
         
         
-          <td class='inherited'><div class='inherited ph_ent_gb'>Inherited from ph_ent</div></td>
+         <td>
+          <div class="code ph_ent_gb">
+            
+            
+            
+              
+              
+                <div class='sameas'>Same as in ph_english</div>
+              
+            
+              
+              
+            
+              
+              
+            
+            
+            <pre><span class='blue'>phoneme</span> A@
+  vwl  starttype #a  endtype #a
+  ipa ɑː
+  length 230
+  <span class='red'>IfNextVowelAppend</span>(r-)
+  FMT(vowel/aa_2)
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -1113,7 +1444,36 @@ ipa ☠
      
         
         
-          <td class='inherited'><div class='inherited ph_ent_us'>Inherited from ph_ent</div></td>
+         <td>
+          <div class="code ph_ent_us">
+            
+            
+            
+              
+              
+            
+              
+              
+            
+              
+              
+                <div class='sameas'>Same as in ph_english_us</div>
+              
+            
+            
+            <pre><span class='blue'>phoneme</span> A@
+  vwl  starttype #a  endtype #a
+  ipa ɑː|ɹ
+  <span class='green'>IF</span> nextPh(r-) <span class='green'>THEN</span>
+    ipa ɑː
+  <span class='green'>ENDIF</span>
+  length 260
+  <span class='red'>IfNextVowelAppend</span>(r-)
+  FMT(vwl_en_us/aar)
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -1200,7 +1560,7 @@ ipa ☠
             
             <pre><span class='blue'>phoneme</span> A~
 vwl
-ipa ☠
+ipa ☐
 <span class='grey'>// TODO</span>
 <span class='blue'>endphoneme</span>
 </pre>                
@@ -1343,7 +1703,7 @@ ipa ☠
             
             <pre><span class='blue'>phoneme</span> aI
 vwl
-ipa ☠
+ipa ☐
 <span class='grey'>// TODO</span>
 <span class='blue'>endphoneme</span>
 </pre>                
@@ -1479,7 +1839,7 @@ ipa ☠
             
             <pre><span class='blue'>phoneme</span> aI3
 vwl
-ipa ☠
+ipa ☐
 <span class='grey'>// TODO</span>
 <span class='blue'>endphoneme</span>
 </pre>                
@@ -1617,7 +1977,7 @@ ipa ☠
             
             <pre><span class='blue'>phoneme</span> aI@ <span class='grey'>// sc**ie**nce</span>
 vwl
-ipa ☠
+ipa ☐
 <span class='grey'>// TODO</span>
 <span class='blue'>endphoneme</span>
 </pre>                
@@ -1751,7 +2111,7 @@ ipa ☠
             
             <pre><span class='blue'>phoneme</span> aU
 vwl
-ipa ☠
+ipa ☐
 <span class='grey'>// TODO</span>
 <span class='blue'>endphoneme</span>
 </pre>                
@@ -1892,7 +2252,7 @@ ipa ☠
             
             <pre><span class='blue'>phoneme</span> aU@
 vwl
-ipa ☠
+ipa ☐
 <span class='grey'>// TODO</span>
 <span class='blue'>endphoneme</span>
 </pre>                
@@ -2011,7 +2371,7 @@ ipa ☠
             
             <pre><span class='blue'>phoneme</span> e# <span class='grey'>// **E**XPLORE</span>
 vwl
-ipa ☠
+ipa ☐
 <span class='grey'>// TODO</span>
 <span class='blue'>endphoneme</span>
 </pre>                
@@ -2119,7 +2479,7 @@ ipa ☠
             
             <pre><span class='blue'>phoneme</span> e:
 vwl
-ipa ☠
+ipa ☐
 <span class='grey'>// TODO</span>
 <span class='blue'>endphoneme</span>
 </pre>                
@@ -2268,7 +2628,7 @@ ipa ☠
             
             <pre><span class='blue'>phoneme</span> E
   vwl
-  ipa ☠
+  ipa ☐
   <span class='grey'>// TODO</span>
 <span class='blue'>endphoneme</span>
 </pre>                
@@ -2380,7 +2740,7 @@ ipa ☠
             
             <pre><span class='blue'>phoneme</span> E#
   vwl
-  ipa ☠
+  ipa ☐
   <span class='grey'>// TODO</span>
 <span class='blue'>endphoneme</span>
 </pre>                
@@ -2488,7 +2848,7 @@ ipa ☠
             
             <pre><span class='blue'>phoneme</span> E2
   vwl
-  ipa ☠
+  ipa ☐
   <span class='grey'>// TODO</span>
 <span class='blue'>endphoneme</span>
 </pre>                
@@ -2629,7 +2989,7 @@ ipa ☠
             
             <pre><span class='blue'>phoneme</span> e@
 vwl
-ipa ☠
+ipa ☐
 <span class='grey'>// TODO</span>
 <span class='blue'>endphoneme</span>
 </pre>                
@@ -2764,7 +3124,7 @@ ipa ☠
             
             <pre><span class='blue'>phoneme</span> eI
 vwl
-ipa ☠
+ipa ☐
 <span class='grey'>// TODO</span>
 <span class='blue'>endphoneme</span>
 </pre>                
@@ -2924,7 +3284,7 @@ ipa ☠
             
             <pre><span class='blue'>phoneme</span> i
   vwl
-  ipa ☠
+  ipa ☐
   <span class='grey'>// TODO</span>
 <span class='blue'>endphoneme</span>
 </pre>                
@@ -3067,7 +3427,7 @@ ipa ☠
             
             <pre><span class='blue'>phoneme</span> i:
 vwl
-ipa ☠
+ipa ☐
 <span class='grey'>// TODO</span>
 <span class='blue'>endphoneme</span>
 </pre>                
@@ -3210,7 +3570,7 @@ ipa ☠
             
             <pre><span class='blue'>phoneme</span> I
   vwl
-  ipa ☠
+  ipa ☐
   <span class='grey'>// TODO</span>
 <span class='blue'>endphoneme</span>
 </pre>                
@@ -3341,7 +3701,7 @@ ipa ☠
             
             <pre><span class='blue'>phoneme</span> I#
   vwl
-  ipa ☠
+  ipa ☐
   <span class='grey'>// TODO</span>
 <span class='blue'>endphoneme</span>
 </pre>                
@@ -3486,6 +3846,8 @@ ipa ☠
             
               
               
+                <div class='sameas'>Same as in ph_english_us</div>
+              
             
             
             <pre><span class='grey'>// G : Taken from US</span>
@@ -3607,7 +3969,7 @@ ipa ☠
             
             <pre><span class='blue'>phoneme</span> IR        <span class='grey'>// used for "ir" when [3:] is split (Scottish)</span>
 vwl
-ipa ☠
+ipa ☐
 <span class='grey'>// TODO</span>
 <span class='blue'>endphoneme</span>
 </pre>                
@@ -3743,7 +4105,7 @@ ipa ☠
             
             <pre><span class='blue'>phoneme</span> i@
 vwl
-ipa ☠
+ipa ☐
 <span class='grey'>// TODO</span>
 <span class='blue'>endphoneme</span>
 </pre>                
@@ -3889,7 +4251,7 @@ ipa ☠
             
             <pre><span class='blue'>phoneme</span> i@3
 vwl
-ipa ☠
+ipa ☐
 <span class='grey'>// TODO</span>
 <span class='blue'>endphoneme</span>
 </pre>                
@@ -3997,7 +4359,7 @@ ipa ☠
             
             <pre><span class='blue'>phoneme</span> o:
 vwl
-ipa ☠
+ipa ☐
 <span class='grey'>// TODO</span>
 <span class='blue'>endphoneme</span>
 </pre>                
@@ -4134,7 +4496,7 @@ ipa ☠
             
             <pre><span class='blue'>phoneme</span> O
 vwl
-ipa ☠
+ipa ☐
 <span class='grey'>// TODO</span>
 <span class='blue'>endphoneme</span>
 </pre>                
@@ -4255,7 +4617,7 @@ ipa ☠
             
             <pre><span class='blue'>phoneme</span> O2
   vwl
-  ipa ☠
+  ipa ☐
   <span class='grey'>// TODO</span>
 <span class='blue'>endphoneme</span>
 </pre>                
@@ -4396,7 +4758,7 @@ ipa ☠
             
             <pre><span class='blue'>phoneme</span> O:
 vwl
-ipa ☠
+ipa ☐
 <span class='grey'>// TODO</span>
 <span class='blue'>endphoneme</span>
 </pre>                
@@ -4530,7 +4892,7 @@ ipa ☠
             
             <pre><span class='blue'>phoneme</span> OI
 vwl
-ipa ☠
+ipa ☐
 <span class='grey'>// TODO</span>
 <span class='blue'>endphoneme</span>
 </pre>                
@@ -4638,7 +5000,7 @@ ipa ☠
             
             <pre><span class='blue'>phoneme</span> O~
 vwl
-ipa ☠
+ipa ☐
 <span class='grey'>// TODO</span>
 <span class='blue'>endphoneme</span>
 </pre>                
@@ -4781,7 +5143,7 @@ ipa ☠
             
             <pre><span class='blue'>phoneme</span> O@
 vwl
-ipa ☠
+ipa ☐
 <span class='grey'>// TODO</span>
 <span class='blue'>endphoneme</span>
 </pre>                
@@ -4922,7 +5284,7 @@ ipa ☠
             
             <pre><span class='blue'>phoneme</span> 0
   vwl
-  ipa ☠
+  ipa ☐
   <span class='grey'>// TODO</span>
 <span class='blue'>endphoneme</span>
 </pre>                
@@ -5034,7 +5396,7 @@ ipa ☠
             
             <pre><span class='blue'>phoneme</span> 0#
   vwl
-  ipa ☠
+  ipa ☐
   <span class='grey'>// TODO</span>
 <span class='blue'>endphoneme</span>
 </pre>                
@@ -5155,7 +5517,7 @@ ipa ☠
             
             <pre><span class='blue'>phoneme</span> 02
   vwl
-  ipa ☠
+  ipa ☐
   <span class='grey'>// TODO</span>
 <span class='blue'>endphoneme</span>
 </pre>                
@@ -5288,7 +5650,7 @@ ipa ☠
             
             <pre><span class='blue'>phoneme</span> o@
 vwl
-ipa ☠
+ipa ☐
 <span class='grey'>// TODO</span>
 <span class='blue'>endphoneme</span>
 </pre>                
@@ -5424,7 +5786,7 @@ ipa ☠
             
             <pre><span class='blue'>phoneme</span> oU
 vwl
-ipa ☠
+ipa ☐
 <span class='grey'>// TODO</span>
 <span class='blue'>endphoneme</span>
 </pre>                
@@ -5539,7 +5901,7 @@ ipa ☠
             
             <pre><span class='blue'>phoneme</span> oU#
 vwl
-ipa ☠
+ipa ☐
 <span class='grey'>// TODO</span>
 <span class='blue'>endphoneme</span>
 </pre>                
@@ -5989,7 +6351,7 @@ ipa ☠
             
             <pre><span class='blue'>phoneme</span> U@
 vwl
-ipa ☠
+ipa ☐
 <span class='grey'>// TODO</span>
 <span class='blue'>endphoneme</span>
 </pre>                
@@ -6268,7 +6630,7 @@ ipa ☠
             
             <pre><span class='blue'>phoneme</span> @#   <span class='grey'>// TEST: [@] which is slightly more 'front'</span>
 vwl
-ipa ☠
+ipa ☐
 <span class='grey'>// TODO</span>
 <span class='blue'>endphoneme</span>
 </pre>                
@@ -6410,6 +6772,8 @@ ipa ☠
             
               
               
+                <div class='sameas'>Same as in ph_english_us</div>
+              
             
             
             <pre><span class='grey'>// G : Taken from US to keep coherency </span>
@@ -6541,6 +6905,8 @@ ipa ☠
             
             
               
+              
+                <div class='sameas'>Same as in ph_english</div>
               
             
               
@@ -7066,7 +7432,7 @@ ipa ☠
             
             <pre><span class='blue'>phoneme</span> 3:
 vwl
-ipa ☠
+ipa ☐
 <span class='grey'>// TODO</span>
 <span class='blue'>endphoneme</span>
 </pre>                
@@ -7737,8 +8103,6 @@ ipa ☠
             
               
               
-                <div class='sameas'>Same as in ph_english</div>
-              
             
               
               
@@ -7752,9 +8116,9 @@ ipa ☠
 <span class='grey'>//    : mainly used as a sub-tool for treating certain vowels, schwas and diphtongs</span>
 <span class='grey'>//    : en-us + en-gb + en-rp</span>
 <span class='grey'>//    : examples : overage, -aring, -europe-</span>
-<span class='blue'>phoneme</span> r-   <span class='grey'>// linking r, used in English between certain vowels and a following vowel</span>
+<span class='blue'>phoneme</span> r-
   liquid rhotic
-  ipa ɹ
+  ipa ɹ‿
   
   <span class='green'>IF</span> <span class='green'>NOT</span> thisPh(isWordEnd) AND <span class='green'>NOT</span> prevPh(@) AND <span class='green'>NOT</span> prevPh(3) <span class='green'>THEN</span>
     <span class='red'>ChangePhoneme</span>(r)
@@ -8381,7 +8745,7 @@ ipa ☠
             
             <pre><span class='blue'>phoneme</span> V
   vwl
-  ipa ☠
+  ipa ☐
   <span class='grey'>// TODO</span>
 <span class='blue'>endphoneme</span>
 </pre>                
@@ -8494,7 +8858,7 @@ ipa ☠
             
             <pre><span class='blue'>phoneme</span> VR        <span class='grey'>// used for "or"/"ur" when [3:] is split (Scottish)</span>
 vwl
-ipa ☠
+ipa ☐
 <span class='grey'>// TODO</span>
 <span class='blue'>endphoneme</span>
 </pre>                
@@ -8856,6 +9220,8 @@ ipa ☠
             
               
               
+                <div class='sameas'>Same as in ph_english</div>
+              
             
               
               
@@ -9001,7 +9367,7 @@ ipa ☠
             
             <pre><span class='blue'>phoneme</span> I2#
   vwl
-  ipa ☠
+  ipa ☐
   <span class='grey'>// TODO</span>
 <span class='blue'>endphoneme</span>
 </pre>                

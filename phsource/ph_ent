@@ -101,9 +101,9 @@ endphoneme
 //    : en-us + en-gb + en-rp
 //    : examples : overage, -aring, -europe-
 
-phoneme r-   // linking r, used in English between certain vowels and a following vowel
+phoneme r-
   liquid rhotic
-  ipa ɹ
+  ipa ɹ‿
   
   IF NOT thisPh(isWordEnd) AND NOT prevPh(@) AND NOT prevPh(3) THEN
     ChangePhoneme(r)
@@ -316,33 +316,91 @@ phoneme u:
 endphoneme
 
 
+// G: (BEN) : Taken from the english RP
+//        ex : trap
 phoneme a
-vwl
-ipa ☐
-// TODO
+  vwl  starttype #a  endtype #a
+  ipa æ
+  length 175
+  ChangeIfDiminished(a#)
+  FMT(vowel/&)
+endphoneme
+
+// G: (BEN): For all versions.
+//   This is a "a" that does not reduce.
+//   Seems very rare, only found in "diffraction"
+phoneme a2
+  vwl
+  ChangePhoneme(a)
 endphoneme
 
 
-phoneme a2  // don't reduce to a#
-vwl
-ipa ☐
-// TODO
-endphoneme
-
-
-phoneme a# // **a**bout. This may be \[@\] or may be a more open schwa.
-vwl
-ipa ☐
-// TODO
-endphoneme
-
-
+// G: (BEN) : Taken from the english RP
+//        ex : bath
 phoneme aa
-vwl
-ipa ☐
-// TODO
+  vwl  starttype #a  endtype #a
+  ipa ɑː
+  length 200
+  FMT(vwl_en_rp/aa)
 endphoneme
 
+
+// G: (BEN) : Taken from the english RP
+//    Unstressed a, like in **a**bout, or at the end of words, may trigger a linking r
+//    This may be \[@\] or may be a more open schwa.
+phoneme a#
+  vwl  starttype #@  endtype #@
+  ipa ɐ
+  unstressed
+  length 150
+  IfNextVowelAppend(r-)
+  FMT(vowel/@_low)
+endphoneme
+
+// G: (BEN): For all.
+//   ex : "an"
+phoneme a#2
+  vwl
+  IF next2Ph(isVowel) THEN
+    ChangePhoneme(a#)
+  ELSE
+    ChangePhoneme(a)
+  ENDIF
+endphoneme
+
+// G: (BEN): Long [a] (often seen in foreign words)
+//    ex: camouflage
+//
+phoneme A:
+  vwl  starttype #a  endtype #a
+  length 240
+  IfNextVowelAppend(r-) // grandpa igor
+  FMT(vwl_en_rp/aa)
+endphoneme
+
+// G: (BEN): Long [a] followed by a r
+//    ex: bar
+phoneme A@
+  vwl  starttype #a  endtype #a
+  ipa ɑː // bar open
+  length 240
+  IfNextVowelAppend(r-)
+  FMT(vwl_en_rp/aa)
+endphoneme
+
+// G: An "a" that lenghtens in american accent ([a] in British but [A:] in American)
+//   ex: The first a of "mama"
+phoneme A#  
+  vwl  starttype #a  endtype #a
+  ChangePhoneme(a)
+endphoneme
+
+// G: An [a] that sounds nasal (french words)
+phoneme A~
+  vwl  starttype #a endtype #a
+  length 260
+  FMT(vnasal/aa_n2)
+endphoneme
 
 
 phoneme I
@@ -443,27 +501,6 @@ phoneme V
 endphoneme
 
 
-phoneme A:
-  vwl
-  ipa ☐
-  // TODO
-endphoneme
-
-
-phoneme A@
-  vwl
-  ipa ☐
-  // TODO
-endphoneme
-
-
-phoneme A#    // [a] in British [A:] in American
-  vwl
-  ipa ☐
-  // TODO
-endphoneme
-
-
 phoneme O:
 vwl
 ipa ☐
@@ -540,11 +577,6 @@ ipa ☐
 // TODO
 endphoneme
 
-phoneme a#2  // for word 'an'
-vwl
-ipa ☐
-// TODO
-endphoneme
 
 phoneme @#   // TEST: [@] which is slightly more 'front'
 vwl
