@@ -1,7 +1,9 @@
 function transcribe(text) {
 
-  if(typeof(client)==='undefined')
+  if(typeof(client)==='undefined') {
     client = new ESpeakNGGlue();
+    client.set_voice("ent");
+  }
 
   var d1 = new Date();
   result = client.synthesize(text, false, true, true, function(result) {});
