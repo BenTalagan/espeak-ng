@@ -319,9 +319,9 @@ phsource/phonemes.stamp: \
 	phsource/ph_english_us \
 	phsource/ph_english_wi \
 	phsource/ph_english_wm \
-  phsource/ph_tengwar_english \
-  phsource/ph_tengwar_english_gb \
-  phsource/ph_tengwar_english_us \
+  phsource/ph_ent \
+  phsource/ph_ent_gb \
+  phsource/ph_ent_us \
 	phsource/ph_esperanto \
 	phsource/ph_estonian \
 	phsource/ph_farsi \
@@ -474,6 +474,7 @@ dictionaries: \
 	espeak-ng-data/de_dict \
 	espeak-ng-data/el_dict \
 	espeak-ng-data/en_dict \
+	espeak-ng-data/ent_dict \
 	espeak-ng-data/eo_dict \
 	espeak-ng-data/es_dict \
 	espeak-ng-data/et_dict \
@@ -601,6 +602,9 @@ espeak-ng-data/de_dict: dictsource/de_list dictsource/de_rules dictsource/de_ext
 
 el: espeak-ng-data/el_dict
 espeak-ng-data/el_dict: dictsource/el_list dictsource/el_rules dictsource/el_extra dictsource/el_emoji
+
+ent: espeak-ng-data/ent_dict
+espeak-ng-data/ent_dict: dictsource/ent_list dictsource/ent_rules dictsource/ent_extra dictsource/ent_emoji
 
 en: espeak-ng-data/en_dict
 espeak-ng-data/en_dict: dictsource/en_list dictsource/en_rules dictsource/en_extra dictsource/en_emoji

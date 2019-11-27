@@ -1,8 +1,7 @@
-name English (Tengwar GB)
+name English (Tengwar JRRT)
 
-language en-tengwar-gb
-language en-tengwar 1
-language en 42
+language ent
+language ent 42
 
 // Have the wh / w rule (no whine/wine merger) because Tolkien makes the graphic distinction.
 // Have the fir/fur/fern merger (Rule 5) ? Rather yes (no rule).
@@ -11,7 +10,7 @@ dictrules 2
 maintainer Benjamin Talagan Babut <for_my_email_address_please_visit@glaemscrafu>
 status testing
 
-phonemes en-tengwar-gb
+phonemes ent
 
 // No horse/hoarse merger
 // replace 00  o@  O@

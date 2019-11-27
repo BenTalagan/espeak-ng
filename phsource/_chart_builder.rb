@@ -256,15 +256,15 @@ en_us  = Lang.new("ph_english_us",en)
 
 ref_langs = [en,en_rp,en_us]
 
-teng_t = Lang.new("ph_tengwar_english",nil,ref_langs)
+teng_t = Lang.new("ph_ent",nil,ref_langs)
 
 build_chart([
   en,
   en_rp,
   en_us,
   teng_t,
-  Lang.new("ph_tengwar_english_gb",teng_t,ref_langs),
-  Lang.new("ph_tengwar_english_us",teng_t,ref_langs)
+  Lang.new("ph_ent_gb",teng_t,ref_langs),
+  Lang.new("ph_ent_us",teng_t,ref_langs)
 ])
 
 

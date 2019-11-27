@@ -32,7 +32,7 @@
         <% if l.type == :example %>
           <td><%= l.content %></td>
           <% l.translations.each do |k,v| %>
-            <td><%= v %></td>
+            <td><%= v.gsub("☐","<b style='color:red'>☐</b>") %></td>
           <% end %>
         <% else %>
           <td class="comment" colspan="<%= SPECS.keys.count + 1 %>"><%= l.content %></td>

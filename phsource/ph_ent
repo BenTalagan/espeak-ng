@@ -299,51 +299,6 @@ phoneme U
 endphoneme
 
 
-phoneme aa   //   'bath' etc.
-  vwl  starttype #a  endtype #a
-  ipa ɑː
-  length 200
-  FMT(vwl_en_rp/aa)
-endphoneme
-
-phoneme a#
-  vwl  starttype #@  endtype #@
-  ipa ɐ
-  unstressed
-  length 150
-  IfNextVowelAppend(r-)
-  FMT(vowel/@_low)
-endphoneme
-
-phoneme a
- vwl  starttype #a  endtype #a
- ipa æ
- length 175
- ChangeIfDiminished(a#)
- FMT(vowel/&)
-endphoneme
-
-phoneme A:
-  vwl  starttype #a  endtype #a
-  length 240
-  IfNextVowelAppend(r-)
-  FMT(vwl_en_rp/aa)
-endphoneme
-
-phoneme A@
-  vwl  starttype #a  endtype #a
-  ipa ɑː
-  length 240
-  IfNextVowelAppend(r-)
-  FMT(vwl_en_rp/aa)
-endphoneme
-
-phoneme A#    // [a] in British [A:] in American
-  vwl  starttype #a  endtype #a
-  ChangePhoneme(a)
-endphoneme
-
-
 
 // G : Taken from  EN (keep it)
 //   : en-us + en-gb + en-rp
@@ -361,6 +316,312 @@ phoneme u:
 endphoneme
 
 
+phoneme a
+vwl
+ipa ☐
+// TODO
+endphoneme
+
+
+phoneme a2  // don't reduce to a#
+vwl
+ipa ☐
+// TODO
+endphoneme
+
+
+phoneme a# // **a**bout. This may be \[@\] or may be a more open schwa.
+vwl
+ipa ☐
+// TODO
+endphoneme
+
+
+phoneme aa
+vwl
+ipa ☐
+// TODO
+endphoneme
+
+
+
+phoneme I
+  vwl
+  ipa ☐
+  // TODO
+endphoneme
+
+
+phoneme I#
+  vwl
+  ipa ☐
+  // TODO
+endphoneme
+
+phoneme I2#
+  vwl
+  ipa ☐
+  // TODO
+endphoneme
+
+phoneme i
+  vwl
+  ipa ☐
+  // TODO
+endphoneme
+
+phoneme i@
+vwl
+ipa ☐
+// TODO
+endphoneme
+
+phoneme i@3
+vwl
+ipa ☐
+// TODO
+endphoneme
+
+phoneme o:
+vwl
+ipa ☐
+// TODO
+endphoneme
+
+phoneme E
+  vwl
+  ipa ☐
+  // TODO
+endphoneme
+
+
+phoneme E#
+  vwl
+  ipa ☐
+  // TODO
+endphoneme
+
+
+phoneme E2
+  vwl
+  ipa ☐
+  // TODO
+endphoneme
+
+phoneme 0
+  vwl
+  ipa ☐
+  // TODO
+endphoneme
+
+
+phoneme 0#
+  vwl
+  ipa ☐
+  // TODO
+endphoneme
+
+
+phoneme 02
+  vwl
+  ipa ☐
+  // TODO
+endphoneme
+
+
+phoneme O2
+  vwl
+  ipa ☐
+  // TODO
+endphoneme
+
+
+phoneme V
+  vwl
+  ipa ☐
+  // TODO
+endphoneme
+
+
+phoneme A:
+  vwl
+  ipa ☐
+  // TODO
+endphoneme
+
+
+phoneme A@
+  vwl
+  ipa ☐
+  // TODO
+endphoneme
+
+
+phoneme A#    // [a] in British [A:] in American
+  vwl
+  ipa ☐
+  // TODO
+endphoneme
+
+
+phoneme O:
+vwl
+ipa ☐
+// TODO
+endphoneme
+
+
+phoneme O
+vwl
+ipa ☐
+// TODO
+endphoneme
+
+
+phoneme O@
+vwl
+ipa ☐
+// TODO
+endphoneme
+
+
+phoneme o@
+vwl
+ipa ☐
+// TODO
+endphoneme
+
+phoneme oU#
+vwl
+ipa ☐
+// TODO
+endphoneme
+
+phoneme OI
+vwl
+ipa ☐
+// TODO
+endphoneme
+
+phoneme oU
+vwl
+ipa ☐
+// TODO
+endphoneme
+
+phoneme U@
+vwl
+ipa ☐
+// TODO
+endphoneme
+
+
+phoneme O~
+vwl
+ipa ☐
+// TODO
+endphoneme
+
+phoneme e# // **E**XPLORE
+vwl
+ipa ☐
+// TODO
+endphoneme
+
+phoneme e:
+vwl
+ipa ☐
+// TODO
+endphoneme
+
+phoneme A~
+vwl
+ipa ☐
+// TODO
+endphoneme
+
+phoneme a#2  // for word 'an'
+vwl
+ipa ☐
+// TODO
+endphoneme
+
+phoneme @#   // TEST: [@] which is slightly more 'front'
+vwl
+ipa ☐
+// TODO
+endphoneme
+
+
+phoneme aI
+vwl
+ipa ☐
+// TODO
+endphoneme
+
+
+phoneme aI@ // sc**ie**nce
+vwl
+ipa ☐
+// TODO
+endphoneme
+
+
+phoneme aI3
+vwl
+ipa ☐
+// TODO
+endphoneme
+
+
+phoneme aU
+vwl
+ipa ☐
+// TODO
+endphoneme
+
+phoneme aU@
+vwl
+ipa ☐
+// TODO
+endphoneme
+
+phoneme e@
+vwl
+ipa ☐
+// TODO
+endphoneme
+
+phoneme eI
+vwl
+ipa ☐
+// TODO
+endphoneme
+
+phoneme i:
+vwl
+ipa ☐
+// TODO
+endphoneme
+
+phoneme IR        // used for "ir" when [3:] is split (Scottish)
+vwl
+ipa ☐
+// TODO
+endphoneme
+
+phoneme 3:
+vwl
+ipa ☐
+// TODO
+endphoneme
+
+
+phoneme VR        // used for "or"/"ur" when [3:] is split (Scottish)
+vwl
+ipa ☐
+// TODO
+endphoneme
 
 
 
