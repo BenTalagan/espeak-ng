@@ -571,13 +571,6 @@ ipa ☐
 // TODO
 endphoneme
 
-phoneme A~
-vwl
-ipa ☐
-// TODO
-endphoneme
-
-
 phoneme @#   // TEST: [@] which is slightly more 'front'
 vwl
 ipa ☐
