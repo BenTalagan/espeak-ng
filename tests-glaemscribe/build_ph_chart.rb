@@ -6,7 +6,6 @@ Dir.chdir(File.dirname(__FILE__))
 require "erb"
 require "securerandom"
 
-
 EN_PHONEMES_SORTED = [
   
   # Variants of A
@@ -43,6 +42,7 @@ EN_PHONEMES_SORTED = [
   'I',
   'I#',
   'I2',
+  'I2#',
   'IR',
 
   'i@',
@@ -65,9 +65,10 @@ EN_PHONEMES_SORTED = [
   'oU#',
   
   # Variants of U
+  'V',
+  'VR',
   'u:',
   'U',
-  
   'U@',
  
   # Variants of Schwa
@@ -99,9 +100,7 @@ EN_PHONEMES_SORTED = [
   't',
   't#',
   't2',
-  
-  'V',
-  'VR',
+
   
   'w#',
   'z#',
@@ -120,7 +119,7 @@ def load_erb(filepath)
   ERB.new(template, 0, nil, "erb_" + SecureRandom.uuid.gsub("-","_"))
 end
 
-$ERB = load_erb("_chart_builder.html.erb")
+$ERB = load_erb("ph_chart_template.html.erb")
 
 class Phoneme
   attr_accessor :name, :pre, :code
@@ -238,7 +237,7 @@ def build_chart(langs)
   chart_sources = {}
   
   langs.each{ |l| 
-    chart_sources[l.name] = read_ph_source(l.name) 
+    chart_sources[l.name] = read_ph_source("../phsource/" + l.name) 
   }
   
   ref_lang      = langs[0]
@@ -248,28 +247,33 @@ def build_chart(langs)
   ref_phonemes = ref_phonemes.sort{ |ph1,ph2| phoneme_sorter(ph1,ph2) }.uniq
   
   @toto = "test"
-  File.open("chart_ph_tengwar.html","wb:UTF-8") { |f|
+  File.open("build/ph_chart.html","wb:UTF-8") { |f|
     f << $ERB.result(binding)
   }
 end
 
-en     = Lang.new("ph_english",nil)
-en_rp  = Lang.new("ph_english_rp",en)
-en_us  = Lang.new("ph_english_us",en)
+def build_full_chart
 
-ref_langs = [en,en_rp,en_us]
+  en     = Lang.new("ph_english",nil)
+  en_rp  = Lang.new("ph_english_rp",en)
+  en_us  = Lang.new("ph_english_us",en)
+  
+  ref_langs = [en,en_rp,en_us]
+  
+  teng_t = Lang.new("ph_ent",nil,ref_langs)
+  
+  build_chart([
+    en,
+    en_rp,
+    en_us,
+    teng_t,
+    Lang.new("ph_ent_gb",teng_t,ref_langs),
+    Lang.new("ph_ent_us",teng_t,ref_langs)
+  ])
+end
 
-teng_t = Lang.new("ph_ent",nil,ref_langs)
-
-build_chart([
-  en,
-  en_rp,
-  en_us,
-  teng_t,
-  Lang.new("ph_ent_gb",teng_t,ref_langs),
-  Lang.new("ph_ent_us",teng_t,ref_langs)
-])
-
+puts "Building phoneme comparison chart from phsource data for lang 'en' and 'ent'..."
+build_full_chart
 
 
 

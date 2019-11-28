@@ -21,7 +21,7 @@ def load_erb(filepath)
   ERB.new(template, 0, nil, "erb_" + SecureRandom.uuid.gsub("-","_"))
 end
 
-$ERB = load_erb("template.html.erb")  
+$ERB = load_erb("example_chart_template.html.erb")  
   
 class Line
   attr_accessor :type
@@ -85,12 +85,17 @@ def assemble_result(lines)
     }
   }
   
-  File.open("build/chart.html","wb:UTF-8") { |f|
+  File.open("build/example_chart.html","wb:UTF-8") { |f|
     f << $ERB.result(binding)
   }
 end
 
-lines = read_example_file("examples.txt")
-dump_as_raw_example_file(lines, "build/_examples.txt")
-translate_raw_example_file
-assemble_result(lines)
+def build_full_chart
+  lines = read_example_file("examples.txt")
+  dump_as_raw_example_file(lines, "build/_examples.txt")
+  translate_raw_example_file
+  assemble_result(lines)
+end
+
+puts "Building example chart on data set ..."
+build_full_chart

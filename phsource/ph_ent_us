@@ -60,3 +60,112 @@ phoneme A@
   FMT(vwl_en_us/aar)
 endphoneme
 
+
+
+
+
+
+
+phoneme i
+  vwl  starttype #i  endtype #i
+  unstressed
+  ipa i
+  length 170
+  IfNextVowelAppend(;)
+
+  IF NOT thisPh(isFinalVowel) THEN
+    length 130
+    FMT(vowel/ii_4)
+  ENDIF
+
+  FMT(vowel/ii_final)
+endphoneme
+
+phoneme i:
+  vwl  starttype #i  endtype #i
+  length 180
+  IfNextVowelAppend(;)
+  FMT(vowel/i_en)
+endphoneme
+
+phoneme I
+  vwl  starttype #i endtype #i
+  length 160
+  IfNextVowelAppend(;)
+  ChangeIfDiminished(I2)
+  
+  IF nextPhW(r) THEN
+    length 200
+  ENDIF
+
+  FMT(vowel/ii_4)
+endphoneme
+
+phoneme I#
+  vwl  starttype #i  endtype #i
+  unstressed
+  length 160
+  ipa ᵻ
+//  FMT(vowel/@_fnt)
+  FMT(vowel/ii#)
+endphoneme
+
+phoneme I2#
+  vwl  starttype #i  endtype #i
+  unstressed
+  ChangePhoneme(I#)
+endphoneme
+
+phoneme i@
+  vwl  starttype #i  endtype #@
+  length 250
+  FMT(vdiph2/ii@)  // don't append [r] before a vowel
+endphoneme
+
+phoneme i@3
+  vwl  starttype #i  endtype #@
+  length 280
+  ipa ɪ|ɹ
+  IF nextPhW(r) THEN
+    ipa ɪ
+  ENDIF
+  IfNextVowelAppend(r)
+  FMT(vwl_en_us/ir)
+endphoneme
+
+
+
+phoneme V
+  vwl  starttype #a  endtype #@
+  length 170
+  ChangeIfDiminished(@)
+  FMT(vowel/V_6)
+endphoneme
+
+phoneme u:
+  vwl  starttype #u  endtype #u
+  length 190
+  
+  IF prevPhW(j)  AND NOT thisPh(isWordEnd) THEN
+    length 160
+  ENDIF
+  
+  FMT(vdiph2/uw_6)
+endphoneme
+
+phoneme U
+  vwl  starttype #o  endtype #o
+  length 145
+  FMT(vowel/8_2)
+endphoneme
+
+phoneme U@
+  vwl  starttype #@  endtype #@
+  length 250
+  ipa ʊ|ɹ
+  IF nextPhW(r-) THEN
+    ipa ʊ
+  ENDIF
+  IfNextVowelAppend(r-)
+  FMT(vwl_en_us/ur)
+endphoneme

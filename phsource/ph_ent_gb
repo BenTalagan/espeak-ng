@@ -55,3 +55,105 @@ phoneme A@
   IfNextVowelAppend(r-)
   FMT(vowel/aa_2)
 endphoneme
+
+
+
+
+
+phoneme i
+  vwl  starttype #i  endtype #i
+  unstressed
+  ipa i
+  length 150
+  IfNextVowelAppend(;)
+  
+//  IF NOT thisPh(isFinalVowel) THEN
+//    ChangePhoneme(I)
+//  ENDIF
+  
+  FMT(vowel/ii_7)
+endphoneme
+
+phoneme i:
+  vwl  starttype #i  endtype #i
+  length 175
+  IfNextVowelAppend(;)
+  IF prevPh(w) THEN
+    VowelStart(w/wi2)
+  ENDIF
+  FMT(vowel/i_en)
+endphoneme
+
+phoneme I
+  vwl  starttype #i  endtype #i
+  length 130
+  IfNextVowelAppend(;)
+  FMT(vowel/ii_2)
+endphoneme
+
+phoneme i@
+  vwl  starttype #i  endtype #@
+  length 250
+  IfNextVowelAppend(r-)
+  FMT(vdiph2/ii@)
+endphoneme
+
+phoneme i@3
+  vwl  starttype #i  endtype #@
+  length 250
+  
+  IF MbrolaSynth THEN
+    ChangePhoneme(i@)
+  ENDIF
+
+  IfNextVowelAppend(r-)
+  FMT(vdiph2/ii@)
+endphoneme
+
+
+
+phoneme V
+  vwl  starttype #a  endtype #@
+  length 140
+
+  ChangeIfDiminished(@)
+  FMT(vowel/V_2)
+endphoneme
+
+
+// G : Taken from  EN 
+//   : example : goose
+phoneme u:
+  vwl  starttype #u  endtype #u
+  length 210
+  IF nextPh(l/2) THEN
+    FMT(vwl_en/u_L)
+  ENDIF
+  IF prevPhW(j) AND NOT thisPh(isWordEnd) THEN
+    length 160
+  ENDIF
+  FMT(vdiph2/uw_2)
+endphoneme
+
+// TODO
+phoneme U
+  vwl  starttype #o  endtype #o
+  length 150
+  
+  IF prevPhW(j) THEN
+    length 130
+    FMT(vowel/8_2)
+  ENDIF
+
+  FMT(vowel/uu)
+endphoneme
+
+phoneme U@
+  vwl  starttype #u  endtype #@
+  length 200
+  IfNextVowelAppend(r-)
+  IF thisPh(isUnstressed) THEN
+    FMT(vdiph2/8@)
+  ENDIF
+  FMT(vdiph2/uu@)
+endphoneme

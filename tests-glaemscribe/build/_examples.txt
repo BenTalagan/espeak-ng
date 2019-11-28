@@ -1,0 +1,36 @@
+trap .
+bath .
+palm .
+lot .
+cloth .
+thought .
+kit .
+dress .
+strut .
+foot .
+face .
+goat .
+fleece .
+goose .
+price .
+choice .
+mouth .
+nurse .
+start .
+north .
+force .
+near .
+square .
+cure .
+letter .
+comma .
+roses .
+fire .
+hour .
+grandpa .
+grandpa igor .
+vanilla .
+vanilla ice .
+incoming .
+goal .
+happy .

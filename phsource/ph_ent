@@ -275,45 +275,8 @@ phoneme @L // simp**le**
   FMT(vwl_en/@L)
 endphoneme
 
-// G : Taken from US
-// Schwa i in : th*e* + vowel / or for genitives like Liz's
-phoneme I2
-  vwl  starttype #i  endtype #i
-  unstressed
-  length 160
-  IfNextVowelAppend(;) // Make it long before vowels.
-  FMT(vowel/ii#_3)
-endphoneme
-
-// TODO
-phoneme U
-  vwl  starttype #o  endtype #o
-  length 150
-  
-  IF prevPhW(j) THEN
-    length 130
-    FMT(vowel/8_2)
-  ENDIF
-
-  FMT(vowel/uu)
-endphoneme
 
 
-
-// G : Taken from  EN (keep it)
-//   : en-us + en-gb + en-rp
-//   : example : goose
-phoneme u:
-  vwl  starttype #u  endtype #u
-  length 210
-  IF nextPh(l/2) THEN
-    FMT(vwl_en/u_L)
-  ENDIF
-  IF prevPhW(j) AND NOT thisPh(isWordEnd) THEN
-    length 160
-  ENDIF
-  FMT(vdiph2/uw_2)
-endphoneme
 
 
 // G: (BEN) : Taken from the english RP
@@ -403,42 +366,155 @@ phoneme A~
 endphoneme
 
 
-phoneme I
-  vwl
-  ipa ☐
-  // TODO
-endphoneme
-
-
-phoneme I#
-  vwl
-  ipa ☐
-  // TODO
-endphoneme
-
-phoneme I2#
-  vwl
-  ipa ☐
-  // TODO
-endphoneme
+//////////////////////////////////
+//  I
+//////////////////////////////////
 
 phoneme i
-  vwl
-  ipa ☐
-  // TODO
+  vwl  starttype #i  endtype #i
+  unstressed
+  ipa ɪ
+  length 140
+  IfNextVowelAppend(;)
+
+  IF NOT thisPh(isFinalVowel) THEN
+    length 130
+    FMT(vowel/ii)
+  ENDIF
+
+  FMT(vowel/ii_final)
+endphoneme
+
+phoneme i:
+  vwl  starttype #i  endtype #i
+  length 175 lng
+  IfNextVowelAppend(;)
+  IF prevPh(w) THEN
+    VowelStart(w/wi2)
+  ENDIF
+  FMT(vowel/i)
+endphoneme
+
+phoneme I
+  vwl  starttype #i endtype #i
+  length 130
+  IfNextVowelAppend(;)
+  FMT(vowel/ii)
+endphoneme
+
+// G : Taken from US
+// Schwa i in : th*e* + vowel / or for genitives like Liz's
+phoneme I2
+  vwl  starttype #i  endtype #i
+  unstressed
+  length 160
+  IfNextVowelAppend(;) // Make it long before vowels.
+  FMT(vowel/ii#_3)
+endphoneme
+
+// G : (BEN) : to review!
+// used for [I] which may be [@] in some accents
+phoneme I#  
+  vwl  starttype #i  endtype #i
+  unstressed
+  length 130
+  
+  IF MbrolaSynth THEN
+    ChangePhoneme(I)
+  ENDIF
+
+  IfNextVowelAppend(;)
+  ChangePhoneme(I2)
+endphoneme
+
+// G : (BEN) : to review!
+// used for [I] in -ed adjectives which may be [E] in some accents
+phoneme I2#   
+  vwl  starttype #@  endtype #@
+  unstressed
+
+  IfNextVowelAppend(;)
+  ChangePhoneme(I2)
+endphoneme
+
+
+// used for "ir" when [3:] is split (Scottish)
+phoneme IR        
+  vwl  starttype #@  endtype #@
+  length 190
+  ipa əɹ
+  IF nextPhW(r-) THEN
+    ipa ə
+  ENDIF
+  IfNextVowelAppend(r-)
+  FMT(vowelr/V_r)
 endphoneme
 
 phoneme i@
-vwl
-ipa ☐
-// TODO
+  vwl  starttype #i  endtype #@
+  length 240
+  IfNextVowelAppend(r-)
+  FMT(vwl_en_rp/i@)
 endphoneme
 
 phoneme i@3
-vwl
-ipa ☐
-// TODO
+  vwl  starttype #i  endtype #@
+  length 240
+  IfNextVowelAppend(r-)
+  FMT(vwl_en_rp/i@)
 endphoneme
+
+
+////////////////////
+// U
+////////////////
+
+phoneme V
+  vwl  starttype #a  endtype #@
+  length 140
+  ChangeIfDiminished(@)
+  FMT(vowel/V_3)
+endphoneme
+
+phoneme VR        // used for "or"/"ur" when [3:] is split (Scottish)
+  vwl  starttype #@  endtype #@
+  length 210
+  ipa ʌɹ
+  IF nextPhW(r-) THEN
+    ipa ʌ
+  ENDIF
+  IfNextVowelAppend(r-)
+  FMT(vowelr/V3_r)
+endphoneme
+
+phoneme u:
+  vwl  starttype #u  endtype #u
+  length 190
+  FMT(vowel/uu#_2)
+endphoneme
+
+phoneme U
+  vwl  starttype #o  endtype #o
+  length 150
+  FMT(vowel/o-_3)
+endphoneme
+
+phoneme U@
+  vwl  starttype #u  endtype #@
+  ipa ɔː
+  length 230
+  IfNextVowelAppend(r-)
+  FMT(vowel/o_mid)
+endphoneme
+
+
+
+
+
+
+
+
+
 
 phoneme o:
 vwl
@@ -494,13 +570,6 @@ phoneme O2
 endphoneme
 
 
-phoneme V
-  vwl
-  ipa ☐
-  // TODO
-endphoneme
-
-
 phoneme O:
 vwl
 ipa ☐
@@ -546,11 +615,6 @@ ipa ☐
 // TODO
 endphoneme
 
-phoneme U@
-vwl
-ipa ☐
-// TODO
-endphoneme
 
 
 phoneme O~
@@ -623,26 +687,7 @@ ipa ☐
 // TODO
 endphoneme
 
-phoneme i:
-vwl
-ipa ☐
-// TODO
-endphoneme
-
-phoneme IR        // used for "ir" when [3:] is split (Scottish)
-vwl
-ipa ☐
-// TODO
-endphoneme
-
 phoneme 3:
-vwl
-ipa ☐
-// TODO
-endphoneme
-
-
-phoneme VR        // used for "or"/"ur" when [3:] is split (Scottish)
 vwl
 ipa ☐
 // TODO
