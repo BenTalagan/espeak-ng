@@ -178,7 +178,18 @@
               
             
             
-            <pre><span class='grey'>// G: (BEN) : Taken from the english RP</span>
+            <pre><span class='grey'>////////////</span>
+<span class='grey'>// VOWELS //</span>
+<span class='grey'>////////////</span>
+
+
+
+
+<span class='grey'>/////////</span>
+<span class='grey'>//  A  //</span>
+<span class='grey'>/////////</span>
+
+<span class='grey'>// G: (BEN) : Taken from the english RP</span>
 <span class='grey'>//        ex : trap</span>
 <span class='blue'>phoneme</span> a
   vwl  starttype #a  endtype #a
@@ -1699,15 +1710,20 @@
             
               
               
+                <div class='sameas'>Same as in ph_english_rp</div>
+              
             
               
               
             
             
             <pre><span class='blue'>phoneme</span> aI
-vwl
-ipa ☐
-<span class='grey'>// TODO</span>
+  vwl  starttype #a  endtype #i
+  length 230
+  <span class='green'>IF</span> nextPh(#a) OR nextPh(#o) <span class='green'>THEN</span>
+    <span class='red'>AppendPhoneme</span>(;)
+  <span class='green'>ENDIF</span>
+  FMT(vdiph/ai_6)
 <span class='blue'>endphoneme</span>
 </pre>                
           </div>
@@ -1719,7 +1735,34 @@ ipa ☐
      
         
         
-          <td class='inherited'><div class='inherited ph_ent_gb'>Inherited from ph_ent</div></td>
+         <td>
+          <div class="code ph_ent_gb">
+            
+            
+            
+              
+              
+                <div class='sameas'>Same as in ph_english</div>
+              
+            
+              
+              
+            
+              
+              
+            
+            
+            <pre><span class='blue'>phoneme</span> aI
+  vwl  starttype #a  endtype #i
+  length 240
+  <span class='green'>IF</span> nextPh(#a) <span class='green'>THEN</span>
+    <span class='red'>AppendPhoneme</span>(;)
+  <span class='green'>ENDIF</span>
+  FMT(vdiph/ai_2)
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -1727,7 +1770,34 @@ ipa ☐
      
         
         
-          <td class='inherited'><div class='inherited ph_ent_us'>Inherited from ph_ent</div></td>
+         <td>
+          <div class="code ph_ent_us">
+            
+            
+            
+              
+              
+            
+              
+              
+            
+              
+              
+                <div class='sameas'>Same as in ph_english_us</div>
+              
+            
+            
+            <pre><span class='blue'>phoneme</span> aI
+  vwl  starttype #a  endtype #i
+  length 240
+  <span class='green'>IF</span> nextPh(#a) OR nextPh(#o) <span class='green'>THEN</span>
+    <span class='red'>AppendPhoneme</span>(;)
+  <span class='green'>ENDIF</span>
+  FMT(vwl_en_us/ai)
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -1832,8 +1902,12 @@ ipa ☐
             
               
               
+                <div class='sameas'>Same as in ph_english</div>
+              
             
               
+              
+                <div class='sameas'>Same as in ph_english_rp</div>
               
             
               
@@ -1841,9 +1915,9 @@ ipa ☐
             
             
             <pre><span class='blue'>phoneme</span> aI3
-vwl
-ipa ☐
-<span class='grey'>// TODO</span>
+  vwl  starttype #a  endtype #@
+  length 280
+  <span class='red'>ChangePhoneme</span>(aI@)
 <span class='blue'>endphoneme</span>
 </pre>                
           </div>
@@ -1855,7 +1929,33 @@ ipa ☐
      
         
         
-          <td class='inherited'><div class='inherited ph_ent_gb'>Inherited from ph_ent</div></td>
+         <td>
+          <div class="code ph_ent_gb">
+            
+            
+            
+              
+              
+                <div class='sameas'>Same as in ph_english</div>
+              
+            
+              
+              
+                <div class='sameas'>Same as in ph_english_rp</div>
+              
+            
+              
+              
+            
+            
+            <pre><span class='blue'>phoneme</span> aI3
+  vwl  starttype #a  endtype #@
+  length 280
+  <span class='red'>ChangePhoneme</span>(aI@)
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -1863,7 +1963,33 @@ ipa ☐
      
         
         
-          <td class='inherited'><div class='inherited ph_ent_us'>Inherited from ph_ent</div></td>
+         <td>
+          <div class="code ph_ent_us">
+            
+            
+            
+              
+              
+            
+              
+              
+            
+              
+              
+                <div class='sameas'>Same as in ph_english_us</div>
+              
+            
+            
+            <pre><span class='blue'>phoneme</span> aI3
+  vwl  starttype #a  endtype #@
+  length 310
+  ipa aɪɚ
+  <span class='red'>IfNextVowelAppend</span>(r-)
+  FMT(vwl_en_us/ai3)
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -1973,15 +2099,19 @@ ipa ☐
             
               
               
+                <div class='sameas'>Same as in ph_english_rp</div>
+              
             
               
               
             
             
-            <pre><span class='blue'>phoneme</span> aI@ <span class='grey'>// sc**ie**nce</span>
-vwl
-ipa ☐
-<span class='grey'>// TODO</span>
+            <pre><span class='grey'>// science : TODO REWORK OR <span class='green'>NOT</span> ?</span>
+<span class='blue'>phoneme</span> aI@
+  vwl  starttype #a  endtype #@
+  length 270
+  <span class='red'>IfNextVowelAppend</span>(r-)
+  FMT(vwl_en/aI@)
 <span class='blue'>endphoneme</span>
 </pre>                
           </div>
@@ -1993,7 +2123,32 @@ ipa ☐
      
         
         
-          <td class='inherited'><div class='inherited ph_ent_gb'>Inherited from ph_ent</div></td>
+         <td>
+          <div class="code ph_ent_gb">
+            
+            
+            
+              
+              
+                <div class='sameas'>Same as in ph_english</div>
+              
+            
+              
+              
+            
+              
+              
+            
+            
+            <pre><span class='blue'>phoneme</span> aI@
+  vwl  starttype #a  endtype #@
+  length 280
+  <span class='red'>IfNextVowelAppend</span>(r-)
+  FMT(vwl_en/aI@)
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -2001,7 +2156,33 @@ ipa ☐
      
         
         
-          <td class='inherited'><div class='inherited ph_ent_us'>Inherited from ph_ent</div></td>
+         <td>
+          <div class="code ph_ent_us">
+            
+            
+            
+              
+              
+            
+              
+              
+            
+              
+              
+                <div class='sameas'>Same as in ph_english_us</div>
+              
+            
+            
+            <pre><span class='blue'>phoneme</span> aI@
+  vwl  starttype #a  endtype #@
+  length 300
+  ipa aɪə
+  <span class='red'>IfNextVowelAppend</span>(r-)
+  FMT(vwl_en_us/ai@)
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -2107,15 +2288,17 @@ ipa ☐
             
               
               
+                <div class='sameas'>Same as in ph_english_rp</div>
+              
             
               
               
             
             
             <pre><span class='blue'>phoneme</span> aU
-vwl
-ipa ☐
-<span class='grey'>// TODO</span>
+  vwl  starttype #a  endtype #u
+  length 230
+  FMT(vdiph/au_3)
 <span class='blue'>endphoneme</span>
 </pre>                
           </div>
@@ -2127,7 +2310,31 @@ ipa ☐
      
         
         
-          <td class='inherited'><div class='inherited ph_ent_gb'>Inherited from ph_ent</div></td>
+         <td>
+          <div class="code ph_ent_gb">
+            
+            
+            
+              
+              
+                <div class='sameas'>Same as in ph_english</div>
+              
+            
+              
+              
+            
+              
+              
+            
+            
+            <pre><span class='blue'>phoneme</span> aU
+  vwl  starttype #a  endtype #u
+  length 230
+  FMT(vdiph/au)
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -2135,7 +2342,31 @@ ipa ☐
      
         
         
-          <td class='inherited'><div class='inherited ph_ent_us'>Inherited from ph_ent</div></td>
+         <td>
+          <div class="code ph_ent_us">
+            
+            
+            
+              
+              
+            
+              
+              
+            
+              
+              
+                <div class='sameas'>Same as in ph_english_us</div>
+              
+            
+            
+            <pre><span class='blue'>phoneme</span> aU
+  vwl  starttype #a  endtype #o
+  length 235
+  FMT(vdiph/aoo)
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -2248,15 +2479,21 @@ ipa ☐
             
               
               
+                <div class='sameas'>Same as in ph_english_rp</div>
+              
             
               
               
             
             
-            <pre><span class='blue'>phoneme</span> aU@
-vwl
-ipa ☐
-<span class='grey'>// TODO</span>
+            <pre><span class='grey'>// Hum, what's this.'</span>
+<span class='grey'>// Cannot find any example for this or any word in the dict.</span>
+<span class='grey'>// TODO : try harder</span>
+<span class='blue'>phoneme</span> aU@
+  vwl  starttype #a   endtype #@
+  length 270
+  <span class='red'>IfNextVowelAppend</span>(r-)
+  FMT(vwl_en_rp/aU@)
 <span class='blue'>endphoneme</span>
 </pre>                
           </div>
@@ -2268,7 +2505,32 @@ ipa ☐
      
         
         
-          <td class='inherited'><div class='inherited ph_ent_gb'>Inherited from ph_ent</div></td>
+         <td>
+          <div class="code ph_ent_gb">
+            
+            
+            
+              
+              
+                <div class='sameas'>Same as in ph_english</div>
+              
+            
+              
+              
+            
+              
+              
+            
+            
+            <pre><span class='blue'>phoneme</span> aU@ <span class='grey'>// h**our**</span>
+  vwl  starttype #a   endtype #@
+  length 280
+  <span class='red'>IfNextVowelAppend</span>(r-)
+  FMT(vwl_en/aU@)
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -2276,7 +2538,36 @@ ipa ☐
      
         
         
-          <td class='inherited'><div class='inherited ph_ent_us'>Inherited from ph_ent</div></td>
+         <td>
+          <div class="code ph_ent_us">
+            
+            
+            
+              
+              
+            
+              
+              
+            
+              
+              
+                <div class='sameas'>Same as in ph_english_us</div>
+              
+            
+            
+            <pre><span class='blue'>phoneme</span> aU@
+  vwl  starttype #a   endtype #@
+  length 300
+  ipa aɪʊɹ
+  <span class='green'>IF</span> nextPhW(r) <span class='green'>THEN</span>
+    ipa aɪʊ
+  <span class='green'>ENDIF</span>
+  <span class='red'>IfNextVowelAppend</span>(r)
+  FMT(vwl_en_us/aU@)
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -2367,15 +2658,19 @@ ipa ☐
             
               
               
+                <div class='sameas'>Same as in ph_english_rp</div>
+              
             
               
               
             
             
-            <pre><span class='blue'>phoneme</span> e# <span class='grey'>// **E**XPLORE</span>
-vwl
-ipa ☐
-<span class='grey'>// TODO</span>
+            <pre><span class='grey'>/////////</span>
+<span class='grey'>//  E  //</span>
+<span class='grey'>/////////</span>
+<span class='blue'>phoneme</span> e# <span class='grey'>// **E**XPLORE</span>
+  vwl
+  <span class='red'>ChangePhoneme</span>(I)
 <span class='blue'>endphoneme</span>
 </pre>                
           </div>
@@ -2387,7 +2682,30 @@ ipa ☐
      
         
         
-          <td class='inherited'><div class='inherited ph_ent_gb'>Inherited from ph_ent</div></td>
+         <td>
+          <div class="code ph_ent_gb">
+            
+            
+            
+              
+              
+                <div class='sameas'>Same as in ph_english</div>
+              
+            
+              
+              
+            
+              
+              
+            
+            
+            <pre><span class='blue'>phoneme</span> e# <span class='grey'>// **E**XPLORE</span>
+  vwl
+  <span class='red'>ChangePhoneme</span>(E)
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -2395,7 +2713,31 @@ ipa ☐
      
         
         
-          <td class='inherited'><div class='inherited ph_ent_us'>Inherited from ph_ent</div></td>
+         <td>
+          <div class="code ph_ent_us">
+            
+            
+            
+              
+              
+                <div class='sameas'>Same as in ph_english</div>
+              
+            
+              
+              
+            
+              
+              
+            
+            
+            <pre><span class='grey'>// This is discussable, is it more like rp or more like gb ??</span>
+<span class='blue'>phoneme</span> e# <span class='grey'>// **E**XPLORE</span>
+  vwl
+  <span class='red'>ChangePhoneme</span>(E)
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -2472,6 +2814,8 @@ ipa ☐
             
               
               
+                <div class='sameas'>Same as in ph_english</div>
+              
             
               
               
@@ -2481,9 +2825,9 @@ ipa ☐
             
             
             <pre><span class='blue'>phoneme</span> e:
-vwl
-ipa ☐
-<span class='grey'>// TODO</span>
+  vwl  starttype #e  endtype #e
+  length 210
+  FMT(vowel/e)
 <span class='blue'>endphoneme</span>
 </pre>                
           </div>
@@ -2624,15 +2968,22 @@ ipa ☐
             
               
               
+                <div class='sameas'>Same as in ph_english_rp</div>
+              
             
               
               
             
             
             <pre><span class='blue'>phoneme</span> E
-  vwl
-  ipa ☐
-  <span class='grey'>// TODO</span>
+  vwl  starttype #e  endtype #e
+  length 140
+  <span class='green'>IF</span> nextPhW(n) <span class='green'>THEN</span>
+    <span class='red'>ChangeIfDiminished</span>(@)
+  <span class='green'>ELSE</span>
+    <span class='red'>ChangeIfDiminished</span>(I2)
+  <span class='green'>ENDIF</span>
+  FMT(vowel/e_mid)
 <span class='blue'>endphoneme</span>
 </pre>                
           </div>
@@ -2644,7 +2995,36 @@ ipa ☐
      
         
         
-          <td class='inherited'><div class='inherited ph_ent_gb'>Inherited from ph_ent</div></td>
+         <td>
+          <div class="code ph_ent_gb">
+            
+            
+            
+              
+              
+                <div class='sameas'>Same as in ph_english</div>
+              
+            
+              
+              
+            
+              
+              
+            
+            
+            <pre><span class='blue'>phoneme</span> E
+  vwl  starttype #e  endtype #e
+  length 140
+  <span class='green'>IF</span> nextPhW(n) <span class='green'>THEN</span>
+    <span class='red'>ChangeIfDiminished</span>(@)
+  <span class='green'>ELSE</span>
+    <span class='red'>ChangeIfDiminished</span>(I2)
+  <span class='green'>ENDIF</span>
+  FMT(vowel/ee_5)
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -2652,7 +3032,36 @@ ipa ☐
      
         
         
-          <td class='inherited'><div class='inherited ph_ent_us'>Inherited from ph_ent</div></td>
+         <td>
+          <div class="code ph_ent_us">
+            
+            
+            
+              
+              
+            
+              
+              
+            
+              
+              
+                <div class='sameas'>Same as in ph_english_us</div>
+              
+            
+            
+            <pre><span class='blue'>phoneme</span> E
+  vwl  starttype #e  endtype #e
+  length 190
+  <span class='green'>IF</span> nextPhW(n) <span class='green'>THEN</span>
+    <span class='red'>ChangeIfDiminished</span>(@)
+  <span class='green'>ELSE</span>
+    <span class='red'>ChangeIfDiminished</span>(I2)
+  <span class='green'>ENDIF</span>
+  FMT(vwl_en_us/ee)
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -2733,6 +3142,8 @@ ipa ☐
             
               
               
+                <div class='sameas'>Same as in ph_english</div>
+              
             
               
               
@@ -2741,10 +3152,15 @@ ipa ☐
               
             
             
-            <pre><span class='blue'>phoneme</span> E#
-  vwl
-  ipa ☐
-  <span class='grey'>// TODO</span>
+            <pre><span class='grey'>// [@] in unstressed syllables, if next vowel is stressed</span>
+<span class='blue'>phoneme</span> E#
+  vwl  starttype #e  endtype #e
+
+  <span class='green'>IF</span> thisPh(isUnstressed) AND nextVowel(isVowel) AND nextVowel(isStressed) <span class='green'>THEN</span>
+    <span class='red'>ChangePhoneme</span>(@)
+  <span class='green'>ENDIF</span>
+
+  <span class='red'>ChangePhoneme</span>(E)
 <span class='blue'>endphoneme</span>
 </pre>                
           </div>
@@ -2841,6 +3257,8 @@ ipa ☐
             
               
               
+                <div class='sameas'>Same as in ph_english</div>
+              
             
               
               
@@ -2849,10 +3267,10 @@ ipa ☐
               
             
             
-            <pre><span class='blue'>phoneme</span> E2
-  vwl
-  ipa ☐
-  <span class='grey'>// TODO</span>
+            <pre><span class='blue'>phoneme</span> E2  <span class='grey'>// does not reduce in unstressed syllables</span>
+  vwl  starttype #e  endtype #e
+  length 140
+  <span class='red'>ChangePhoneme</span>(E)  <span class='grey'>// a second change ([E]  to [I2]) won't happen</span>
 <span class='blue'>endphoneme</span>
 </pre>                
           </div>
@@ -2985,15 +3403,19 @@ ipa ☐
             
               
               
+                <div class='sameas'>Same as in ph_english_rp</div>
+              
             
               
               
             
             
-            <pre><span class='blue'>phoneme</span> e@
-vwl
-ipa ☐
-<span class='grey'>// TODO</span>
+            <pre><span class='grey'>// TODO : PROBABLY REWORK TO MAKE IT WORK MORE LIKE US</span>
+<span class='blue'>phoneme</span> e@
+  vwl  starttype #e  endtype #@
+  length 220
+  <span class='red'>IfNextVowelAppend</span>(r-)
+  FMT(vdiph2/ee@_2)
 <span class='blue'>endphoneme</span>
 </pre>                
           </div>
@@ -3005,7 +3427,32 @@ ipa ☐
      
         
         
-          <td class='inherited'><div class='inherited ph_ent_gb'>Inherited from ph_ent</div></td>
+         <td>
+          <div class="code ph_ent_gb">
+            
+            
+            
+              
+              
+                <div class='sameas'>Same as in ph_english</div>
+              
+            
+              
+              
+            
+              
+              
+            
+            
+            <pre><span class='blue'>phoneme</span> e@
+  vwl  starttype #e  endtype #@
+  length 230
+  <span class='red'>IfNextVowelAppend</span>(r-)
+  FMT(vowel/ee_1)
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -3013,7 +3460,36 @@ ipa ☐
      
         
         
-          <td class='inherited'><div class='inherited ph_ent_us'>Inherited from ph_ent</div></td>
+         <td>
+          <div class="code ph_ent_us">
+            
+            
+            
+              
+              
+            
+              
+              
+            
+              
+              
+                <div class='sameas'>Same as in ph_english_us</div>
+              
+            
+            
+            <pre><span class='blue'>phoneme</span> e@
+  vwl  starttype #e  endtype #@
+  length 260
+  ipa ɛ|ɹ
+  <span class='green'>IF</span> nextPhW(r) <span class='green'>THEN</span>
+    ipa ɛ
+  <span class='green'>ENDIF</span>
+  <span class='red'>IfNextVowelAppend</span>(r)
+  FMT(vwl_en_us/er)
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -3120,15 +3596,17 @@ ipa ☐
             
               
               
+                <div class='sameas'>Same as in ph_english_rp</div>
+              
             
               
               
             
             
             <pre><span class='blue'>phoneme</span> eI
-vwl
-ipa ☐
-<span class='grey'>// TODO</span>
+  vwl  starttype #i  endtype #i
+  length 220
+  FMT(vdiph2/ei_2)
 <span class='blue'>endphoneme</span>
 </pre>                
           </div>
@@ -3140,7 +3618,31 @@ ipa ☐
      
         
         
-          <td class='inherited'><div class='inherited ph_ent_gb'>Inherited from ph_ent</div></td>
+         <td>
+          <div class="code ph_ent_gb">
+            
+            
+            
+              
+              
+                <div class='sameas'>Same as in ph_english</div>
+              
+            
+              
+              
+            
+              
+              
+            
+            
+            <pre><span class='blue'>phoneme</span> eI
+  vwl  starttype #e  endtype #i
+  length 210
+  FMT(vdiph/eei)
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -3148,7 +3650,32 @@ ipa ☐
      
         
         
-          <td class='inherited'><div class='inherited ph_ent_us'>Inherited from ph_ent</div></td>
+         <td>
+          <div class="code ph_ent_us">
+            
+            
+            
+              
+              
+            
+              
+              
+            
+              
+              
+                <div class='sameas'>Same as in ph_english_us</div>
+              
+            
+            
+            <pre><span class='blue'>phoneme</span> eI
+  vwl  starttype #e  endtype #i
+  length 220
+  FMT(vdiph2/ei_4)
+<span class='grey'>//  FMT(vdiph/eei_5)</span>
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -3287,9 +3814,9 @@ ipa ☐
               
             
             
-            <pre><span class='grey'>//////////////////////////////////</span>
-<span class='grey'>//  I</span>
-<span class='grey'>//////////////////////////////////</span>
+            <pre><span class='grey'>/////////</span>
+<span class='grey'>//  I  //</span>
+<span class='grey'>/////////</span>
 <span class='blue'>phoneme</span> i
   vwl  starttype #i  endtype #i
   unstressed
@@ -4862,6 +5389,8 @@ ipa ☐
             
               
               
+                <div class='sameas'>Same as in ph_english</div>
+              
             
               
               
@@ -4870,10 +5399,13 @@ ipa ☐
               
             
             
-            <pre><span class='blue'>phoneme</span> o:
-vwl
-ipa ☐
-<span class='grey'>// TODO</span>
+            <pre><span class='grey'>/////////</span>
+<span class='grey'>//  O  //</span>
+<span class='grey'>/////////</span>
+<span class='blue'>phoneme</span> o:
+  vwl  starttype #o  endtype #o
+  length 220
+  FMT(vowel/o)
 <span class='blue'>endphoneme</span>
 </pre>                
           </div>
@@ -5002,15 +5534,18 @@ ipa ☐
             
               
               
+                <div class='sameas'>Same as in ph_english_rp</div>
+              
             
               
               
             
             
             <pre><span class='blue'>phoneme</span> O
-vwl
-ipa ☐
-<span class='grey'>// TODO</span>
+  vwl  starttype #o  endtype #o
+  length 150
+  <span class='red'>ChangeIfDiminished</span>(@)
+  FMT(vowel/oo_en)
 <span class='blue'>endphoneme</span>
 </pre>                
           </div>
@@ -5022,7 +5557,32 @@ ipa ☐
      
         
         
-          <td class='inherited'><div class='inherited ph_ent_gb'>Inherited from ph_ent</div></td>
+         <td>
+          <div class="code ph_ent_gb">
+            
+            
+            
+              
+              
+                <div class='sameas'>Same as in ph_english</div>
+              
+            
+              
+              
+            
+              
+              
+            
+            
+            <pre><span class='blue'>phoneme</span> O
+  vwl  starttype #o  endtype #o
+  length 200
+  <span class='red'>ChangeIfDiminished</span>(@)
+  FMT(vowel/oo_en)
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -5030,7 +5590,32 @@ ipa ☐
      
         
         
-          <td class='inherited'><div class='inherited ph_ent_us'>Inherited from ph_ent</div></td>
+         <td>
+          <div class="code ph_ent_us">
+            
+            
+            
+              
+              
+            
+              
+              
+            
+              
+              
+                <div class='sameas'>Same as in ph_english_us</div>
+              
+            
+            
+            <pre><span class='blue'>phoneme</span> O
+  vwl  starttype #o  endtype #o
+  length 200
+  <span class='red'>ChangeIfDiminished</span>(@)
+  FMT(vowel/aa#)
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -5120,6 +5705,8 @@ ipa ☐
             
               
               
+                <div class='sameas'>Same as in ph_english</div>
+              
             
               
               
@@ -5129,9 +5716,9 @@ ipa ☐
             
             
             <pre><span class='blue'>phoneme</span> O2
-  vwl
-  ipa ☐
-  <span class='grey'>// TODO</span>
+  vwl  starttype #o  endtype #o
+  length 140
+  <span class='red'>ChangePhoneme</span>(0)
 <span class='blue'>endphoneme</span>
 </pre>                
           </div>
@@ -5151,7 +5738,31 @@ ipa ☐
      
         
         
-          <td class='inherited'><div class='inherited ph_ent_us'>Inherited from ph_ent</div></td>
+         <td>
+          <div class="code ph_ent_us">
+            
+            
+            
+              
+              
+            
+              
+              
+            
+              
+              
+                <div class='sameas'>Same as in ph_english_us</div>
+              
+            
+            
+            <pre><span class='blue'>phoneme</span> O2
+  vwl  starttype #o  endtype #o
+  length 220
+  FMT(vowel/aa#) <span class='grey'>// Same as /O/, but not diminished.</span>
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -5264,15 +5875,19 @@ ipa ☐
             
               
               
+                <div class='sameas'>Same as in ph_english_rp</div>
+              
             
               
               
             
             
             <pre><span class='blue'>phoneme</span> O:
-vwl
-ipa ☐
-<span class='grey'>// TODO</span>
+  vwl  starttype #o  endtype #o
+  length 230
+  <span class='red'>ChangeIfDiminished</span>(@)
+  <span class='red'>IfNextVowelAppend</span>(r-)
+  FMT(vowel/oo_1)
 <span class='blue'>endphoneme</span>
 </pre>                
           </div>
@@ -5284,7 +5899,32 @@ ipa ☐
      
         
         
-          <td class='inherited'><div class='inherited ph_ent_gb'>Inherited from ph_ent</div></td>
+         <td>
+          <div class="code ph_ent_gb">
+            
+            
+            
+              
+              
+                <div class='sameas'>Same as in ph_english</div>
+              
+            
+              
+              
+            
+              
+              
+            
+            
+            <pre><span class='blue'>phoneme</span> O:
+  vwl  starttype #o  endtype #o
+  length 230
+  <span class='red'>ChangeIfDiminished</span>(@)
+  FMT(vowel/oo_en)
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -5292,7 +5932,35 @@ ipa ☐
      
         
         
-          <td class='inherited'><div class='inherited ph_ent_us'>Inherited from ph_ent</div></td>
+         <td>
+          <div class="code ph_ent_us">
+            
+            
+            
+              
+              
+            
+              
+              
+            
+              
+              
+                <div class='sameas'>Same as in ph_english_us</div>
+              
+            
+            
+            <pre><span class='blue'>phoneme</span> O:
+  vwl  starttype #o  endtype #o
+  length 220
+  <span class='red'>ChangeIfDiminished</span>(@)
+  <span class='green'>IF</span> nextPhW(r) <span class='green'>THEN</span>
+    FMT(vwl_en_us/oor)
+  <span class='green'>ENDIF</span>
+  FMT(vowel/0_3)
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -5398,15 +6066,17 @@ ipa ☐
             
               
               
+                <div class='sameas'>Same as in ph_english_rp</div>
+              
             
               
               
             
             
             <pre><span class='blue'>phoneme</span> OI
-vwl
-ipa ☐
-<span class='grey'>// TODO</span>
+  vwl  starttype #o  endtype #i
+  length 230
+  FMT(vdiph/ooi_3)
 <span class='blue'>endphoneme</span>
 </pre>                
           </div>
@@ -5418,7 +6088,31 @@ ipa ☐
      
         
         
-          <td class='inherited'><div class='inherited ph_ent_gb'>Inherited from ph_ent</div></td>
+         <td>
+          <div class="code ph_ent_gb">
+            
+            
+            
+              
+              
+                <div class='sameas'>Same as in ph_english</div>
+              
+            
+              
+              
+            
+              
+              
+            
+            
+            <pre><span class='blue'>phoneme</span> OI
+  vwl  starttype #o  endtype #i
+  length 230
+  FMT(vdiph/ooi)
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -5426,7 +6120,31 @@ ipa ☐
      
         
         
-          <td class='inherited'><div class='inherited ph_ent_us'>Inherited from ph_ent</div></td>
+         <td>
+          <div class="code ph_ent_us">
+            
+            
+            
+              
+              
+            
+              
+              
+            
+              
+              
+                <div class='sameas'>Same as in ph_english_us</div>
+              
+            
+            
+            <pre><span class='blue'>phoneme</span> OI
+  vwl  starttype #o  endtype #i
+  length 270
+  FMT(vdiph/ooi_3)
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -5503,6 +6221,8 @@ ipa ☐
             
               
               
+                <div class='sameas'>Same as in ph_english</div>
+              
             
               
               
@@ -5512,9 +6232,9 @@ ipa ☐
             
             
             <pre><span class='blue'>phoneme</span> O~
-vwl
-ipa ☐
-<span class='grey'>// TODO</span>
+  vwl  starttype #o  endtype #o
+  length 240
+  FMT(vnasal/oo_n2)
 <span class='blue'>endphoneme</span>
 </pre>                
           </div>
@@ -5649,15 +6369,21 @@ ipa ☐
             
               
               
+                <div class='sameas'>Same as in ph_english_rp</div>
+              
             
               
               
             
             
-            <pre><span class='blue'>phoneme</span> O@
-vwl
-ipa ☐
-<span class='grey'>// TODO</span>
+            <pre><span class='grey'>// THIS IS PROBABLY WRONG. THE r of the shwa should be kept in our JRRT RP</span>
+<span class='grey'>// TODO : REWORK THIS</span>
+<span class='blue'>phoneme</span> O@
+  vwl  starttype #o  endtype #@
+  ipa ɔː
+  length 230
+  <span class='red'>IfNextVowelAppend</span>(r-)
+  FMT(vowel/oo_1)
 <span class='blue'>endphoneme</span>
 </pre>                
           </div>
@@ -5669,7 +6395,33 @@ ipa ☐
      
         
         
-          <td class='inherited'><div class='inherited ph_ent_gb'>Inherited from ph_ent</div></td>
+         <td>
+          <div class="code ph_ent_gb">
+            
+            
+            
+              
+              
+                <div class='sameas'>Same as in ph_english</div>
+              
+            
+              
+              
+            
+              
+              
+            
+            
+            <pre><span class='blue'>phoneme</span> O@
+  vwl  starttype #o  endtype #o
+  ipa ɔː
+  length 240
+  <span class='red'>IfNextVowelAppend</span>(r-)
+  FMT(vowel/oo_en)
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -5677,7 +6429,36 @@ ipa ☐
      
         
         
-          <td class='inherited'><div class='inherited ph_ent_us'>Inherited from ph_ent</div></td>
+         <td>
+          <div class="code ph_ent_us">
+            
+            
+            
+              
+              
+            
+              
+              
+            
+              
+              
+                <div class='sameas'>Same as in ph_english_us</div>
+              
+            
+            
+            <pre><span class='blue'>phoneme</span> O@
+  vwl  starttype #o  endtype #@
+  length 250
+  ipa ɔː|ɹ
+  <span class='green'>IF</span> nextPhW(r) <span class='green'>THEN</span>
+    ipa ɔː
+  <span class='green'>ENDIF</span>
+  <span class='red'>IfNextVowelAppend</span>(r)
+  FMT(vwl_en_us/oor)
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -5790,15 +6571,18 @@ ipa ☐
             
               
               
+                <div class='sameas'>Same as in ph_english_rp</div>
+              
             
               
               
             
             
             <pre><span class='blue'>phoneme</span> 0
-  vwl
-  ipa ☐
-  <span class='grey'>// TODO</span>
+  vwl  starttype #o   endtype #o
+  length 140
+  <span class='red'>ChangeIfDiminished</span>(@)
+  FMT(vowel/0_3)
 <span class='blue'>endphoneme</span>
 </pre>                
           </div>
@@ -5810,7 +6594,32 @@ ipa ☐
      
         
         
-          <td class='inherited'><div class='inherited ph_ent_gb'>Inherited from ph_ent</div></td>
+         <td>
+          <div class="code ph_ent_gb">
+            
+            
+            
+              
+              
+                <div class='sameas'>Same as in ph_english</div>
+              
+            
+              
+              
+            
+              
+              
+            
+            
+            <pre><span class='blue'>phoneme</span> 0
+  vwl  starttype #o  endtype #o
+  length 140
+  <span class='red'>ChangeIfDiminished</span>(@)
+  FMT(vowel/0)
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -5818,7 +6627,36 @@ ipa ☐
      
         
         
-          <td class='inherited'><div class='inherited ph_ent_us'>Inherited from ph_ent</div></td>
+         <td>
+          <div class="code ph_ent_us">
+            
+            
+            
+              
+              
+            
+              
+              
+            
+              
+              
+                <div class='sameas'>Same as in ph_english_us</div>
+              
+            
+            
+            <pre><span class='blue'>phoneme</span> 0
+  vwl  starttype #a   endtype #a
+  length 220
+  ipa ɑː
+  <span class='red'>ChangeIfDiminished</span>(@)
+  <span class='green'>IF</span> nextPh(r) <span class='green'>THEN</span>
+    <span class='red'>ChangePhoneme</span>(O:)
+  <span class='green'>ENDIF</span>
+  FMT(vowel/aa_8)
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -5899,6 +6737,8 @@ ipa ☐
             
               
               
+                <div class='sameas'>Same as in ph_english</div>
+              
             
               
               
@@ -5907,10 +6747,15 @@ ipa ☐
               
             
             
-            <pre><span class='blue'>phoneme</span> 0#
-  vwl
-  ipa ☐
-  <span class='grey'>// TODO</span>
+            <pre><span class='grey'>// A [O] that turns to [@] in unstressed syllables</span>
+<span class='blue'>phoneme</span> 0#    
+  vwl  starttype #o  endtype #o
+
+  <span class='green'>IF</span> thisPh(isUnstressed) AND nextVowel(isVowel) AND <span class='green'>NOT</span> nextVowel(isUnstressed) <span class='green'>THEN</span>
+    <span class='red'>ChangePhoneme</span>(@)
+  <span class='green'>ENDIF</span>
+
+  <span class='red'>ChangePhoneme</span>(0)
 <span class='blue'>endphoneme</span>
 </pre>                
           </div>
@@ -6020,6 +6865,8 @@ ipa ☐
             
               
               
+                <div class='sameas'>Same as in ph_english</div>
+              
             
               
               
@@ -6028,10 +6875,10 @@ ipa ☐
               
             
             
-            <pre><span class='blue'>phoneme</span> 02
-  vwl
-  ipa ☐
-  <span class='grey'>// TODO</span>
+            <pre><span class='blue'>phoneme</span> 02   <span class='grey'>// becomes V in en-us</span>
+  vwl  starttype #o  endtype #o
+  length 140
+  <span class='red'>ChangePhoneme</span>(0)
 <span class='blue'>endphoneme</span>
 </pre>                
           </div>
@@ -6051,7 +6898,31 @@ ipa ☐
      
         
         
-          <td class='inherited'><div class='inherited ph_ent_us'>Inherited from ph_ent</div></td>
+         <td>
+          <div class="code ph_ent_us">
+            
+            
+            
+              
+              
+            
+              
+              
+            
+              
+              
+                <div class='sameas'>Same as in ph_english_us</div>
+              
+            
+            
+            <pre><span class='blue'>phoneme</span> 02   <span class='grey'>// becomes V in en-us</span>
+  vwl  starttype #o  endtype #o
+  length 140
+  <span class='red'>ChangePhoneme</span>(V)
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -6153,6 +7024,8 @@ ipa ☐
             
               
               
+                <div class='sameas'>Same as in ph_english</div>
+              
             
               
               
@@ -6162,9 +7035,16 @@ ipa ☐
             
             
             <pre><span class='blue'>phoneme</span> o@
-vwl
-ipa ☐
-<span class='grey'>// TODO</span>
+  vwl  starttype #o  endtype #o
+  ipa ɔː
+  length 250
+  
+  <span class='green'>IF</span> MbrolaSynth <span class='green'>THEN</span>
+    <span class='red'>ChangePhoneme</span>(O@)
+  <span class='green'>ENDIF</span>
+
+  <span class='red'>IfNextVowelAppend</span>(r-)
+  FMT(vowel/oo_en)
 <span class='blue'>endphoneme</span>
 </pre>                
           </div>
@@ -6184,7 +7064,36 @@ ipa ☐
      
         
         
-          <td class='inherited'><div class='inherited ph_ent_us'>Inherited from ph_ent</div></td>
+         <td>
+          <div class="code ph_ent_us">
+            
+            
+            
+              
+              
+            
+              
+              
+            
+              
+              
+                <div class='sameas'>Same as in ph_english_us</div>
+              
+            
+            
+            <pre><span class='blue'>phoneme</span> o@
+  vwl  starttype #o  endtype #@
+  length 250
+  ipa oː|ɹ
+  <span class='green'>IF</span> nextPhW(r) <span class='green'>THEN</span>
+    ipa oː
+  <span class='green'>ENDIF</span>
+  <span class='red'>IfNextVowelAppend</span>(r)
+  FMT(vwl_en_us/or)
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -6292,15 +7201,18 @@ ipa ☐
             
               
               
+                <div class='sameas'>Same as in ph_english_rp</div>
+              
             
               
               
             
             
             <pre><span class='blue'>phoneme</span> oU
-vwl
-ipa ☐
-<span class='grey'>// TODO</span>
+  vwl  starttype #@  endtype #u
+  ipa əʊ
+  length 220
+  FMT(vdiph/@u_2)
 <span class='blue'>endphoneme</span>
 </pre>                
           </div>
@@ -6312,7 +7224,32 @@ ipa ☐
      
         
         
-          <td class='inherited'><div class='inherited ph_ent_gb'>Inherited from ph_ent</div></td>
+         <td>
+          <div class="code ph_ent_gb">
+            
+            
+            
+              
+              
+                <div class='sameas'>Same as in ph_english</div>
+              
+            
+              
+              
+            
+              
+              
+            
+            
+            <pre><span class='blue'>phoneme</span> oU
+  vwl  starttype #@  endtype #u
+  ipa əʊ
+  length 220
+  FMT(vdiph/@u_en)
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -6320,7 +7257,31 @@ ipa ☐
      
         
         
-          <td class='inherited'><div class='inherited ph_ent_us'>Inherited from ph_ent</div></td>
+         <td>
+          <div class="code ph_ent_us">
+            
+            
+            
+              
+              
+            
+              
+              
+            
+              
+              
+                <div class='sameas'>Same as in ph_english_us</div>
+              
+            
+            
+            <pre><span class='blue'>phoneme</span> oU
+  vwl  starttype #@  endtype #u
+  length 230
+  FMT(vdiph/8u)
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -6404,6 +7365,8 @@ ipa ☐
             
               
               
+                <div class='sameas'>Same as in ph_english</div>
+              
             
               
               
@@ -6413,9 +7376,16 @@ ipa ☐
             
             
             <pre><span class='blue'>phoneme</span> oU#
-vwl
-ipa ☐
-<span class='grey'>// TODO</span>
+  vwl
+  <span class='green'>IF</span> thisPh(isStressed) <span class='green'>THEN</span>
+    <span class='red'>ChangePhoneme</span>(0)
+  <span class='green'>ENDIF</span>
+  
+  <span class='green'>IF</span> nextVowel(isStressed) OR prevVowel(isStressed) <span class='green'>THEN</span>
+    <span class='red'>ChangePhoneme</span>(@)
+  <span class='green'>ENDIF</span>
+  
+  <span class='red'>ChangePhoneme</span>(oU)
 <span class='blue'>endphoneme</span>
 </pre>                
           </div>
@@ -6552,9 +7522,9 @@ ipa ☐
               
             
             
-            <pre><span class='grey'>////////////////////</span>
-<span class='grey'>// U</span>
-<span class='grey'>////////////////</span>
+            <pre><span class='grey'>/////////</span>
+<span class='grey'>//  U  //</span>
+<span class='grey'>/////////</span>
 <span class='blue'>phoneme</span> V
   vwl  starttype #a  endtype #@
   length 140
@@ -7279,7 +8249,9 @@ ipa ☐
               
             
             
-            <pre><span class='blue'>phoneme</span> U@
+            <pre><span class='grey'>// THIS IS PROBABLY WRONG. THE r of the shwa should be kept in our JRRT RP</span>
+<span class='grey'>// TODO : REWORK THIS</span>
+<span class='blue'>phoneme</span> U@
   vwl  starttype #u  endtype #@
   ipa ɔː
   length 230
@@ -7495,7 +8467,12 @@ ipa ☐
               
             
             
-            <pre><span class='grey'>// G : Taken from US, classic schwa</span>
+            <pre><span class='grey'>// @ : schwa</span>
+<span class='grey'>//   : </span>
+<span class='grey'>//   : examples : </span>
+<span class='grey'>//   : not in diphtongs : patina (p@raI@), pegasus (pEg@s@s), pejorative (p@dZ0r@tIv), pencil ()</span>
+<span class='grey'>//   : in diphtongs, always indicates presence of r : pear (pe@), pier (pi@3)</span>
+<span class='grey'>// G : Taken from US, classic schwa</span>
 <span class='blue'>phoneme</span> @    <span class='grey'>//  Schwa</span>
   vwl   starttype #@  endtype #@
   unstressed
@@ -7523,7 +8500,36 @@ ipa ☐
      
         
         
-          <td class='inherited'><div class='inherited ph_ent_gb'>Inherited from ph_ent</div></td>
+         <td>
+          <div class="code ph_ent_gb">
+            
+            
+            
+              
+              
+                <div class='sameas'>Same as in ph_english</div>
+              
+            
+              
+              
+            
+              
+              
+            
+            
+            <pre><span class='blue'>phoneme</span> @
+  vwl   starttype #@  endtype #@
+  unstressed
+  length 140
+  <span class='red'>IfNextVowelAppend</span>(r-)
+  <span class='green'>IF</span> thisPh(isWordEnd) <span class='green'>THEN</span>
+    FMT(vowel/@_6, 90)
+  <span class='green'>ENDIF</span>
+  FMT(vowel/@)
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -7531,7 +8537,38 @@ ipa ☐
      
         
         
-          <td class='inherited'><div class='inherited ph_ent_us'>Inherited from ph_ent</div></td>
+         <td>
+          <div class="code ph_ent_us">
+            
+            
+            
+              
+              
+            
+              
+              
+            
+              
+              
+                <div class='sameas'>Same as in ph_english_us</div>
+              
+            
+            
+            <pre><span class='blue'>phoneme</span> @    <span class='grey'>//  Schwa</span>
+  vwl   starttype #@  endtype #@
+  unstressed
+  length 130
+  <span class='green'>IF</span> nextPh(isRhotic) <span class='green'>THEN</span>
+    <span class='red'>ChangePhoneme</span>(3)
+  <span class='green'>ENDIF</span>
+  <span class='green'>IF</span> thisPh(isWordEnd) <span class='green'>THEN</span>
+    FMT(vowel/@_6)
+  <span class='green'>ENDIF</span>
+  FMT(vowel/@_4)
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -7609,6 +8646,8 @@ ipa ☐
             
               
               
+                <div class='sameas'>Same as in ph_english</div>
+              
             
               
               
@@ -7617,10 +8656,12 @@ ipa ☐
               
             
             
-            <pre><span class='blue'>phoneme</span> @#   <span class='grey'>// TEST: [@] which is slightly more 'front'</span>
-vwl
-ipa ☐
-<span class='grey'>// TODO</span>
+            <pre><span class='grey'>// TEST: [@] which is slightly more 'front'</span>
+<span class='blue'>phoneme</span> @#   
+  vwl  starttype #i  endtype #i
+  unstressed
+  length 130
+  FMT(vowel/@_3)
 <span class='blue'>endphoneme</span>
 </pre>                
           </div>
@@ -8168,14 +9209,10 @@ ipa ☐
             
             
             <pre><span class='grey'>////////////</span>
-<span class='grey'>// VOWELS //</span>
+<span class='grey'>// SCHWAS //</span>
 <span class='grey'>////////////</span>
 
-<span class='grey'>// @ : schwa</span>
-<span class='grey'>//   : </span>
-<span class='grey'>//   : examples : </span>
-<span class='grey'>//   : not in diphtongs : patina (p@raI@), pegasus (pEg@s@s), pejorative (p@dZ0r@tIv), pencil ()</span>
-<span class='grey'>//   : in diphtongs, always indicates presence of r : pear (pe@), pier (pi@3)</span>
+
 
 <span class='grey'>// G : Taken from US</span>
 <span class='blue'>phoneme</span> 3    <span class='grey'>//  Schwa, used for rhotic schwa in American</span>
@@ -8420,9 +9457,12 @@ ipa ☐
             
             
             <pre><span class='blue'>phoneme</span> 3:
-vwl
-ipa ☐
-<span class='grey'>// TODO</span>
+  vwl  starttype #@  endtype #@
+  ipa ɜː|ɹ <span class='grey'>// G : To make things easier, we add the rhotic mark to ipa</span>
+  length 210
+  <span class='red'>ChangeIfDiminished</span>(@)
+  <span class='red'>IfNextVowelAppend</span>(r-)
+  FMT(vowel/3_3)
 <span class='blue'>endphoneme</span>
 </pre>                
           </div>
@@ -8434,7 +9474,32 @@ ipa ☐
      
         
         
-          <td class='inherited'><div class='inherited ph_ent_gb'>Inherited from ph_ent</div></td>
+         <td>
+          <div class="code ph_ent_gb">
+            
+            
+            
+              
+              
+            
+              
+              
+            
+              
+              
+            
+            
+            <pre><span class='blue'>phoneme</span> 3:
+  vwl  starttype #@  endtype #@
+  ipa ɜː|ɹ <span class='grey'>// G : To make things easier, we add the rhotic mark to ipa</span>
+  length 210
+  <span class='red'>IfNextVowelAppend</span>(r-)
+  <span class='red'>ChangeIfDiminished</span>(@)
+  FMT(vowel/3_en)
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -8442,7 +9507,32 @@ ipa ☐
      
         
         
-          <td class='inherited'><div class='inherited ph_ent_us'>Inherited from ph_ent</div></td>
+         <td>
+          <div class="code ph_ent_us">
+            
+            
+            
+              
+              
+            
+              
+              
+            
+              
+              
+            
+            
+            <pre><span class='blue'>phoneme</span> 3:
+  vwl  starttype #@  endtype #@
+  ipa ɜː|ɹ <span class='grey'>// G : To make things easier, we add the rhotic mark to ipa</span>
+  length 210
+  <span class='red'>IfNextVowelAppend</span>(r-)
+  <span class='red'>ChangeIfDiminished</span>(3)
+  FMT(vwl_en_us/3_us2)
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -9586,11 +10676,9 @@ ipa ☐
               
             
             
-            <pre><span class='grey'>// List of phonemes used by espeak specifically for english</span>
-
-<span class='grey'>/////////////////////////</span>
-<span class='grey'>// MODIFIED CONSONANTS //</span>
-<span class='grey'>/////////////////////////</span>
+            <pre><span class='grey'>////////////////</span>
+<span class='grey'>// CONSONANTS //</span>
+<span class='grey'>////////////////</span>
 
 <span class='grey'>// t2 : [t] which does not reduce</span>
 <span class='grey'>//    : en-us + en-gb + en-rp</span>
@@ -10092,7 +11180,19 @@ ipa ☐
               
             
             
-            <pre><span class='grey'>// The four phonemes are virtual chars used as a hack</span>
+            <pre><span class='grey'>// This is a reconstruction of the RP at the time of JRRTolkien</span>
+<span class='grey'>// It aims at producing a rich IPA for tengwar transcription</span>
+<span class='grey'>//</span>
+<span class='grey'>// Among other principles :</span>
+<span class='grey'>//</span>
+<span class='grey'>// Its vowels are close to the modern RP (and the US pronounciation)</span>
+<span class='grey'>// It tries to keep the trace of the R in rhotic schwas (like in US)</span>
+<span class='grey'>// Linking phonetic phenomena are marked as such</span>
+
+
+
+
+<span class='grey'>// The four phonemes are virtual chars used as a hack</span>
 <span class='grey'>// For keeping the punctuation in the IPA output.</span>
 <span class='grey'>// The used chars are 0xF8E0,0xF8E1,0xF8E2,0xF8E3</span>
 <span class='blue'>phoneme</span> 

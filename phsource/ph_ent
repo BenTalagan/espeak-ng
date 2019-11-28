@@ -1,3 +1,15 @@
+// This is a reconstruction of the RP at the time of JRRTolkien
+// It aims at producing a rich IPA for tengwar transcription
+//
+// Among other principles :
+//
+// Its vowels are close to the modern RP (and the US pronounciation)
+// It tries to keep the trace of the R in rhotic schwas (like in US)
+// Linking phonetic phenomena are marked as such
+
+
+
+
 // The four phonemes are virtual chars used as a hack
 // For keeping the punctuation in the IPA output.
 // The used chars are 0xF8E0,0xF8E1,0xF8E2,0xF8E3
@@ -22,12 +34,9 @@ phoneme 
   ipa 
 endphoneme
 
-
-// List of phonemes used by espeak specifically for english
-
-/////////////////////////
-// MODIFIED CONSONANTS //
-/////////////////////////
+////////////////
+// CONSONANTS //
+////////////////
 
 // t2 : [t] which does not reduce
 //    : en-us + en-gb + en-rp
@@ -193,91 +202,12 @@ endphoneme
 // VOWELS //
 ////////////
 
-// @ : schwa
-//   : 
-//   : examples : 
-//   : not in diphtongs : patina (p@raI@), pegasus (pEg@s@s), pejorative (p@dZ0r@tIv), pencil ()
-//   : in diphtongs, always indicates presence of r : pear (pe@), pier (pi@3)
-
-// G : Taken from US
-phoneme 3    //  Schwa, used for rhotic schwa in American
-  vwl   starttype #@  endtype #@
-  ipa ɚ
-  unstressed
-  length 210
-  IfNextVowelAppend(r-)
-  FMT(vwl_en_us/3_us)
-endphoneme
-
-// G : use that phoneme at the end of words finishing 
-//   by a schwa followed by a word beginning with a r
-//   It becomes a rhotic schwa but the only reason is the linking with the next word in r
-//   Ex: america rules
-
-phoneme 32
-  CALL 3
-  ipa ɚ‿
-endphoneme
-
-// G : Taken from US, classic schwa
-phoneme @    //  Schwa
-  vwl   starttype #@  endtype #@
-  unstressed
-  length 130
-  // G: CHANGED! nextPh > nextPhW, we want to treat the end of word case separately.
-  IF nextPhW(isRhotic) THEN 
-    ChangePhoneme(3)
-  ENDIF
-  // G: CHANGED! "america rules" with a rothic schwa at the end, but marked differently for better precision
-  IF nextPh(isRhotic) AND thisPh(isWordEnd) THEN
-    ChangePhoneme(32)   
-  ENDIF
-  IF thisPh(isWordEnd) THEN
-    FMT(vowel/@_6)
-  ENDIF
-  FMT(vowel/@_4)
-endphoneme
-
-// G : Taken from US to keep coherency 
-// (it should not turn into a normal schwa and be re-treated)
-// This can be reconsidered, since now we've changed 
-// the schwa behaviour which could be compatible
-// Schwa, changes to I before a vowel. th**e**, used only for "the".
-phoneme @2   
-  vwl  starttype #@  endtype #@
-  unstressed
-  length 120
-  IF nextPh(isVowel) THEN
-    ChangePhoneme(I2) // Schwi before vowels "the age"
-  ENDIF
-  FMT(vowel/@_low2)
-endphoneme
-
-// G : Taken from  EN (keep it)
-// @5: Schwa, changes to U before a vowel. t**o**, used only for "to".
-phoneme @5   
-  vwl  starttype #@  endtype #@
-  unstressed
-  length 140
-  IF nextPh(isVowel) OR nextPh(isPause) THEN
-    ChangePhoneme(U) // Ex : "to Isengard" (vowel), "nowhere to go to" (pause)
-  ENDIF
-  ChangePhoneme(@)
-endphoneme
-
-
-phoneme @L // simp**le**
-  vwl  starttype #@  endtype l
-  ipa ə|l
-  unstressed
-  length 160
-  CALL vowelstart_l
-  FMT(vwl_en/@L)
-endphoneme
 
 
 
-
+/////////
+//  A  //
+/////////
 
 // G: (BEN) : Taken from the english RP
 //        ex : trap
@@ -297,7 +227,6 @@ phoneme a2
   ChangePhoneme(a)
 endphoneme
 
-
 // G: (BEN) : Taken from the english RP
 //        ex : bath
 phoneme aa
@@ -306,7 +235,6 @@ phoneme aa
   length 200
   FMT(vwl_en_rp/aa)
 endphoneme
-
 
 // G: (BEN) : Taken from the english RP
 //    Unstressed a, like in **a**bout, or at the end of words, may trigger a linking r
@@ -366,9 +294,107 @@ phoneme A~
 endphoneme
 
 
-//////////////////////////////////
-//  I
-//////////////////////////////////
+phoneme aI
+  vwl  starttype #a  endtype #i
+  length 230
+  IF nextPh(#a) OR nextPh(#o) THEN
+    AppendPhoneme(;)
+  ENDIF
+  FMT(vdiph/ai_6)
+endphoneme
+
+phoneme aI3
+  vwl  starttype #a  endtype #@
+  length 280
+  ChangePhoneme(aI@)
+endphoneme
+
+// science : TODO REWORK OR NOT ?
+phoneme aI@
+  vwl  starttype #a  endtype #@
+  length 270
+  IfNextVowelAppend(r-)
+  FMT(vwl_en/aI@)
+endphoneme
+
+phoneme aU
+  vwl  starttype #a  endtype #u
+  length 230
+  FMT(vdiph/au_3)
+endphoneme
+
+// Hum, what's this.'
+// Cannot find any example for this or any word in the dict.
+// TODO : try harder
+phoneme aU@
+  vwl  starttype #a   endtype #@
+  length 270
+  IfNextVowelAppend(r-)
+  FMT(vwl_en_rp/aU@)
+endphoneme
+
+
+/////////
+//  E  //
+/////////
+
+phoneme e# // **E**XPLORE
+  vwl
+  ChangePhoneme(I)
+endphoneme
+
+phoneme e:
+  vwl  starttype #e  endtype #e
+  length 210
+  FMT(vowel/e)
+endphoneme
+
+phoneme E
+  vwl  starttype #e  endtype #e
+  length 140
+  IF nextPhW(n) THEN
+    ChangeIfDiminished(@)
+  ELSE
+    ChangeIfDiminished(I2)
+  ENDIF
+  FMT(vowel/e_mid)
+endphoneme
+
+// [@] in unstressed syllables, if next vowel is stressed
+phoneme E#
+  vwl  starttype #e  endtype #e
+
+  IF thisPh(isUnstressed) AND nextVowel(isVowel) AND nextVowel(isStressed) THEN
+    ChangePhoneme(@)
+  ENDIF
+
+  ChangePhoneme(E)
+endphoneme
+
+phoneme E2  // does not reduce in unstressed syllables
+  vwl  starttype #e  endtype #e
+  length 140
+  ChangePhoneme(E)  // a second change ([E]  to [I2]) won't happen
+endphoneme
+
+// TODO : PROBABLY REWORK TO MAKE IT WORK MORE LIKE US
+phoneme e@
+  vwl  starttype #e  endtype #@
+  length 220
+  IfNextVowelAppend(r-)
+  FMT(vdiph2/ee@_2)
+endphoneme
+
+phoneme eI
+  vwl  starttype #i  endtype #i
+  length 220
+  FMT(vdiph2/ei_2)
+endphoneme
+
+
+/////////
+//  I  //
+/////////
 
 phoneme i
   vwl  starttype #i  endtype #i
@@ -465,9 +491,9 @@ phoneme i@3
 endphoneme
 
 
-////////////////////
-// U
-////////////////
+/////////
+//  U  //
+/////////
 
 phoneme V
   vwl  starttype #a  endtype #@
@@ -499,6 +525,8 @@ phoneme U
   FMT(vowel/o-_3)
 endphoneme
 
+// THIS IS PROBABLY WRONG. THE r of the shwa should be kept in our JRRT RP
+// TODO : REWORK THIS
 phoneme U@
   vwl  starttype #u  endtype #@
   ipa ɔː
@@ -509,270 +537,220 @@ endphoneme
 
 
 
-
-
-
-
-
-
+/////////
+//  O  //
+/////////
 
 phoneme o:
-vwl
-ipa ☐
-// TODO
+  vwl  starttype #o  endtype #o
+  length 220
+  FMT(vowel/o)
 endphoneme
-
-phoneme E
-  vwl
-  ipa ☐
-  // TODO
-endphoneme
-
-
-phoneme E#
-  vwl
-  ipa ☐
-  // TODO
-endphoneme
-
-
-phoneme E2
-  vwl
-  ipa ☐
-  // TODO
-endphoneme
-
-phoneme 0
-  vwl
-  ipa ☐
-  // TODO
-endphoneme
-
-
-phoneme 0#
-  vwl
-  ipa ☐
-  // TODO
-endphoneme
-
-
-phoneme 02
-  vwl
-  ipa ☐
-  // TODO
-endphoneme
-
-
-phoneme O2
-  vwl
-  ipa ☐
-  // TODO
-endphoneme
-
-
-phoneme O:
-vwl
-ipa ☐
-// TODO
-endphoneme
-
 
 phoneme O
-vwl
-ipa ☐
-// TODO
+  vwl  starttype #o  endtype #o
+  length 150
+  ChangeIfDiminished(@)
+  FMT(vowel/oo_en)
 endphoneme
 
-
-phoneme O@
-vwl
-ipa ☐
-// TODO
+phoneme O2
+  vwl  starttype #o  endtype #o
+  length 140
+  ChangePhoneme(0)
 endphoneme
 
-
-phoneme o@
-vwl
-ipa ☐
-// TODO
-endphoneme
-
-phoneme oU#
-vwl
-ipa ☐
-// TODO
+phoneme O:
+  vwl  starttype #o  endtype #o
+  length 230
+  ChangeIfDiminished(@)
+  IfNextVowelAppend(r-)
+  FMT(vowel/oo_1)
 endphoneme
 
 phoneme OI
-vwl
-ipa ☐
-// TODO
+  vwl  starttype #o  endtype #i
+  length 230
+  FMT(vdiph/ooi_3)
+endphoneme
+
+phoneme O~
+  vwl  starttype #o  endtype #o
+  length 240
+  FMT(vnasal/oo_n2)
+endphoneme
+
+// THIS IS PROBABLY WRONG. THE r of the shwa should be kept in our JRRT RP
+// TODO : REWORK THIS
+phoneme O@
+  vwl  starttype #o  endtype #@
+  ipa ɔː
+  length 230
+  IfNextVowelAppend(r-)
+  FMT(vowel/oo_1)
+endphoneme
+
+phoneme 0
+  vwl  starttype #o   endtype #o
+  length 140
+  ChangeIfDiminished(@)
+  FMT(vowel/0_3)
+endphoneme
+
+// A [O] that turns to [@] in unstressed syllables
+phoneme 0#    
+  vwl  starttype #o  endtype #o
+
+  IF thisPh(isUnstressed) AND nextVowel(isVowel) AND NOT nextVowel(isUnstressed) THEN
+    ChangePhoneme(@)
+  ENDIF
+
+  ChangePhoneme(0)
+endphoneme
+
+phoneme 02   // becomes V in en-us
+  vwl  starttype #o  endtype #o
+  length 140
+  ChangePhoneme(0)
+endphoneme
+
+phoneme o@
+  vwl  starttype #o  endtype #o
+  ipa ɔː
+  length 250
+  
+  IF MbrolaSynth THEN
+    ChangePhoneme(O@)
+  ENDIF
+
+  IfNextVowelAppend(r-)
+  FMT(vowel/oo_en)
 endphoneme
 
 phoneme oU
-vwl
-ipa ☐
-// TODO
+  vwl  starttype #@  endtype #u
+  ipa əʊ
+  length 220
+  FMT(vdiph/@u_2)
+endphoneme
+
+phoneme oU#
+  vwl
+  IF thisPh(isStressed) THEN
+    ChangePhoneme(0)
+  ENDIF
+  
+  IF nextVowel(isStressed) OR prevVowel(isStressed) THEN
+    ChangePhoneme(@)
+  ENDIF
+  
+  ChangePhoneme(oU)
+endphoneme
+
+////////////
+// SCHWAS //
+////////////
+
+
+
+// G : Taken from US
+phoneme 3    //  Schwa, used for rhotic schwa in American
+  vwl   starttype #@  endtype #@
+  ipa ɚ
+  unstressed
+  length 210
+  IfNextVowelAppend(r-)
+  FMT(vwl_en_us/3_us)
+endphoneme
+
+// G : use that phoneme at the end of words finishing 
+//   by a schwa followed by a word beginning with a r
+//   It becomes a rhotic schwa but the only reason is the linking with the next word in r
+//   Ex: america rules
+
+phoneme 32
+  CALL 3
+  ipa ɚ‿
+endphoneme
+
+// @ : schwa
+//   : 
+//   : examples : 
+//   : not in diphtongs : patina (p@raI@), pegasus (pEg@s@s), pejorative (p@dZ0r@tIv), pencil ()
+//   : in diphtongs, always indicates presence of r : pear (pe@), pier (pi@3)
+// G : Taken from US, classic schwa
+phoneme @    //  Schwa
+  vwl   starttype #@  endtype #@
+  unstressed
+  length 130
+  // G: CHANGED! nextPh > nextPhW, we want to treat the end of word case separately.
+  IF nextPhW(isRhotic) THEN 
+    ChangePhoneme(3)
+  ENDIF
+  // G: CHANGED! "america rules" with a rothic schwa at the end, but marked differently for better precision
+  IF nextPh(isRhotic) AND thisPh(isWordEnd) THEN
+    ChangePhoneme(32)   
+  ENDIF
+  IF thisPh(isWordEnd) THEN
+    FMT(vowel/@_6)
+  ENDIF
+  FMT(vowel/@_4)
+endphoneme
+
+// G : Taken from US to keep coherency 
+// (it should not turn into a normal schwa and be re-treated)
+// This can be reconsidered, since now we've changed 
+// the schwa behaviour which could be compatible
+// Schwa, changes to I before a vowel. th**e**, used only for "the".
+phoneme @2   
+  vwl  starttype #@  endtype #@
+  unstressed
+  length 120
+  IF nextPh(isVowel) THEN
+    ChangePhoneme(I2) // Schwi before vowels "the age"
+  ENDIF
+  FMT(vowel/@_low2)
+endphoneme
+
+// G : Taken from  EN (keep it)
+// @5: Schwa, changes to U before a vowel. t**o**, used only for "to".
+phoneme @5   
+  vwl  starttype #@  endtype #@
+  unstressed
+  length 140
+  IF nextPh(isVowel) OR nextPh(isPause) THEN
+    ChangePhoneme(U) // Ex : "to Isengard" (vowel), "nowhere to go to" (pause)
+  ENDIF
+  ChangePhoneme(@)
 endphoneme
 
 
-
-phoneme O~
-vwl
-ipa ☐
-// TODO
+phoneme @L // simp**le**
+  vwl  starttype #@  endtype l
+  ipa ə|l
+  unstressed
+  length 160
+  CALL vowelstart_l
+  FMT(vwl_en/@L)
 endphoneme
 
-phoneme e# // **E**XPLORE
-vwl
-ipa ☐
-// TODO
-endphoneme
-
-phoneme e:
-vwl
-ipa ☐
-// TODO
-endphoneme
-
-phoneme @#   // TEST: [@] which is slightly more 'front'
-vwl
-ipa ☐
-// TODO
-endphoneme
-
-
-phoneme aI
-vwl
-ipa ☐
-// TODO
-endphoneme
-
-
-phoneme aI@ // sc**ie**nce
-vwl
-ipa ☐
-// TODO
-endphoneme
-
-
-phoneme aI3
-vwl
-ipa ☐
-// TODO
-endphoneme
-
-
-phoneme aU
-vwl
-ipa ☐
-// TODO
-endphoneme
-
-phoneme aU@
-vwl
-ipa ☐
-// TODO
-endphoneme
-
-phoneme e@
-vwl
-ipa ☐
-// TODO
-endphoneme
-
-phoneme eI
-vwl
-ipa ☐
-// TODO
-endphoneme
 
 phoneme 3:
-vwl
-ipa ☐
-// TODO
+  vwl  starttype #@  endtype #@
+  ipa ɜː|ɹ // G : To make things easier, we add the rhotic mark to ipa
+  length 210
+  ChangeIfDiminished(@)
+  IfNextVowelAppend(r-)
+  FMT(vowel/3_3)
+endphoneme
+
+// TEST: [@] which is slightly more 'front'
+phoneme @#   
+  vwl  starttype #i  endtype #i
+  unstressed
+  length 130
+  FMT(vowel/@_3)
 endphoneme
 
 
 
-// // 0 : standard /o/ as in dot, stop, comet, etc
-// //   : 
-// //   :
-// phoneme 0
-//   // TODO
-// endphoneme
-// 
-// // 0# : /o/ that turns into a schwa when unstressed 
-// //    : position before a stressed vowel
-// //    : ex : over, consult, product, etc      
-// phoneme 0#    // [@] in unstressed syllables
-//   // TODO
-// endphoneme
-// 
-// // 02 : /o/ that turns into a V in us accent (!)
-// //    : ex: what (US : /hwvt/)
-// phoneme 02   // [@] in unstressed syllables
-//   // TODO
-// endphoneme
-// 
-// 
-// 
-// // GB
-// phoneme a
-//   vwl  starttype #a  endtype #a
-//   length 160
-//   ChangeIfDiminished(a#)
-//   IF thisPh(isUnstressed) THEN
-//     FMT(vowel/a_8)
-//   ENDIF
-//   FMT(vowel/a)
-// endphoneme
-// phoneme a# // **a**bout. This may be \[@\] or may be a more open schwa.
-//   vwl  starttype #@  endtype #@
-//   ipa ɐ
-//   unstressed
-//   length 150
-//   
-//   IF NOT thisPh(isUnstressed) THEN
-//     ChangePhoneme(a)          // syllable has an explicit stress
-//   ENDIF
-// 
-//   FMT(vowel/a#_3)
-// endphoneme
-// 
-// 
-// // US
-// phoneme a
-//   vwl  starttype #e  endtype #@
-//   ipa æ
-//   length 210
-// 
-//   ChangeIfDiminished(a#)
-// 
-//   IF nextPh(isNasal) AND NOT KlattSynth THEN
-//     FMT(vnasal/ee_n2)
-//   ELSEIF nextPh(r) AND thisPh(isStressed) THEN
-//     length 190
-//     FMT(vwl_en_us/ar)
-//   ENDIF
-//   FMT(vwl_en_us/a)
-// endphoneme
-// phoneme a#
-//   vwl  starttype #@  endtype #@
-//   ipa ɐ
-//   unstressed
-//   length 150
-// 
-//   IF thisPh(isStressed) THEN
-//     ChangePhoneme(a)
-//   ENDIF
-// 
-//   IF nextPhW(r) THEN 
-//     ChangePhoneme(3) // arise
-//   ENDIF
-//   
-//   FMT(vowel/a#_3)
-// endphoneme
-// 
-// 
-// 

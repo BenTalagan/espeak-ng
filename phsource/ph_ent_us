@@ -60,6 +60,84 @@ phoneme A@
   FMT(vwl_en_us/aar)
 endphoneme
 
+phoneme aI
+  vwl  starttype #a  endtype #i
+  length 240
+  IF nextPh(#a) OR nextPh(#o) THEN
+    AppendPhoneme(;)
+  ENDIF
+  FMT(vwl_en_us/ai)
+endphoneme
+
+phoneme aI3
+  vwl  starttype #a  endtype #@
+  length 310
+  ipa aɪɚ
+  IfNextVowelAppend(r-)
+  FMT(vwl_en_us/ai3)
+endphoneme
+
+phoneme aI@
+  vwl  starttype #a  endtype #@
+  length 300
+  ipa aɪə
+  IfNextVowelAppend(r-)
+  FMT(vwl_en_us/ai@)
+endphoneme
+
+phoneme aU
+  vwl  starttype #a  endtype #o
+  length 235
+  FMT(vdiph/aoo)
+endphoneme
+
+phoneme aU@
+  vwl  starttype #a   endtype #@
+  length 300
+  ipa aɪʊɹ
+  IF nextPhW(r) THEN
+    ipa aɪʊ
+  ENDIF
+  IfNextVowelAppend(r)
+  FMT(vwl_en_us/aU@)
+endphoneme
+
+
+
+// This is discussable, is it more like rp or more like gb ??
+phoneme e# // **E**XPLORE
+  vwl
+  ChangePhoneme(E)
+endphoneme
+
+phoneme E
+  vwl  starttype #e  endtype #e
+  length 190
+  IF nextPhW(n) THEN
+    ChangeIfDiminished(@)
+  ELSE
+    ChangeIfDiminished(I2)
+  ENDIF
+  FMT(vwl_en_us/ee)
+endphoneme
+
+phoneme e@
+  vwl  starttype #e  endtype #@
+  length 260
+  ipa ɛ|ɹ
+  IF nextPhW(r) THEN
+    ipa ɛ
+  ENDIF
+  IfNextVowelAppend(r)
+  FMT(vwl_en_us/er)
+endphoneme
+
+phoneme eI
+  vwl  starttype #e  endtype #i
+  length 220
+  FMT(vdiph2/ei_4)
+//  FMT(vdiph/eei_5)
+endphoneme
 
 
 
@@ -169,3 +247,108 @@ phoneme U@
   IfNextVowelAppend(r-)
   FMT(vwl_en_us/ur)
 endphoneme
+
+
+
+phoneme O
+  vwl  starttype #o  endtype #o
+  length 200
+  ChangeIfDiminished(@)
+  FMT(vowel/aa#)
+endphoneme
+
+phoneme O2
+  vwl  starttype #o  endtype #o
+  length 220
+  FMT(vowel/aa#) // Same as /O/, but not diminished.
+endphoneme
+
+phoneme O:
+  vwl  starttype #o  endtype #o
+  length 220
+  ChangeIfDiminished(@)
+  IF nextPhW(r) THEN
+    FMT(vwl_en_us/oor)
+  ENDIF
+  FMT(vowel/0_3)
+endphoneme
+
+phoneme OI
+  vwl  starttype #o  endtype #i
+  length 270
+  FMT(vdiph/ooi_3)
+endphoneme
+
+phoneme O@
+  vwl  starttype #o  endtype #@
+  length 250
+  ipa ɔː|ɹ
+  IF nextPhW(r) THEN
+    ipa ɔː
+  ENDIF
+  IfNextVowelAppend(r)
+  FMT(vwl_en_us/oor)
+endphoneme
+
+phoneme 0
+  vwl  starttype #a   endtype #a
+  length 220
+  ipa ɑː
+  ChangeIfDiminished(@)
+  IF nextPh(r) THEN
+    ChangePhoneme(O:)
+  ENDIF
+  FMT(vowel/aa_8)
+endphoneme
+
+phoneme 02   // becomes V in en-us
+  vwl  starttype #o  endtype #o
+  length 140
+  ChangePhoneme(V)
+endphoneme
+
+phoneme o@
+  vwl  starttype #o  endtype #@
+  length 250
+  ipa oː|ɹ
+  IF nextPhW(r) THEN
+    ipa oː
+  ENDIF
+  IfNextVowelAppend(r)
+  FMT(vwl_en_us/or)
+endphoneme
+
+phoneme oU
+  vwl  starttype #@  endtype #u
+  length 230
+  FMT(vdiph/8u)
+endphoneme
+
+
+
+phoneme @    //  Schwa
+  vwl   starttype #@  endtype #@
+  unstressed
+  length 130
+  IF nextPh(isRhotic) THEN
+    ChangePhoneme(3)
+  ENDIF
+  IF thisPh(isWordEnd) THEN
+    FMT(vowel/@_6)
+  ENDIF
+  FMT(vowel/@_4)
+endphoneme
+
+
+phoneme 3:
+  vwl  starttype #@  endtype #@
+  ipa ɜː|ɹ // G : To make things easier, we add the rhotic mark to ipa
+  length 210
+  IfNextVowelAppend(r-)
+  ChangeIfDiminished(3)
+  FMT(vwl_en_us/3_us2)
+endphoneme
+
+
+
+

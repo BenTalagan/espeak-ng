@@ -114,8 +114,6 @@ PHEND_REGEXP    = /^endphoneme.*$/
 def load_erb(filepath)
   template = ""
   File.open(filepath,"rb:UTF-8") { |f| template = f.read }
-  puts template.encoding
-  puts template.valid_encoding?
   ERB.new(template, 0, nil, "erb_" + SecureRandom.uuid.gsub("-","_"))
 end
 
