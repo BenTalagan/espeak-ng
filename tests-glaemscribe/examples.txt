@@ -1,0 +1,61 @@
+# Lexical set: full monopthongs
+trap .
+bath .
+palm .
+lot .
+cloth .
+thought .
+kit .
+dress .
+strut .
+foot .
+
+# Potential diphtongs
+face .
+goat .
+fleece .
+goose .
+
+# Full diphtongs
+price .
+choice .
+mouth .
+
+# Pre-R Vowel
+nurse .
+start .
+north .
+force .
+near .
+square .
+cure .
+
+# Short ending schwa, not rhotic in GB, rhotic in US
+letter .
+# Short ending schwa, not rhotic in all accents
+comma .
+# Schwi
+roses .
+
+# Diphtong (price) + rothic schwa
+fire .
+# Diphtong (mouth) + rothic shwa
+hour .
+
+# Linking r examples (long/short a)
+grandpa .
+grandpa igor .
+vanilla .
+vanilla ice .
+
+# Velarizing n inside words
+incoming .
+
+
+
+
+# ??? (==goat)
+goal .
+# ???
+happy .
+
