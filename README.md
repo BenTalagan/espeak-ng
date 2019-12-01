@@ -1,3 +1,9 @@
+# eSpeak NG - Glaemscribe fork
+
+This is a fork of eSpeak NG for Glaemscribe.
+
+make && make install && ./tests-glaemscribe/build_example_chart.rb && ./tests-glaemscribe/build_ph_chart.rb
+
 # eSpeak NG Text-to-Speech
 
 - [Features](#features)

@@ -1877,14 +1877,17 @@ include ph_english_wm
 
 // Glaemscribe's phoneme tables
 
-phonemetable ent base1
-include ph_ent
+phonemetable en-tengwar en
+include ph_english_tengwar
 
-phonemetable ent-gb ent
-include ph_ent_gb
+phonemetable en-tengwar-rp en-tengwar
+include ph_english_tengwar_rp
 
-phonemetable ent-us ent
-include ph_ent_us
+phonemetable en-tengwar-gb en-tengwar
+include ph_english_tengwar_gb
+
+phonemetable en-tengwar-us en-tengwar
+include ph_english_tengwar_us
 
 // End of glaemscribe's phoneme tables
 

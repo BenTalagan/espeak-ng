@@ -1,0 +1,17 @@
+name English (Tengwar GB)
+
+maintainer Benjamin Talagan Babut <for_my_email_address_please_visit@glaemscrafu>
+status testing
+
+language en-tengwar-gb
+language en-tengwar 2
+language en 42
+
+phonemes en-tengwar-gb
+
+tunes s1 c1 q1 e1
+
+// Whine / Wine merger
+dictrules 2
+
+

@@ -22,15 +22,47 @@ force .
 near .
 square .
 cure .
+horse .
+hoarse .
+diffraction .
+about .
+pegasus .
+an apple .
+an hour .
+an herb .
+the lord .
+the age .
+to go .
+to ache .
+simple .
 letter .
 comma .
 roses .
 fire .
 hour .
+letter .
+letter in .
+fire .
+fire in .
+hour .
+hour in .
+near .
+near in .
+square .
+square in .
+star .
+star in .
+cure .
+cure in .
 grandpa .
 grandpa igor .
 vanilla .
 vanilla ice .
 incoming .
-goal .
 happy .
+autism .
+city .
+baked .
+raged .
+cafes .
+slopes .

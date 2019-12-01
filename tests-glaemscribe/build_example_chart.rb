@@ -7,12 +7,13 @@ require "erb"
 Dir.chdir(File.dirname(__FILE__))
 
 SPECS = {
+  "en-tengwar":     "build/examples.tengwar.jrrt.txt",
   "en-gb-x-rp":     "build/examples.normal.rp.txt",
+  "en-tengwar-rp":  "build/examples.tengwar.rp.txt",
   "en-gb":          "build/examples.normal.gb.txt",
+  "en-tengwar-gb":  "build/examples.tengwar.gb.txt",
   "en-us":          "build/examples.normal.us.txt",
-  "ent":            "build/examples.tengwar.jrrt.txt",
-  "ent-gb":         "build/examples.tengwar.gb.txt",
-  "ent-us":         "build/examples.tengwar.us.txt"
+  "en-tengwar-us":  "build/examples.tengwar.us.txt"
 }
   
 def load_erb(filepath)

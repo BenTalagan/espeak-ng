@@ -38,24 +38,70 @@ endphoneme
 // CONSONANTS //
 ////////////////
 
+// Normal t, which can change to a flapping t. 
+// Use the one from the us version and cancel it in gb/rb versions.
+phoneme t
+  vls alv stp
+  voicingswitch d
+  lengthmod 2
+  Vowelin f1=0  f2=1700 -300 300  f3=-100 80
+  Vowelout f1=0 f2=1700 -300 250  f3=-100 80  rms=20
+
+  IF nextPhW(isVowel) AND nextPh(isUnstressed) THEN
+    IF NOT next2PhW(n) OR nextPhW(3:) THEN
+      IF prevPhW(isVowel) THEN
+        ChangePhoneme(t#)
+      ELIF prevPhW(n) THEN
+        WAV(ustop/t, 60)
+      ENDIF
+    ENDIF
+  ENDIF
+
+  IF nextPh(isPause2) THEN
+    WAV(ustop/t_)
+  ELIF nextPh(r) OR nextPh(R) OR nextPh(R2) THEN
+    WAV(ustop/tr)
+  ELIF nextPh(@-) THEN
+    WAV(ustop/t_dnt, 50)
+  ENDIF
+  WAV(ustop/t, 90)
+endphoneme
+
 // t2 : [t] which does not reduce
-//    : en-us + en-gb + en-rp
+//    : taken from the en-us
 //    : autopsy, autism, secretary, etc ...
 
 phoneme t2   // [t] which doesn't reduce
-  vcd alv stp
-  ChangePhoneme(t)
+  import_phoneme  base1/t
 endphoneme
 
 // t# : reduced [t] is 
 //    : en-us only
-//    : en-gb/en-rp changes to standard [t]
 //    : example : city
 
 // G : We keep it and treat it as a standard t
-phoneme t#    // reduced [t] as in "city" in en-us
+phoneme t#    // reduced [t] as in "city"
   vcd alv stp
-  ChangePhoneme(t)
+  ipa ɾ
+  lengthmod 5
+  Vowelin f1=1  f2=1700 -300 300  f3=-100 80
+  Vowelout f1=2 f2=1700 -300 300  f3=-100 80
+
+  IF nextPh(isNotVowel) THEN
+    ChangePhoneme(t)
+  ENDIF
+
+  IF KlattSynth THEN
+    IF PreVoicing THEN
+      FMT(klatt/x_tap)
+    ENDIF
+    FMT(klatt/tap2) addWav(x/d, 70)
+  ENDIF
+
+  IF PreVoicing THEN
+    FMT(d/x_tap)
+  ENDIF
+  FMT(d/tap2) addWav(x/d, 50)
 endphoneme
 
 // d# : becomes [d] if preceded by voiced phoneme, [t] if not 
@@ -136,6 +182,12 @@ phoneme r-
   FMT(r/r)
 endphoneme
 
+phoneme r-2
+  import_phoneme r-
+  ipa ɹ
+endphoneme
+
+
 // z/2 : used for 's suffix
 //     : adds I2 if previous phoneme is sibilant
 //     : changes to s if not previous phoneme is voiced
@@ -201,9 +253,6 @@ endphoneme
 ////////////
 // VOWELS //
 ////////////
-
-
-
 
 /////////
 //  A  //
@@ -271,12 +320,15 @@ endphoneme
 
 // G: (BEN): Long [a] followed by a r
 //    ex: bar
-phoneme A@
+phoneme A@      // Used for [A:] when followed by 'r', becomes [A:]+[r] in American
   vwl  starttype #a  endtype #a
-  ipa ɑː // bar open
-  length 240
-  IfNextVowelAppend(r-)
-  FMT(vwl_en_rp/aa)
+  ipa ɑː|ɹ
+  IF nextPh(r-) OR nextPh(r-2) THEN
+    ipa ɑː
+  ENDIF
+  length 260
+  IfNextVowelAppend(r-2)
+  FMT(vwl_en_us/aar)
 endphoneme
 
 // G: An "a" that lenghtens in american accent ([a] in British but [A:] in American)
@@ -303,17 +355,21 @@ phoneme aI
   FMT(vdiph/ai_6)
 endphoneme
 
+// Fire
+// Taken from US : rhoticize the schwa 
 phoneme aI3
   vwl  starttype #a  endtype #@
-  length 280
-  ChangePhoneme(aI@)
+  length 310
+  ipa aɪɚ
+  IfNextVowelAppend(r-)
+  FMT(vwl_en_us/ai3)
 endphoneme
 
 // science : TODO REWORK OR NOT ?
 phoneme aI@
   vwl  starttype #a  endtype #@
   length 270
-  IfNextVowelAppend(r-)
+  IfNextVowelAppend(r-) // r-2
   FMT(vwl_en/aI@)
 endphoneme
 
@@ -377,13 +433,17 @@ phoneme E2  // does not reduce in unstressed syllables
   ChangePhoneme(E)  // a second change ([E]  to [I2]) won't happen
 endphoneme
 
-// TODO : PROBABLY REWORK TO MAKE IT WORK MORE LIKE US
 phoneme e@
   vwl  starttype #e  endtype #@
-  length 220
-  IfNextVowelAppend(r-)
-  FMT(vdiph2/ee@_2)
+  length 260
+  ipa ɛ|ɹ
+  IF nextPhW(r) THEN
+    ipa ɛ
+  ENDIF
+  IfNextVowelAppend(r)
+  FMT(vwl_en_us/er)
 endphoneme
+
 
 phoneme eI
   vwl  starttype #i  endtype #i
@@ -440,18 +500,15 @@ endphoneme
 
 // G : (BEN) : to review!
 // used for [I] which may be [@] in some accents
-phoneme I#  
+phoneme I#
   vwl  starttype #i  endtype #i
   unstressed
-  length 130
-  
-  IF MbrolaSynth THEN
-    ChangePhoneme(I)
-  ENDIF
-
-  IfNextVowelAppend(;)
-  ChangePhoneme(I2)
+  length 160
+  ipa ᵻ
+//  FMT(vowel/@_fnt)
+  FMT(vowel/ii#)
 endphoneme
+
 
 // G : (BEN) : to review!
 // used for [I] in -ed adjectives which may be [E] in some accents
@@ -483,11 +540,16 @@ phoneme i@
   FMT(vwl_en_rp/i@)
 endphoneme
 
+// Near
 phoneme i@3
   vwl  starttype #i  endtype #@
-  length 240
-  IfNextVowelAppend(r-)
-  FMT(vwl_en_rp/i@)
+  length 280
+  ipa ɪ|ɹ
+  IF nextPhW(r) THEN
+    ipa ɪ
+  ENDIF
+  IfNextVowelAppend(r)
+  FMT(vwl_en_us/ir)
 endphoneme
 
 
@@ -525,14 +587,17 @@ phoneme U
   FMT(vowel/o-_3)
 endphoneme
 
-// THIS IS PROBABLY WRONG. THE r of the shwa should be kept in our JRRT RP
-// TODO : REWORK THIS
+
+// Cure (as in US)
 phoneme U@
-  vwl  starttype #u  endtype #@
-  ipa ɔː
-  length 230
-  IfNextVowelAppend(r-)
-  FMT(vowel/o_mid)
+  vwl  starttype #@  endtype #@
+  length 250
+  ipa ʊ|ɹ
+  IF nextPhW(r-) OR nextPhW(r-2) THEN
+    ipa ʊ
+  ENDIF
+  IfNextVowelAppend(r-2)
+  FMT(vwl_en_us/ur)
 endphoneme
 
 
@@ -580,14 +645,15 @@ phoneme O~
   FMT(vnasal/oo_n2)
 endphoneme
 
-// THIS IS PROBABLY WRONG. THE r of the shwa should be kept in our JRRT RP
-// TODO : REWORK THIS
 phoneme O@
   vwl  starttype #o  endtype #@
-  ipa ɔː
-  length 230
-  IfNextVowelAppend(r-)
-  FMT(vowel/oo_1)
+  length 250
+  ipa ɔː|ɹ
+  IF nextPhW(r) THEN
+    ipa ɔː
+  ENDIF
+  IfNextVowelAppend(r)
+  FMT(vwl_en_us/oor)
 endphoneme
 
 phoneme 0
@@ -614,26 +680,26 @@ phoneme 02   // becomes V in en-us
   ChangePhoneme(0)
 endphoneme
 
+// Horse/hoarse, use the one from US
 phoneme o@
-  vwl  starttype #o  endtype #o
-  ipa ɔː
+  vwl  starttype #o  endtype #@
   length 250
-  
-  IF MbrolaSynth THEN
-    ChangePhoneme(O@)
+  ipa oː|ɹ
+  IF nextPhW(r) THEN
+    ipa oː
   ENDIF
-
-  IfNextVowelAppend(r-)
-  FMT(vowel/oo_en)
+  IfNextVowelAppend(r)
+  FMT(vwl_en_us/or)
 endphoneme
+
 
 phoneme oU
   vwl  starttype #@  endtype #u
-  ipa əʊ
-  length 220
-  FMT(vdiph/@u_2)
+  length 230
+  FMT(vdiph/8u)
 endphoneme
 
+// Latin words, hetero
 phoneme oU#
   vwl
   IF thisPh(isStressed) THEN
@@ -647,13 +713,15 @@ phoneme oU#
   ChangePhoneme(oU)
 endphoneme
 
+
+
+
 ////////////
 // SCHWAS //
 ////////////
 
-
-
 // G : Taken from US
+//   : Rhotic schwa, ex : letter, cooper
 phoneme 3    //  Schwa, used for rhotic schwa in American
   vwl   starttype #@  endtype #@
   ipa ɚ
@@ -672,6 +740,18 @@ phoneme 32
   CALL 3
   ipa ɚ‿
 endphoneme
+
+
+// G : long rhotic schwa, ex : nURse
+phoneme 3:
+  vwl  starttype #@  endtype #@
+  ipa ɜː|ɹ  // G : To make things easier, we add the rhotic mark to ipa
+  length 210
+  ChangeIfDiminished(@)
+  IfNextVowelAppend(r-)
+  FMT(vowel/3_3)
+endphoneme
+
 
 // @ : schwa
 //   : 
@@ -735,16 +815,8 @@ phoneme @L // simp**le**
 endphoneme
 
 
-phoneme 3:
-  vwl  starttype #@  endtype #@
-  ipa ɜː|ɹ // G : To make things easier, we add the rhotic mark to ipa
-  length 210
-  ChangeIfDiminished(@)
-  IfNextVowelAppend(r-)
-  FMT(vowel/3_3)
-endphoneme
-
 // TEST: [@] which is slightly more 'front'
+// (Seems to be a test and not used in espeak)
 phoneme @#   
   vwl  starttype #i  endtype #i
   unstressed

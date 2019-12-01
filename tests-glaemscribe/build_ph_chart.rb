@@ -258,15 +258,16 @@ def build_full_chart
   
   ref_langs = [en,en_rp,en_us]
   
-  teng_t = Lang.new("ph_ent",nil,ref_langs)
+  teng_t = Lang.new("ph_english_tengwar",nil,ref_langs)
   
   build_chart([
     en,
     en_rp,
     en_us,
     teng_t,
-    Lang.new("ph_ent_gb",teng_t,ref_langs),
-    Lang.new("ph_ent_us",teng_t,ref_langs)
+    Lang.new("ph_english_tengwar_rp",teng_t,ref_langs),
+    Lang.new("ph_english_tengwar_gb",teng_t,ref_langs),
+    Lang.new("ph_english_tengwar_us",teng_t,ref_langs)
   ])
 end
 

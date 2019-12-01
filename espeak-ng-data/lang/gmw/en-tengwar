@@ -1,25 +1,26 @@
 name English (Tengwar JRRT)
 
-language ent
-language ent 42
-
 maintainer Benjamin Talagan Babut <for_my_email_address_please_visit@glaemscrafu>
 status testing
 
-phonemes ent
+language en-tengwar
+language en 42
+
+phonemes en-tengwar
 
 // Have the wh / w rule (no whine/wine merger) because Tolkien makes the graphic distinction.
 // Have the fir/fur/fern merger (Rule 5) ? Rather yes (no rule).
 dictrules 2
+option reduce_t 1
 
 // The following rules are taken from en-GB-x-rp voice
 // Horse/hoarse merger
-replace 00  o@  O@
-// Happy tensing
-replace 03 I i
+// replace 00  o@  O@
+// Happy tensing (end of word + stress)
+// replace 03 I i
 // WTF ?
-replace 03 I2 i
-// Schwa strengthening at the end of words when syllabe is stressed
+// replace 03 I2 i
+// Schwa strengthening (end of word + stress) (prefer kˈɒmɐ to kˈɒmə)
 replace 03 @ a#
-// Girl replacement
-replace 03 3 a#
+// Un-rhoticization of rhotic schwa (end of word + stress)
+// replace 03 3 a#

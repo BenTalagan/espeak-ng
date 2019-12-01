@@ -1,12 +1,13 @@
 name English (Tengwar US)
 
-language ent-us
-language ent 42
-
 maintainer Benjamin Talagan Babut <for_my_email_address_please_visit@glaemscrafu>
 status testing
 
-phonemes ent-us
+language en-tengwar-us
+language en-tengwar 2
+language en 42
+
+phonemes en-tengwar-us
 
 // Have the wh / w rule (= don't do whine/wine merger) because Tolkien makes the graphic distinction.
 // Have the fir/fur/fern merger (Rule 5) ? Rather yes (no rule 5).

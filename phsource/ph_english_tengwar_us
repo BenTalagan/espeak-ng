@@ -1,3 +1,8 @@
+
+
+
+
+
 phoneme a
   vwl  starttype #e  endtype #@
   ipa æ
@@ -15,7 +20,7 @@ phoneme a
 endphoneme
 
 phoneme aa
-  import_phoneme ent-us/a
+  import_phoneme en-tengwar-us/a
 endphoneme
 
 phoneme a#
@@ -52,11 +57,11 @@ endphoneme
 phoneme A@
   vwl  starttype #a  endtype #a
   ipa ɑː|ɹ
-  IF nextPh(r-) THEN
+  IF nextPh(r-) OR nextPh(r-2) THEN
     ipa ɑː
   ENDIF
   length 260
-  IfNextVowelAppend(r-)
+  IfNextVowelAppend(r-2)
   FMT(vwl_en_us/aar)
 endphoneme
 
@@ -241,10 +246,10 @@ phoneme U@
   vwl  starttype #@  endtype #@
   length 250
   ipa ʊ|ɹ
-  IF nextPhW(r-) THEN
+  IF nextPhW(r-) OR nextPhW(r-2) THEN
     ipa ʊ
   ENDIF
-  IfNextVowelAppend(r-)
+  IfNextVowelAppend(r-2)
   FMT(vwl_en_us/ur)
 endphoneme
 
@@ -338,6 +343,9 @@ phoneme @    //  Schwa
   ENDIF
   FMT(vowel/@_4)
 endphoneme
+
+
+// phoneme 3 : the root file uses the US version
 
 
 phoneme 3:

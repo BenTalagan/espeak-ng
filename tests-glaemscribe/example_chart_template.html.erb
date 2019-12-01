@@ -10,12 +10,26 @@
 <body>
   
   <style>
+    table {
+      border-collapse:collapse;
+    }
+    table td {
+      border:1px solid #DDDDDD;
+      padding:2px 5px;
+    }
+    .word {
+      background-color:#f0eeff;
+    }
     .comment {
-      background-color:lightgrey;
+      background-color:#d4e5ff;
       padding:5px;
+      font-weight:bold;
     }
     .header {
       min-width:150px;
+    }
+    .word, .en-tengwar, .en-tengwar-gb, .en-tengwar-rp, .en-tengwar-us {
+      border-right: 2px black solid !important;
     }
   </style>
     
@@ -30,9 +44,9 @@
     <% lines.each do |l| %>
       <tr>
         <% if l.type == :example %>
-          <td><%= l.content %></td>
+          <td class="word"><%= l.content %></td>
           <% l.translations.each do |k,v| %>
-            <td><%= v.gsub("☐","<b style='color:red'>☐</b>") %></td>
+            <td class="<%= k %>"><%= v.gsub("☐","<b style='color:red'>☐</b>") %></td>
           <% end %>
         <% else %>
           <td class="comment" colspan="<%= SPECS.keys.count + 1 %>"><%= l.content %></td>
