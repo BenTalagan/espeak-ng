@@ -408,7 +408,7 @@
               
             
             
-            <pre><span class='grey'>// G: (BEN) : Taken from the english RP</span>
+            <pre><span class='grey'>// G: (BEN) : Long a, taken from the english RP</span>
 <span class='grey'>//        ex : bath</span>
 <span class='blue'>phoneme</span> aa
   vwl  starttype #a  endtype #a
@@ -1266,7 +1266,7 @@
 <span class='blue'>phoneme</span> A:
   vwl  starttype #a  endtype #a
   length 240
-  <span class='red'>IfNextVowelAppend</span>(r-) <span class='grey'>// grandpa igor</span>
+  <span class='red'>IfNextVowelAppend</span>(r-) <span class='grey'>// Linking r, grandpa igor</span>
   FMT(vwl_en_rp/aa)
 <span class='blue'>endphoneme</span>
 </pre>                
@@ -1470,8 +1470,9 @@
             
             
             <pre><span class='grey'>// G: (BEN): Long [a] followed by a r</span>
+<span class='grey'>// Used for [A:] when followed by 'r', becomes [A:]+[r] in American</span>
 <span class='grey'>//    ex: bar</span>
-<span class='blue'>phoneme</span> A@      <span class='grey'>// Used for [A:] when followed by 'r', becomes [A:]+[r] in American</span>
+<span class='blue'>phoneme</span> A@      
   vwl  starttype #a  endtype #a
   ipa ɑː|ɹ
   <span class='green'>IF</span> nextPh(r-) OR nextPh(r-2) <span class='green'>THEN</span>
@@ -1676,6 +1677,7 @@
             
             
             <pre><span class='grey'>// G: An [a] that sounds nasal (french words)</span>
+<span class='grey'>// ex : France</span>
 <span class='blue'>phoneme</span> A~
   vwl  starttype #a endtype #a
   length 260
@@ -1831,7 +1833,9 @@
               
             
             
-            <pre><span class='blue'>phoneme</span> aI
+            <pre><span class='grey'>// G: Diphtong [ai], like in price</span>
+<span class='grey'>// Price</span>
+<span class='blue'>phoneme</span> aI
   vwl  starttype #a  endtype #i
   length 230
   <span class='green'>IF</span> nextPh(#a) OR nextPh(#o) <span class='green'>THEN</span>
@@ -2268,7 +2272,7 @@
               
             
             
-            <pre><span class='grey'>// science : TODO REWORK OR <span class='green'>NOT</span> ?</span>
+            <pre><span class='grey'>// science</span>
 <span class='blue'>phoneme</span> aI@
   vwl  starttype #a  endtype #@
   length 270
@@ -2668,7 +2672,7 @@
               
             
             
-            <pre><span class='grey'>// Hum, what's this.'</span>
+            <pre><span class='grey'>// Hum, what's this.</span>
 <span class='grey'>// Cannot find any example for this or any word in the dict.</span>
 <span class='grey'>// TODO : try harder</span>
 <span class='blue'>phoneme</span> aU@
@@ -2860,7 +2864,9 @@
             <pre><span class='grey'>/////////</span>
 <span class='grey'>//  E  //</span>
 <span class='grey'>/////////</span>
-<span class='blue'>phoneme</span> e# <span class='grey'>// **E**XPLORE</span>
+
+<span class='grey'>// **E**XPLORE</span>
+<span class='blue'>phoneme</span> e# 
   vwl
   <span class='red'>ChangePhoneme</span>(I)
 <span class='blue'>endphoneme</span>
@@ -3026,7 +3032,8 @@
               
             
             
-            <pre><span class='blue'>phoneme</span> e:
+            <pre><span class='grey'>// Could not find any example of this.</span>
+<span class='blue'>phoneme</span> e:
   vwl  starttype #e  endtype #e
   length 210
   FMT(vowel/e)
@@ -3375,6 +3382,7 @@
             
             
             <pre><span class='grey'>// [@] in unstressed syllables, if next vowel is stressed</span>
+<span class='grey'>// PhiloxE#ra</span>
 <span class='blue'>phoneme</span> E#
   vwl  starttype #e  endtype #e
 
@@ -3499,7 +3507,8 @@
               
             
             
-            <pre><span class='blue'>phoneme</span> E2  <span class='grey'>// does not reduce in unstressed syllables</span>
+            <pre><span class='grey'>// does not reduce in unstressed syllables</span>
+<span class='blue'>phoneme</span> E2  
   vwl  starttype #e  endtype #e
   length 140
   <span class='red'>ChangePhoneme</span>(E)  <span class='grey'>// a second change ([E]  to [I2]) won't happen</span>
@@ -4094,10 +4103,10 @@
             
               
               
+                <div class='sameas'>Same as in ph_english</div>
+              
             
               
-              
-                <div class='sameas'>Same as in ph_english_rp</div>
               
             
               
@@ -4108,6 +4117,46 @@
 <span class='grey'>//  I  //</span>
 <span class='grey'>/////////</span>
 <span class='blue'>phoneme</span> i
+  vwl  starttype #i  endtype #i
+  unstressed
+  ipa i
+  length 150
+  <span class='red'>IfNextVowelAppend</span>(;)
+  
+<span class='grey'>//  <span class='green'>IF</span> <span class='green'>NOT</span> thisPh(isFinalVowel) <span class='green'>THEN</span></span>
+<span class='grey'>//    <span class='red'>ChangePhoneme</span>(I)</span>
+<span class='grey'>//  <span class='green'>ENDIF</span></span>
+  
+  FMT(vowel/ii_7)
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
+        
+      
+      </td>
+    
+     
+        
+        
+         <td>
+          <div class="code ph_english_tengwar_rp">
+            
+            
+            
+              
+              
+            
+              
+              
+                <div class='sameas'>Same as in ph_english_rp</div>
+              
+            
+              
+              
+            
+            
+            <pre><span class='blue'>phoneme</span> i
   vwl  starttype #i  endtype #i
   unstressed
   ipa ɪ
@@ -4124,14 +4173,6 @@
 </pre>                
           </div>
         </td>
-        
-      
-      </td>
-    
-     
-        
-        
-          <td class='inherited'><div class='inherited ph_english_tengwar_rp'>Inherited from ph_english_tengwar</div></td>
         
       
       </td>
@@ -10914,7 +10955,7 @@
 <span class='blue'>phoneme</span> n
   vcd alv nas
   ipa n
-  <span class='green'>IF</span> nextPh(isVelar) <span class='green'>THEN</span> <span class='grey'>// /n/ is velarized to /N/ when before velar stops</span>
+  <span class='green'>IF</span> nextPhW(isVelar) <span class='green'>THEN</span> <span class='grey'>// /n/ is velarized to /N/ when before velar stops</span>
     <span class='grey'>// G: Introduce here a variant N2 of N to make the distinction</span>
     <span class='red'>ChangePhoneme</span>(N2)
   <span class='green'>ENDIF</span>
@@ -11020,7 +11061,8 @@
               
             
             
-            <pre><span class='blue'>phoneme</span> N2
+            <pre><span class='grey'>// Velarized N inside words</span>
+<span class='blue'>phoneme</span> N2
   <span class='red'>CALL</span> N
   ipa n‿
 <span class='blue'>endphoneme</span>
@@ -12292,7 +12334,7 @@
             
             
             <pre><span class='grey'>// z/2 : used for 's suffix</span>
-<span class='grey'>//     : adds I2 if previous phoneme is sibilant</span>
+<span class='grey'>//     : adds I2 if previous phoneme is sibilant (roses)</span>
 <span class='grey'>//     : changes to s if not previous phoneme is voiced</span>
 <span class='grey'>//     : else changes to phoneme z</span>
 <span class='grey'>//     : en-us + en-gb + en-rp</span>
@@ -12408,7 +12450,8 @@
               
             
             
-            <pre><span class='blue'>phoneme</span> r-2
+            <pre><span class='grey'>// An alternate "linking" r but not marked as such. This is for "true" r (the phoneme is already rhotic)</span>
+<span class='blue'>phoneme</span> r-2
   <span class='red'>import_phoneme</span> r-
   ipa ɹ
 <span class='blue'>endphoneme</span>

@@ -182,6 +182,7 @@ phoneme r-
   FMT(r/r)
 endphoneme
 
+// An alternate "linking" r but not marked as such. This is for "true" r (the phoneme is already rhotic)
 phoneme r-2
   import_phoneme r-
   ipa ɹ
@@ -189,11 +190,10 @@ endphoneme
 
 
 // z/2 : used for 's suffix
-//     : adds I2 if previous phoneme is sibilant
+//     : adds I2 if previous phoneme is sibilant (roses)
 //     : changes to s if not previous phoneme is voiced
 //     : else changes to phoneme z
 //     : en-us + en-gb + en-rp
-
 phoneme z/2    // used for 's suffix
   vcd alv frc sib
   lengthmod 6
@@ -210,7 +210,6 @@ endphoneme
 // w#  : pronounced wh (ipa ʍ)
 //     : en-us + en-gb + en-rp
 //     : example : where
-
 phoneme w#
   vls glt apr  // [h]
   ipa ʍ
@@ -229,21 +228,23 @@ phoneme w#
   WAV(h/hu, 70)
 endphoneme
 
+
+
 // n   : normal n
 //     : changes to velarized n if preceding a velar phoneme
 //     : en-us + en-gb + en-rp
 //     : example : include, income
-
 phoneme n
   vcd alv nas
   ipa n
-  IF nextPh(isVelar) THEN // /n/ is velarized to /N/ when before velar stops
+  IF nextPhW(isVelar) THEN // /n/ is velarized to /N/ when before velar stops
     // G: Introduce here a variant N2 of N to make the distinction
     ChangePhoneme(N2)
   ENDIF
   CALL base1/n
 endphoneme
 
+// Velarized N inside words
 phoneme N2
   CALL N
   ipa n‿
@@ -276,7 +277,7 @@ phoneme a2
   ChangePhoneme(a)
 endphoneme
 
-// G: (BEN) : Taken from the english RP
+// G: (BEN) : Long a, taken from the english RP
 //        ex : bath
 phoneme aa
   vwl  starttype #a  endtype #a
@@ -314,13 +315,14 @@ endphoneme
 phoneme A:
   vwl  starttype #a  endtype #a
   length 240
-  IfNextVowelAppend(r-) // grandpa igor
+  IfNextVowelAppend(r-) // Linking r, grandpa igor
   FMT(vwl_en_rp/aa)
 endphoneme
 
 // G: (BEN): Long [a] followed by a r
+// Used for [A:] when followed by 'r', becomes [A:]+[r] in American
 //    ex: bar
-phoneme A@      // Used for [A:] when followed by 'r', becomes [A:]+[r] in American
+phoneme A@      
   vwl  starttype #a  endtype #a
   ipa ɑː|ɹ
   IF nextPh(r-) OR nextPh(r-2) THEN
@@ -339,13 +341,15 @@ phoneme A#
 endphoneme
 
 // G: An [a] that sounds nasal (french words)
+// ex : France
 phoneme A~
   vwl  starttype #a endtype #a
   length 260
   FMT(vnasal/aa_n2)
 endphoneme
 
-
+// G: Diphtong [ai], like in price
+// Price
 phoneme aI
   vwl  starttype #a  endtype #i
   length 230
@@ -365,7 +369,7 @@ phoneme aI3
   FMT(vwl_en_us/ai3)
 endphoneme
 
-// science : TODO REWORK OR NOT ?
+// science
 phoneme aI@
   vwl  starttype #a  endtype #@
   length 270
@@ -379,7 +383,7 @@ phoneme aU
   FMT(vdiph/au_3)
 endphoneme
 
-// Hum, what's this.'
+// Hum, what's this.
 // Cannot find any example for this or any word in the dict.
 // TODO : try harder
 phoneme aU@
@@ -394,16 +398,19 @@ endphoneme
 //  E  //
 /////////
 
-phoneme e# // **E**XPLORE
+// **E**XPLORE
+phoneme e# 
   vwl
   ChangePhoneme(I)
 endphoneme
 
+// Could not find any example of this.
 phoneme e:
   vwl  starttype #e  endtype #e
   length 210
   FMT(vowel/e)
 endphoneme
+
 
 phoneme E
   vwl  starttype #e  endtype #e
@@ -417,6 +424,7 @@ phoneme E
 endphoneme
 
 // [@] in unstressed syllables, if next vowel is stressed
+// PhiloxE#ra
 phoneme E#
   vwl  starttype #e  endtype #e
 
@@ -427,7 +435,8 @@ phoneme E#
   ChangePhoneme(E)
 endphoneme
 
-phoneme E2  // does not reduce in unstressed syllables
+// does not reduce in unstressed syllables
+phoneme E2  
   vwl  starttype #e  endtype #e
   length 140
   ChangePhoneme(E)  // a second change ([E]  to [I2]) won't happen
@@ -459,16 +468,15 @@ endphoneme
 phoneme i
   vwl  starttype #i  endtype #i
   unstressed
-  ipa ɪ
-  length 140
+  ipa i
+  length 150
   IfNextVowelAppend(;)
-
-  IF NOT thisPh(isFinalVowel) THEN
-    length 130
-    FMT(vowel/ii)
-  ENDIF
-
-  FMT(vowel/ii_final)
+  
+//  IF NOT thisPh(isFinalVowel) THEN
+//    ChangePhoneme(I)
+//  ENDIF
+  
+  FMT(vowel/ii_7)
 endphoneme
 
 phoneme i:

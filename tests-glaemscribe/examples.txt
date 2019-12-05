@@ -34,6 +34,17 @@ cure .
 horse .
 hoarse .
 
+# {A#} : [a] that lengthens when stressed, in US accent
+mama .
+
+# {A~} : nasal A
+croissant .
+
+# Can / Cannot / Can't
+I can .
+I can't .
+I cannot .
+
 # {a2} : [a] that does not reduce (quite rare, latin words)
 diffraction .
 
@@ -68,8 +79,13 @@ roses .
 fire .
 # Diphtong (mouth) + rothic shwa
 hour .
+# Various words with potential problems
+science .
+explore .
+demoness .
+philoxera .
 
-# Linking r with rhotic schwas
+# Linking rs
 letter .
 letter in .
 fire .

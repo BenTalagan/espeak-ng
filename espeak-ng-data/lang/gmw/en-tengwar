@@ -18,7 +18,6 @@ option reduce_t 1
 // replace 00  o@  O@
 // Happy tensing (end of word + stress)
 // replace 03 I i
-// WTF ?
 // replace 03 I2 i
 // Schwa strengthening (end of word + stress) (prefer kˈɒmɐ to kˈɒmə)
 replace 03 @ a#

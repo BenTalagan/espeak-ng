@@ -24,6 +24,11 @@ square .
 cure .
 horse .
 hoarse .
+mama .
+croissant .
+I can .
+I can't .
+I cannot .
 diffraction .
 about .
 pegasus .
@@ -40,6 +45,10 @@ comma .
 roses .
 fire .
 hour .
+science .
+explore .
+demoness .
+philoxera .
 letter .
 letter in .
 fire .

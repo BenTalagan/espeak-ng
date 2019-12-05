@@ -59,6 +59,22 @@ phoneme 3:
   FMT(vowel/3_3)
 endphoneme
 
+
+phoneme i
+  vwl  starttype #i  endtype #i
+  unstressed
+  ipa ɪ
+  length 140
+  IfNextVowelAppend(;)
+
+  IF NOT thisPh(isFinalVowel) THEN
+    length 130
+    FMT(vowel/ii)
+  ENDIF
+
+  FMT(vowel/ii_final)
+endphoneme
+
 phoneme I#   // used for [I] which may be [@] in some accents
   vwl  starttype #i  endtype #i
   unstressed
