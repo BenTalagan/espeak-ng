@@ -41,7 +41,7 @@ make install
 make clean
 make distclean
 ./configure --prefix=/usr --without-async --without-mbrola --without-sonic
-make ent
+make en
 cd src/ucd-tools
 make clean
 emconfigure ./configure
