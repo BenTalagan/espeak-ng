@@ -68,6 +68,9 @@ to ache .
 # Schwa {@L} : special case of schwa before [l] (simPLE)
 simple .
 
+# Rhotic scha in middle of word
+motherfaker .
+
 # Short ending rhotic schwa {3}, loses rhoticization or get strengthened to [a] in some accents
 letter .
 # Short ending schwa {@}, never rhotic
@@ -88,6 +91,8 @@ philoxera .
 # Linking rs
 letter .
 letter in .
+mother .
+mother and child .
 fire .
 fire in .
 hour .

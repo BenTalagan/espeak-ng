@@ -40,6 +40,7 @@ the age .
 to go .
 to ache .
 simple .
+motherfaker .
 letter .
 comma .
 roses .
@@ -51,6 +52,8 @@ demoness .
 philoxera .
 letter .
 letter in .
+mother .
+mother and child .
 fire .
 fire in .
 hour .

@@ -2036,8 +2036,6 @@
             
               
               
-                <div class='sameas'>Same as in ph_english_us</div>
-              
             
             
             <pre><span class='grey'>// Fire</span>
@@ -2046,7 +2044,7 @@
   vwl  starttype #a  endtype #@
   length 310
   ipa aɪɚ
-  <span class='red'>IfNextVowelAppend</span>(r-)
+  <span class='red'>IfNextVowelAppend</span>(r-2)
   FMT(vwl_en_us/ai3)
 <span class='blue'>endphoneme</span>
 </pre>                
@@ -2276,7 +2274,7 @@
 <span class='blue'>phoneme</span> aI@
   vwl  starttype #a  endtype #@
   length 270
-  <span class='red'>IfNextVowelAppend</span>(r-) <span class='grey'>// r-2</span>
+  <span class='red'>IfNextVowelAppend</span>(r-) <span class='grey'>// This is not rothic, so use the explicit version</span>
   FMT(vwl_en/aI@)
 <span class='blue'>endphoneme</span>
 </pre>                
@@ -5326,8 +5324,6 @@
             
               
               
-                <div class='sameas'>Same as in ph_english</div>
-              
             
               
               
@@ -5341,10 +5337,10 @@
   vwl  starttype #@  endtype #@
   length 190
   ipa əɹ
-  <span class='green'>IF</span> nextPhW(r-) <span class='green'>THEN</span>
+  <span class='green'>IF</span> nextPhW(r-) OR nextPhW(r-2) <span class='green'>THEN</span>
     ipa ə
   <span class='green'>ENDIF</span>
-  <span class='red'>IfNextVowelAppend</span>(r-)
+  <span class='red'>IfNextVowelAppend</span>(r-2)
   FMT(vowelr/V_r)
 <span class='blue'>endphoneme</span>
 </pre>                
@@ -8418,8 +8414,6 @@
             
               
               
-                <div class='sameas'>Same as in ph_english</div>
-              
             
               
               
@@ -8432,10 +8426,10 @@
   vwl  starttype #@  endtype #@
   length 210
   ipa ʌɹ
-  <span class='green'>IF</span> nextPhW(r-) <span class='green'>THEN</span>
+  <span class='green'>IF</span> nextPhW(r-) OR nextPhW(r-2) <span class='green'>THEN</span>
     ipa ʌ
   <span class='green'>ENDIF</span>
-  <span class='red'>IfNextVowelAppend</span>(r-)
+  <span class='red'>IfNextVowelAppend</span>(r-2)
   FMT(vowelr/V3_r)
 <span class='blue'>endphoneme</span>
 </pre>                
@@ -10055,8 +10049,6 @@
             
               
               
-                <div class='sameas'>Same as in ph_english_us</div>
-              
             
             
             <pre><span class='grey'>////////////</span>
@@ -10070,7 +10062,7 @@
   ipa ɚ
   unstressed
   length 210
-  <span class='red'>IfNextVowelAppend</span>(r-)
+  <span class='red'>IfNextVowelAppend</span>(r-2)
   FMT(vwl_en_us/3_us)
 <span class='blue'>endphoneme</span>
 </pre>                
@@ -10379,11 +10371,11 @@
             <pre><span class='grey'>// G : long rhotic schwa, ex : nURse</span>
 <span class='blue'>phoneme</span> 3:
   vwl  starttype #@  endtype #@
-  ipa ɜː|ɹ  <span class='grey'>// G : To make things easier, we add the rhotic mark to ipa</span>
+  ipa ɜː|ɹ <span class='grey'>// G : To make things easier, we add the rhotic mark to ipa</span>
   length 210
-  <span class='red'>ChangeIfDiminished</span>(@)
-  <span class='red'>IfNextVowelAppend</span>(r-)
-  FMT(vowel/3_3)
+  <span class='red'>IfNextVowelAppend</span>(r-2)
+  <span class='red'>ChangeIfDiminished</span>(3)
+  FMT(vwl_en_us/3_us2)
 <span class='blue'>endphoneme</span>
 </pre>                
           </div>

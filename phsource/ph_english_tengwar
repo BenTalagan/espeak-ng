@@ -365,7 +365,7 @@ phoneme aI3
   vwl  starttype #a  endtype #@
   length 310
   ipa aɪɚ
-  IfNextVowelAppend(r-)
+  IfNextVowelAppend(r-2)
   FMT(vwl_en_us/ai3)
 endphoneme
 
@@ -373,7 +373,7 @@ endphoneme
 phoneme aI@
   vwl  starttype #a  endtype #@
   length 270
-  IfNextVowelAppend(r-) // r-2
+  IfNextVowelAppend(r-) // This is not rothic, so use the explicit version
   FMT(vwl_en/aI@)
 endphoneme
 
@@ -534,10 +534,10 @@ phoneme IR
   vwl  starttype #@  endtype #@
   length 190
   ipa əɹ
-  IF nextPhW(r-) THEN
+  IF nextPhW(r-) OR nextPhW(r-2) THEN
     ipa ə
   ENDIF
-  IfNextVowelAppend(r-)
+  IfNextVowelAppend(r-2)
   FMT(vowelr/V_r)
 endphoneme
 
@@ -576,10 +576,10 @@ phoneme VR        // used for "or"/"ur" when [3:] is split (Scottish)
   vwl  starttype #@  endtype #@
   length 210
   ipa ʌɹ
-  IF nextPhW(r-) THEN
+  IF nextPhW(r-) OR nextPhW(r-2) THEN
     ipa ʌ
   ENDIF
-  IfNextVowelAppend(r-)
+  IfNextVowelAppend(r-2)
   FMT(vowelr/V3_r)
 endphoneme
 
@@ -735,7 +735,7 @@ phoneme 3    //  Schwa, used for rhotic schwa in American
   ipa ɚ
   unstressed
   length 210
-  IfNextVowelAppend(r-)
+  IfNextVowelAppend(r-2)
   FMT(vwl_en_us/3_us)
 endphoneme
 
@@ -753,11 +753,11 @@ endphoneme
 // G : long rhotic schwa, ex : nURse
 phoneme 3:
   vwl  starttype #@  endtype #@
-  ipa ɜː|ɹ  // G : To make things easier, we add the rhotic mark to ipa
+  ipa ɜː|ɹ // G : To make things easier, we add the rhotic mark to ipa
   length 210
-  ChangeIfDiminished(@)
-  IfNextVowelAppend(r-)
-  FMT(vowel/3_3)
+  IfNextVowelAppend(r-2)
+  ChangeIfDiminished(3)
+  FMT(vwl_en_us/3_us2)
 endphoneme
 
 

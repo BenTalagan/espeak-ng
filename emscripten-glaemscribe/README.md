@@ -54,4 +54,5 @@ emmake make src/libespeak-ng.la
 cd emscripten-glaemscribe
 emmake make clean
 emmake make
+cd ..
 ```
