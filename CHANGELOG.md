@@ -7,7 +7,17 @@
 
 The espeak-ng project is a fork of the espeak project.
 
-### 1.49.3 - (In Development)
+### 1.51 (In Development)
+
+updated languages:
+
+*  de (German) -- Karl Eick
+*  el (Modern Greek) -- Reece Dunn (support for variant Greek letter forms)
+*  grc (Ancient Greek) -- Reece Dunn (support for variant Greek letter forms)
+*  shn (Shan Tay Yai) -- ronaldaug
+*  ur (Urdu) -- Ejaz Shah
+
+### 1.50 - 2019-11-29
 
 *  Add a `--disable-rpath` option to prevent libtool hardcoding rpaths in the executable.
 *  Renamed the `hy-arevmda` language to `hyw`, following the 2018-03-30 change to the
