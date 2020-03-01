@@ -55,7 +55,8 @@ pegasus .
 # {a#2} : only in "an", depends of the following ph starting with a vowel or not. Can't find a real example though. Maybe for 'h' ?
 an apple .
 an hour .
-an herb .
+a host .
+an host .
 
 # Schwa {@2} : only in "the". Changes to [i] before vowel.
 the lord .

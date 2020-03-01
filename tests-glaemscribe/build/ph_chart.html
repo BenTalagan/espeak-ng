@@ -434,40 +434,7 @@
      
         
         
-         <td>
-          <div class="code ph_english_tengwar_gb">
-            
-            
-            
-              
-              
-                <div class='sameas'>Same as in ph_english</div>
-              
-            
-              
-              
-            
-              
-              
-            
-            
-            <pre><span class='grey'>// G: (BEN): Taken from en-gb</span>
-<span class='grey'>//       ex : bath</span>
-<span class='blue'>phoneme</span> aa
-  vwl  starttype #a  endtype #a
-  ipa a
-  length 200
-  
-  <span class='green'>IF</span> MbrolaSynth <span class='green'>THEN</span>
-    <span class='red'>ChangePhoneme</span>(A:)
-  <span class='green'>ENDIF</span>
-
-  <span class='red'>IfNextVowelAppend</span>(r-) <span class='grey'>// Ben : I don't see how this could happen at all. </span>
-  FMT(vowel/a_6, 88)
-<span class='blue'>endphoneme</span>
-</pre>                
-          </div>
-        </td>
+          <td class='inherited'><div class='inherited ph_english_tengwar_gb'>Inherited from ph_english_tengwar</div></td>
         
       
       </td>
@@ -678,6 +645,25 @@
             
             
             <pre><span class='grey'>// G: (BEN): Taken from en-gb</span>
+<span class='grey'>//       ex : bath</span>
+<span class='grey'>// </span>
+<span class='grey'>// After discussion with Bertrand, the short a is probably more typical of the north of England</span>
+<span class='grey'>// So we comment this rule.</span>
+<span class='grey'>//</span>
+<span class='grey'>// phoneme aa</span>
+<span class='grey'>//   vwl  starttype #a  endtype #a</span>
+<span class='grey'>//   ipa a</span>
+<span class='grey'>//   length 200</span>
+<span class='grey'>//   </span>
+<span class='grey'>//   <span class='green'>IF</span> MbrolaSynth <span class='green'>THEN</span></span>
+<span class='grey'>//     <span class='red'>ChangePhoneme</span>(A:)</span>
+<span class='grey'>//   <span class='green'>ENDIF</span></span>
+<span class='grey'>// </span>
+<span class='grey'>//   <span class='red'>IfNextVowelAppend</span>(r-) // Ben : I don't see how this could happen at all. </span>
+<span class='grey'>//   FMT(vowel/a_6, 88)</span>
+<span class='grey'>// endphoneme</span>
+
+<span class='grey'>// G: (BEN): Taken from en-gb</span>
 <span class='grey'>//       ex : **a**bout</span>
 <span class='blue'>phoneme</span> a#
   vwl  starttype #@  endtype #@
@@ -9035,22 +9021,31 @@
             
               
               
-            
-              
-              
-                <div class='sameas'>Same as in ph_english_rp</div>
+                <div class='sameas'>Same as in ph_english</div>
               
             
               
               
             
+              
+              
             
-            <pre><span class='blue'>phoneme</span> U@
+            
+            <pre><span class='grey'>// phoneme U@</span>
+<span class='grey'>//   vwl  starttype #u  endtype #@</span>
+<span class='grey'>//   ipa ɔː</span>
+<span class='grey'>//   length 230</span>
+<span class='grey'>//   <span class='red'>IfNextVowelAppend</span>(r-)</span>
+<span class='grey'>//   FMT(vowel/o_mid)</span>
+<span class='grey'>// endphoneme</span>
+<span class='blue'>phoneme</span> U@
   vwl  starttype #u  endtype #@
-  ipa ɔː
-  length 230
+  length 200
   <span class='red'>IfNextVowelAppend</span>(r-)
-  FMT(vowel/o_mid)
+  <span class='green'>IF</span> thisPh(isUnstressed) <span class='green'>THEN</span>
+    FMT(vdiph2/8@)
+  <span class='green'>ENDIF</span>
+  FMT(vdiph2/uu@)
 <span class='blue'>endphoneme</span>
 </pre>                
           </div>
@@ -9069,24 +9064,31 @@
             
               
               
-                <div class='sameas'>Same as in ph_english</div>
+            
+              
+              
+                <div class='sameas'>Same as in ph_english_rp</div>
               
             
               
               
             
-              
-              
             
-            
-            <pre><span class='blue'>phoneme</span> U@
+            <pre><span class='grey'>// phoneme U@</span>
+<span class='grey'>//   vwl  starttype #u  endtype #@</span>
+<span class='grey'>//   length 200</span>
+<span class='grey'>//   <span class='red'>IfNextVowelAppend</span>(r-)</span>
+<span class='grey'>//   <span class='green'>IF</span> thisPh(isUnstressed) <span class='green'>THEN</span></span>
+<span class='grey'>//     FMT(vdiph2/8@)</span>
+<span class='grey'>//   <span class='green'>ENDIF</span></span>
+<span class='grey'>//   FMT(vdiph2/uu@)</span>
+<span class='grey'>// endphoneme</span>
+<span class='blue'>phoneme</span> U@
   vwl  starttype #u  endtype #@
-  length 200
+  ipa ɔː
+  length 230
   <span class='red'>IfNextVowelAppend</span>(r-)
-  <span class='green'>IF</span> thisPh(isUnstressed) <span class='green'>THEN</span>
-    FMT(vdiph2/8@)
-  <span class='green'>ENDIF</span>
-  FMT(vdiph2/uu@)
+  FMT(vowel/o_mid)
 <span class='blue'>endphoneme</span>
 </pre>                
           </div>
@@ -11439,8 +11441,32 @@
      
         
         
+          <td class='absent'><div class='absent  ph_english_tengwar'>Absent</div></td>
+        
+      
+      </td>
+    
+     
+        
+        
+          <td class='absent'><div class='absent  ph_english_tengwar_rp'>Absent</div></td>
+        
+      
+      </td>
+    
+     
+        
+        
+          <td class='absent'><div class='absent  ph_english_tengwar_gb'>Absent</div></td>
+        
+      
+      </td>
+    
+     
+        
+        
          <td>
-          <div class="code ph_english_tengwar">
+          <div class="code ph_english_tengwar_us">
             
             
             
@@ -11456,11 +11482,7 @@
               
             
             
-            <pre><span class='grey'>////////////////</span>
-<span class='grey'>// CONSONANTS //</span>
-<span class='grey'>////////////////</span>
-
-<span class='grey'>// Normal t, which can change to a flapping t. </span>
+            <pre><span class='grey'>// Normal t, which can change to a flapping t. </span>
 <span class='grey'>// Use the one from the us version and cancel it in gb/rb versions.</span>
 <span class='blue'>phoneme</span> t
   vls alv stp
@@ -11491,72 +11513,6 @@
 </pre>                
           </div>
         </td>
-        
-      
-      </td>
-    
-     
-        
-        
-         <td>
-          <div class="code ph_english_tengwar_rp">
-            
-            
-            
-              
-              
-            
-              
-              
-            
-              
-              
-            
-            
-            <pre><span class='blue'>phoneme</span> t
-  <span class='grey'>// Cancel flapping t</span>
-  <span class='red'>import_phoneme</span> base1/t
-<span class='blue'>endphoneme</span>
-</pre>                
-          </div>
-        </td>
-        
-      
-      </td>
-    
-     
-        
-        
-         <td>
-          <div class="code ph_english_tengwar_gb">
-            
-            
-            
-              
-              
-            
-              
-              
-            
-              
-              
-            
-            
-            <pre><span class='blue'>phoneme</span> t
-  <span class='grey'>// Cancel flapping t</span>
-  <span class='red'>import_phoneme</span> base1/t
-<span class='blue'>endphoneme</span>
-</pre>                
-          </div>
-        </td>
-        
-      
-      </td>
-    
-     
-        
-        
-          <td class='inherited'><div class='inherited ph_english_tengwar_us'>Inherited from ph_english_tengwar</div></td>
         
       
       </td>
@@ -11874,7 +11830,11 @@
               
             
             
-            <pre><span class='grey'>// t2 : [t] which does not reduce</span>
+            <pre><span class='grey'>////////////////</span>
+<span class='grey'>// CONSONANTS //</span>
+<span class='grey'>////////////////</span>
+
+<span class='grey'>// t2 : [t] which does not reduce</span>
 <span class='grey'>//    : taken from the en-us</span>
 <span class='grey'>//    : autopsy, autism, secretary, etc ...</span>
 <span class='blue'>phoneme</span> t2   <span class='grey'>// [t] which doesn't reduce</span>

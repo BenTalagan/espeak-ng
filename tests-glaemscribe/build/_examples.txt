@@ -34,7 +34,8 @@ about .
 pegasus .
 an apple .
 an hour .
-an herb .
+a host .
+an host .
 the lord .
 the age .
 to go .
