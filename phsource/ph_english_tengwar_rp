@@ -1,9 +1,4 @@
 
-phoneme t
-  // Cancel flapping t
-  import_phoneme base1/t
-endphoneme
-
 phoneme t2   // [t] which doesn't reduce
   vcd alv stp
   ChangePhoneme(t)
@@ -100,12 +95,22 @@ phoneme i@3
   FMT(vdiph2/ii@)
 endphoneme
 
+// phoneme U@
+//   vwl  starttype #u  endtype #@
+//   ipa ɔː
+//   length 230
+//   IfNextVowelAppend(r-)
+//   FMT(vowel/o_mid)
+// endphoneme
+
 phoneme U@
   vwl  starttype #u  endtype #@
-  ipa ɔː
-  length 230
+  length 200
   IfNextVowelAppend(r-)
-  FMT(vowel/o_mid)
+  IF thisPh(isUnstressed) THEN
+    FMT(vdiph2/8@)
+  ENDIF
+  FMT(vdiph2/uu@)
 endphoneme
 
 

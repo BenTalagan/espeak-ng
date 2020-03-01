@@ -38,35 +38,6 @@ endphoneme
 // CONSONANTS //
 ////////////////
 
-// Normal t, which can change to a flapping t. 
-// Use the one from the us version and cancel it in gb/rb versions.
-phoneme t
-  vls alv stp
-  voicingswitch d
-  lengthmod 2
-  Vowelin f1=0  f2=1700 -300 300  f3=-100 80
-  Vowelout f1=0 f2=1700 -300 250  f3=-100 80  rms=20
-
-  IF nextPhW(isVowel) AND nextPh(isUnstressed) THEN
-    IF NOT next2PhW(n) OR nextPhW(3:) THEN
-      IF prevPhW(isVowel) THEN
-        ChangePhoneme(t#)
-      ELIF prevPhW(n) THEN
-        WAV(ustop/t, 60)
-      ENDIF
-    ENDIF
-  ENDIF
-
-  IF nextPh(isPause2) THEN
-    WAV(ustop/t_)
-  ELIF nextPh(r) OR nextPh(R) OR nextPh(R2) THEN
-    WAV(ustop/tr)
-  ELIF nextPh(@-) THEN
-    WAV(ustop/t_dnt, 50)
-  ENDIF
-  WAV(ustop/t, 90)
-endphoneme
-
 // t2 : [t] which does not reduce
 //    : taken from the en-us
 //    : autopsy, autism, secretary, etc ...

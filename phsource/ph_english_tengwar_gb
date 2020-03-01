@@ -1,8 +1,4 @@
 
-phoneme t
-  // Cancel flapping t
-  import_phoneme base1/t
-endphoneme
 
 phoneme t2   // [t] which doesn't reduce
   vcd alv stp
@@ -31,18 +27,22 @@ endphoneme
 
 // G: (BEN): Taken from en-gb
 //       ex : bath
-phoneme aa
-  vwl  starttype #a  endtype #a
-  ipa a
-  length 200
-  
-  IF MbrolaSynth THEN
-    ChangePhoneme(A:)
-  ENDIF
-
-  IfNextVowelAppend(r-) // Ben : I don't see how this could happen at all. 
-  FMT(vowel/a_6, 88)
-endphoneme
+// 
+// After discussion with Bertrand, the short a is probably more typical of the north of England
+// So we comment this rule.
+//
+// phoneme aa
+//   vwl  starttype #a  endtype #a
+//   ipa a
+//   length 200
+//   
+//   IF MbrolaSynth THEN
+//     ChangePhoneme(A:)
+//   ENDIF
+// 
+//   IfNextVowelAppend(r-) // Ben : I don't see how this could happen at all. 
+//   FMT(vowel/a_6, 88)
+// endphoneme
 
 // G: (BEN): Taken from en-gb
 //       ex : **a**bout
@@ -247,16 +247,23 @@ phoneme U
   FMT(vowel/uu)
 endphoneme
 
+// phoneme U@
+//   vwl  starttype #u  endtype #@
+//   length 200
+//   IfNextVowelAppend(r-)
+//   IF thisPh(isUnstressed) THEN
+//     FMT(vdiph2/8@)
+//   ENDIF
+//   FMT(vdiph2/uu@)
+// endphoneme
+
 phoneme U@
   vwl  starttype #u  endtype #@
-  length 200
+  ipa ɔː
+  length 230
   IfNextVowelAppend(r-)
-  IF thisPh(isUnstressed) THEN
-    FMT(vdiph2/8@)
-  ENDIF
-  FMT(vdiph2/uu@)
+  FMT(vowel/o_mid)
 endphoneme
-
 
 
 
