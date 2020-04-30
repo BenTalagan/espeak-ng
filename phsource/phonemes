@@ -1724,6 +1724,11 @@ include ph_guarani
 phonemetable hak base1
 include ph_hakka
 
+phonemetable haw base1
+include ph_hawaiian
+
+phonemetable he base1
+
 phonemetable hi_base base1
 include ph_hindi_base
 
@@ -1780,6 +1785,9 @@ include ph_polish
 
 phonemetable prs base1
 include ph_dari
+
+phonemetable qu base1
+include ph_quechua
 
 phonemetable quc base1
 
@@ -1844,6 +1852,7 @@ include ph_nahuatl
 
 phonemetable pt base2
 include ph_pt_brazil
+
 
 phonemetable ro base2
 include ph_romanian
@@ -2017,6 +2026,8 @@ include ph_serbian
 phonemetable ru-lv ru
 include ph_russian_lv
 
+phonemetable uk ru
+
 phonemetable az tr
 include ph_azerbaijani
 
@@ -2034,4 +2045,5 @@ include ph_vietnam_sgn
 
 phonemetable sd ur
 include ph_sindhi
+
 
