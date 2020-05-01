@@ -49,11 +49,11 @@ EM_FILE_PACKAGER=python $(EMSCRIPTEN)/tools/file_packager.py
 
 # NOTE: libespeak-ng.so (Linux) or libespeak-ng.dylib (macOS) compiled to LLVM IR code
 EM_LIBESPEAKNG_SO=$(wildcard ../src/.libs/libespeak-ng.so)
-EM_LIBESPEAKNG_DYLIB=$(wildcard ../src/.libs/libespeak-ng.dylib)
-ifneq ($(EM_LIBESPEAKNG_DYLIB),)
-	EM_LIBESPEAKNG=$(EM_LIBESPEAKNG_DYLIB)
-else ifneq ($(EM_LIBESPEAKNG_SO),)
+EM_LIBESPEAKNG_A=$(wildcard ../src/.libs/libespeak-ng.a)
+ifneq ($(EM_LIBESPEAKNG_SO),)
 	EM_LIBESPEAKNG=$(EM_LIBESPEAKNG_SO)
+else ifneq ($(EM_LIBESPEAKNG_A),)
+	EM_LIBESPEAKNG=$(EM_LIBESPEAKNG_A)
 endif
 
 # NOTE: glue code files
@@ -89,7 +89,7 @@ EM_ALL_POST_JS=$(EM_GLUE_AUTOGEN_JS) $(EM_POST_JS)
 # ./emconfigure ./configure --prefix=/usr --without-async
 # ./emmake make
 CXXFLAGS+=-DESPEAK_DATA_PATH=\"$(EM_VIRTUAL_PATH_ESPEAKNG_DATA)\"
-CXXFLAGS+=-I ./ -I ../ -I ../src/include/espeak-ng
+CXXFLAGS+=-I ./ -I ../  -I ../src/include -I ../src/include/espeak-ng -I ../src/ucd-tools/src/include
 
 # NOTE: so far, pthread is not supported in any browser
 #       except Firefox Nightly.
@@ -114,9 +114,10 @@ CXXFLAGS+=-I ./ -I ../ -I ../src/include/espeak-ng
 #
 # Since we don't want a nightmare headache in loading the engine, we will stay syncrhonous, without WASM.
 
-EM_CXXFLAGS_SYNC_NOWASM=-s RESERVED_FUNCTION_POINTERS=2 --memory-init-file 0 -s SINGLE_FILE -s FORCE_FILESYSTEM=1 -s WASM=0
-EM_CXXFLAGS_SYNC_WASM=-s RESERVED_FUNCTION_POINTERS=2 --memory-init-file 0 -s SINGLE_FILE -s FORCE_FILESYSTEM=1 -s WASM=1 -s BINARYEN_ASYNC_COMPILATION=0
-EM_CXXFLAGS_ASYNC_WASM=-s RESERVED_FUNCTION_POINTERS=2 --memory-init-file 0 -s SINGLE_FILE -s FORCE_FILESYSTEM=1 -s WASM=1 -s BINARYEN_ASYNC_COMPILATION=1 -s MODULARIZE=1 -s 'EXPORT_NAME="GlaemscribeEspeakNG"'
+EM_CXXFLAGS_COMMON=-s RESERVED_FUNCTION_POINTERS=2 --memory-init-file 0 -s SINGLE_FILE -s FORCE_FILESYSTEM=1 
+EM_CXXFLAGS_SYNC_NOWASM=$(EM_CXXFLAGS_COMMON) -s WASM=0
+EM_CXXFLAGS_SYNC_WASM=$(EM_CXXFLAGS_COMMON) -s WASM=1 -s BINARYEN_ASYNC_COMPILATION=0
+EM_CXXFLAGS_ASYNC_WASM=$(EM_CXXFLAGS_COMMON) -s WASM=1 -s BINARYEN_ASYNC_COMPILATION=1 -s MODULARIZE=1 -s 'EXPORT_NAME="GlaemscribeEspeakNG"'
 
 
 ###############################################################################
@@ -150,8 +151,8 @@ ifeq ($(EM_LIBESPEAKNG),)
 endif
 	$(CXX) $(CXXFLAGS) \
 		$(EM_CXXFLAGS_SYNC_WASM) \
-		$(EM_GLUE_OBJ) \
 		$(EM_LIBESPEAKNG) \
+		$(EM_GLUE_OBJ) \
 		$(patsubst %,--pre-js %,$(EM_ALL_PRE_JS)) \
 		$(patsubst %,--post-js %,$(EM_ALL_POST_JS)) \
 		-o $@
@@ -162,8 +163,8 @@ ifeq ($(EM_LIBESPEAKNG),)
 endif
 	$(CXX) $(CXXFLAGS) \
 		$(EM_CXXFLAGS_ASYNC_WASM) \
-		$(EM_GLUE_OBJ) \
 		$(EM_LIBESPEAKNG) \
+		$(EM_GLUE_OBJ) \
 		$(patsubst %,--pre-js %,$(EM_ALL_PRE_JS)) \
 		$(patsubst %,--post-js %,$(EM_ALL_POST_JS)) \
 		-o $@		
@@ -174,8 +175,8 @@ ifeq ($(EM_LIBESPEAKNG),)
 endif
 	$(CXX) $(CXXFLAGS) \
 		$(EM_CXXFLAGS_SYNC_NOWASM) \
-		$(EM_GLUE_OBJ) \
 		$(EM_LIBESPEAKNG) \
+		$(EM_GLUE_OBJ) \
 		$(patsubst %,--pre-js %,$(EM_ALL_PRE_JS)) \
 		$(patsubst %,--post-js %,$(EM_ALL_POST_JS)) \
 		-o $@				

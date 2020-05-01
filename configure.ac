@@ -90,43 +90,47 @@ dnl ================================================================
 dnl C99 compiler checks.
 dnl ================================================================
 
-AC_LANG_PUSH(C)
-AC_MSG_CHECKING([if $CC supports C99 without any flags])
-AC_COMPILE_IFELSE(
-	[AC_LANG_PROGRAM(
-		[[static inline int c99_restrict(int *restrict c99_restrict) {}]],
-		[[]])],
-	[AC_MSG_RESULT([yes])
-	 have_c99_native=yes],
-	[AC_MSG_RESULT([no])
-	 have_c99_native=no])
-AC_LANG_POP(C)
+AC_PROG_CC_C99
 
-AC_LANG_PUSH(C)
-TEMP_CFLAGS="$CFLAGS"
-CFLAGS="$CFLAGS -std=c99"
-AC_MSG_CHECKING([if $CC supports C99 with the -std=c99 flag])
-AC_COMPILE_IFELSE(
-	[AC_LANG_PROGRAM(
-		[[static inline int c99_restrict(int *restrict c99_restrict) {}]],
-		[[]])],
-	[AC_MSG_RESULT([yes])
-	 have_c99_c99=yes],
-	[AC_MSG_RESULT([no])
-	 have_c99_c99=no])
-CFLAGS="$TEMP_CFLAGS"
-AC_LANG_POP(C)
+dnl Commented the following tests that would prevent emscripten from emconfiguring.
 
-AC_MSG_CHECKING([if $CC supports C99])
-if test "$have_c99_c99" = yes ; then
-	AC_MSG_RESULT([-std=c99])
-	CFLAGS="$CFLAGS -std=c99"
-elif test "$have_c99_native" = yes ; then
-	AC_MSG_RESULT([yes])
-else
-	AC_MSG_RESULT([no])
-	AC_MSG_ERROR([C99 is not supported by $CC.])
-fi
+dnl AC_LANG_PUSH(C)
+dnl AC_MSG_CHECKING([if $CC supports C99 without any flags])
+dnl AC_COMPILE_IFELSE(
+dnl 	[AC_LANG_PROGRAM(
+dnl 		[[static inline int c99_restrict(int *restrict c99_restrict) {}]],
+dnl 		[[]])],
+dnl 	[AC_MSG_RESULT([yes])
+dnl 	 have_c99_native=yes],
+dnl 	[AC_MSG_RESULT([no])
+dnl 	 have_c99_native=no])
+dnl AC_LANG_POP(C)
+dnl 
+dnl AC_LANG_PUSH(C)
+dnl TEMP_CFLAGS="$CFLAGS"
+dnl CFLAGS="$CFLAGS -std=c99"
+dnl AC_MSG_CHECKING([if $CC supports C99 with the -std=c99 flag])
+dnl AC_COMPILE_IFELSE(
+dnl 	[AC_LANG_PROGRAM(
+dnl 		[[static inline int c99_restrict(int *restrict c99_restrict) {}]],
+dnl 		[[]])],
+dnl 	[AC_MSG_RESULT([yes])
+dnl 	 have_c99_c99=yes],
+dnl 	[AC_MSG_RESULT([no])
+dnl 	 have_c99_c99=no])
+dnl CFLAGS="$TEMP_CFLAGS"
+dnl AC_LANG_POP(C)
+dnl 
+dnl AC_MSG_CHECKING([if $CC supports C99])
+dnl if test "$have_c99_c99" = yes ; then
+dnl 	AC_MSG_RESULT([-std=c99])
+dnl 	CFLAGS="$CFLAGS -std=c99"
+dnl elif test "$have_c99_native" = yes ; then
+dnl 	AC_MSG_RESULT([yes])
+dnl else
+dnl 	AC_MSG_RESULT([no])
+dnl 	AC_MSG_ERROR([C99 is not supported by $CC.])
+dnl fi
 
 dnl ================================================================
 dnl FreeBSD check.

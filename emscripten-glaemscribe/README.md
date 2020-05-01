@@ -4,20 +4,17 @@ Removed worker logic from demos : too much overhead here and not useful.
 
 ### Preinstall requirements (version may be different for binaryen)
 
-brew install emscripten
-python /usr/local/Cellar/emscripten/1.38.25/libexec/embuilder.py build binaryen
+- install xcode command line tools
+- install emscripten from sources (in ~/emsdk for example)
+- install cmake from brew
 
-#### 1.a. If emscripten is installed from source (for an install in ~/emsdk)
+### Before building, activate emscripten
 
 source ~/emsdk/emsdk_set_env.sh 
 
-#### 1.b. If emscripten is installed from brew
+### Build From root directory
 
-=> Nothing to do (emscripten is in the env)
-
-#### 2. BUILD From root directory
-
-#### First runs
+#### First run
 
 Should call ./autogen.sh in the 
 
@@ -36,6 +33,13 @@ make install
 ```
 
 #### General emscripten rebuild flow
+
+This can be a good idea to exchange `phonemes` and `phonemes_light` files in ph_source. This will result in a smaller file.
+
+````
+mv phsource/phonemes phsource/phonemes.orig
+mv phsource/phonemes.light phsource/phonemes 
+```
 
 ```
 make clean
@@ -56,3 +60,15 @@ emmake make clean
 emmake make
 cd ..
 ```
+
+````
+mv phsource/phonemes phsource/phonemes.light
+mv phsource/phonemes.orig phsource/phonemes
+```
+
+### Troubleshoot
+
+Last compilation was done with emscripten 1.39.13 . 
+
+Had to comment C99 checks in configure.ac or the configure step would fail, emcc would be rejected as a compiler not supporting C99.
+
