@@ -2,15 +2,18 @@ Reworked the Makefile to use a more recent version of emscripten.
 Will generate multiple async/sync wasm/nowasm versions for different purposes.
 Removed worker logic from demos : too much overhead here and not useful.
 
+
 ### Preinstall requirements (version may be different for binaryen)
 
 - install xcode command line tools
 - install emscripten from sources (in ~/emsdk for example)
 - install cmake from brew
 
+
 ### Before building, activate emscripten
 
 source ~/emsdk/emsdk_set_env.sh 
+
 
 ### Build From root directory
 
@@ -41,6 +44,8 @@ mv phsource/phonemes phsource/phonemes.orig
 mv phsource/phonemes.light phsource/phonemes 
 ```
 
+Then
+
 ```
 make clean
 make distclean
@@ -60,6 +65,8 @@ emmake make clean
 emmake make
 cd ..
 ```
+
+Restore phonemes
 
 ````
 mv phsource/phonemes phsource/phonemes.light
