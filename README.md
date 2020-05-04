@@ -2,7 +2,11 @@
 
 eSpeak NG fork for Glaemscribe.
 
-Glaemscribe uses (will use) espeak-ng for its phonemic modes, and thus integrates an emscripten compiled version of espeak-ng. It integrates a few custom patches to make espeak-ng compatible with glaemscribe, especially to make the punctuation work. It has also its own way of building the emscripten files.
+Glaemscribe uses (will use in a near future) espeak-ng for its phonemic modes, and thus integrates an emscripten compiled version of espeak-ng.
+ 
+It integrates a few custom patches to make espeak-ng compatible with glaemscribe (especially to handle IPA with punctuation). It has its own phoneme files to augment IPA for the needs of tengwar transcription. 
+
+It has also its own way of building the emscripten files.
 
 See here for the [espeak-ng](https://github.com/espeak-ng/espeak-ng) main repository.
 See here for [Glaemscribe](https://github.com/BenTalagan/glaemscribe)'s official git repository.
