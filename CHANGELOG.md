@@ -13,12 +13,12 @@ updated languages:
 
 *  de (German) -- Karl Eick
 *  el (Modern Greek) -- Reece Dunn (support for variant Greek letter forms)
-*  en (English) -- Steven Presser
+*  en (English) -- Steven Presser, Ben Talagan
 *  grc (Ancient Greek) -- Reece Dunn (support for variant Greek letter forms)
 *  shn (Shan Tay Yai) -- ronaldaug
 *  tr (Turkish) -- boracasli98
 *  ur (Urdu) -- Ejaz Shah
-*  zh (Chinese) -- Silas S. Brown
+*  zh (Chinese) -- Silas S. Brown, Rongcui Dong
 
 new languages:
 *  haw (Hawaiian) -- Valdis Vitolins
