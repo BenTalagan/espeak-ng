@@ -777,10 +777,18 @@ phoneme @5
   vwl  starttype #@  endtype #@
   unstressed
   length 140
+  
+  ipa ʊ̟ // G : Special notation for this schwa, we will propose not to mark it in the UI.
+
   IF nextPh(isVowel) OR nextPh(isPause) THEN
     ChangePhoneme(U) // Ex : "to Isengard" (vowel), "nowhere to go to" (pause)
   ENDIF
-  ChangePhoneme(@)
+
+  // ChangePhoneme(@)
+  IF thisPh(isWordEnd) THEN
+    FMT(vowel/@_6)
+  ENDIF
+  FMT(vowel/@_4)
 endphoneme
 
 

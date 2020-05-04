@@ -9763,8 +9763,6 @@
             
               
               
-                <div class='sameas'>Same as in ph_english</div>
-              
             
               
               
@@ -9779,10 +9777,18 @@
   vwl  starttype #@  endtype #@
   unstressed
   length 140
+  
+  ipa ʊ̟ <span class='grey'>// G : Special notation for this schwa</span>
+
   <span class='green'>IF</span> nextPh(isVowel) OR nextPh(isPause) <span class='green'>THEN</span>
     <span class='red'>ChangePhoneme</span>(U) <span class='grey'>// Ex : "to Isengard" (vowel), "nowhere to go to" (pause)</span>
   <span class='green'>ENDIF</span>
-  <span class='red'>ChangePhoneme</span>(@)
+
+  <span class='grey'>// <span class='red'>ChangePhoneme</span>(@)</span>
+  <span class='green'>IF</span> thisPh(isWordEnd) <span class='green'>THEN</span>
+    FMT(vowel/@_6)
+  <span class='green'>ENDIF</span>
+  FMT(vowel/@_4)
 <span class='blue'>endphoneme</span>
 </pre>                
           </div>
