@@ -95,6 +95,13 @@ public:
     voices = espeak_ListVoices(NULL);
   }
   
+  const char* version() {
+    const char* path = NULL;
+    const char* info = NULL;
+    info = espeak_Info(&path);
+    return info;
+  }
+  
   int synth_all_(const char* aText, const char* wavVirtualFileName, const char* phoVirtualFileName, bool phonemesAreIpa)
   {   
     bool processWav = (wavVirtualFileName != NULL);

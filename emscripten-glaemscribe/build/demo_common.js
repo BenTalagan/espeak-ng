@@ -5,14 +5,16 @@ function transcribe(text) {
     client.set_voice("ent");
   }
 
-  var d1 = new Date();
-  result = client.synthesize(text, false, true, true, function(result) {});
-  result.time = new Date() - d1;
+  var d1          = new Date();
+  result          = client.synthesize(text, false, true, true, function(result) {});
+  result.version  = client.version();
+  result.time     = new Date() - d1;
   
   return JSON.stringify(result);
 }
 
 function benchmark() {
+
   var ret = "\n";
   ret += transcribe("A letter for toto");
   ret += transcribe("A letter for toto");
