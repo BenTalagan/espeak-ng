@@ -12,8 +12,12 @@ phonemes en-tengwar-rp
 // Whine / Wine merger
 dictrules 2
 
-replace 00  o@  O@
+// Flags: bit 0: replacement only occurs on the final phoneme of a word.
+// Flags: bit 1: replacement doesn't occur in stressed syllables.
+// 03 == (END OF WORD ONLY | UNSTRESSED ONLY)
+
+replace 00 o@ O@
 replace 03 I i
 replace 03 I2 i
 replace 03 @ a#
-replace 03 3 a#
+replace 03 3 a#7

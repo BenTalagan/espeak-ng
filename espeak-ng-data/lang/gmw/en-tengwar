@@ -13,13 +13,18 @@ phonemes en-tengwar
 dictrules 2
 option reduce_t 1
 
+
+// Flags: bit 0: replacement only occurs on the final phoneme of a word.
+// Flags: bit 1: replacement doesn't occur in stressed syllables.
+// 03 == (END OF WORD ONLY | UNSTRESSED ONLY)
+
 // The following rules are taken from en-GB-x-rp voice
 // Horse/hoarse merger
 // replace 00  o@  O@
 // Happy tensing (end of word + stress)
 // replace 03 I i
 // replace 03 I2 i
-// Schwa strengthening (end of word + stress) (prefer kˈɒmɐ to kˈɒmə)
+// Schwa strengthening (end of word + unstress) (prefer kˈɒmɐ to kˈɒmə)
 replace 03 @ a#
 // Un-rhoticization of rhotic schwa (end of word + stress)
-// replace 03 3 a#
+// replace 03 3 a#7

@@ -20,6 +20,10 @@ option reduce_t 1
 stressLength 140 120 190 170 0 0 255 300
 stressAmp  17 16  19 19  19 19  21 19
 
+// Flags: bit 0: replacement only occurs on the final phoneme of a word.
+// Flags: bit 1: replacement doesn't occur in stressed syllables.
+// 03 == (END OF WORD ONLY | UNSTRESSED ONLY)
+
 // No happy tensing
 replace 03 I  i
 // WTF?

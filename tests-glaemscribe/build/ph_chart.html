@@ -591,22 +591,21 @@
             
               
               
-                <div class='sameas'>Same as in ph_english_rp</div>
-              
             
               
               
             
             
             <pre><span class='grey'>// G: (BEN) : Taken from the english RP</span>
-<span class='grey'>//    Unstressed a, like in **a**bout, or at the end of words, may trigger a linking r</span>
+<span class='grey'>//    Unstressed a, like in **a**bout, or at the end of words, may trigger an intrusive r</span>
 <span class='grey'>//    This may be \[@\] or may be a more open schwa.</span>
 <span class='blue'>phoneme</span> a#
   vwl  starttype #@  endtype #@
   ipa ɐ
   unstressed
   length 150
-  <span class='red'>IfNextVowelAppend</span>(r-)
+  <span class='grey'>// This is an intrusive R</span>
+  <span class='red'>IfNextVowelAppend</span>(r-3)
   FMT(vowel/@_low)
 <span class='blue'>endphoneme</span>
 </pre>                
@@ -1239,8 +1238,6 @@
             
               
               
-                <div class='sameas'>Same as in ph_english_rp</div>
-              
             
               
               
@@ -1252,7 +1249,7 @@
 <span class='blue'>phoneme</span> A:
   vwl  starttype #a  endtype #a
   length 240
-  <span class='red'>IfNextVowelAppend</span>(r-) <span class='grey'>// Linking r, grandpa igor</span>
+  <span class='red'>IfNextVowelAppend</span>(r-3) <span class='grey'>// Intrusive r, grandpa igor</span>
   FMT(vwl_en_rp/aa)
 <span class='blue'>endphoneme</span>
 </pre>                
@@ -1280,8 +1277,6 @@
             
               
               
-                <div class='sameas'>Same as in ph_english</div>
-              
             
               
               
@@ -1293,7 +1288,7 @@
             <pre><span class='blue'>phoneme</span> A:
   vwl  starttype #a  endtype #a
   length 230
-  <span class='red'>IfNextVowelAppend</span>(r-)
+  <span class='red'>IfNextVowelAppend</span>(r-3) <span class='grey'>// Intrusive R</span>
   FMT(vowel/aa_2)
 <span class='blue'>endphoneme</span>
 </pre>                
@@ -9263,12 +9258,17 @@
               
             
             
-            <pre><span class='grey'>// @ : schwa</span>
+            <pre><span class='grey'>// @ : schwa, non rhotic</span>
 <span class='grey'>//   : </span>
 <span class='grey'>//   : examples : </span>
 <span class='grey'>//   : not in diphtongs : patina (p@raI@), pegasus (pEg@s@s), pejorative (p@dZ0r@tIv), pencil ()</span>
-<span class='grey'>//   : in diphtongs, always indicates presence of r : pear (pe@), pier (pi@3)</span>
+<span class='grey'>//</span>
+<span class='grey'>//   : In diphtongs, always indicates presence of r : pear (pe@), pier (pi@3)</span>
+<span class='grey'>//   : but in that case, a combination is used : e@ / i@3</span>
+<span class='grey'>//</span>
 <span class='grey'>// G : Taken from US, classic schwa</span>
+<span class='grey'>//   : But modified</span>
+<span class='grey'>//</span>
 <span class='blue'>phoneme</span> @    <span class='grey'>//  Schwa</span>
   vwl   starttype #@  endtype #@
   unstressed
@@ -9311,8 +9311,6 @@
             
               
               
-                <div class='sameas'>Same as in ph_english</div>
-              
             
               
               
@@ -9325,7 +9323,7 @@
   vwl   starttype #@  endtype #@
   unstressed
   length 140
-  <span class='red'>IfNextVowelAppend</span>(r-)
+  <span class='red'>IfNextVowelAppend</span>(r-3) <span class='grey'>// Intrusive</span>
   <span class='green'>IF</span> thisPh(isWordEnd) <span class='green'>THEN</span>
     FMT(vowel/@_6, 90)
   <span class='green'>ENDIF</span>
@@ -10123,12 +10121,8 @@
             
               
               
-                <div class='sameas'>Same as in ph_english</div>
-              
             
               
-              
-                <div class='sameas'>Same as in ph_english_rp</div>
               
             
               
@@ -10138,6 +10132,7 @@
             <pre><span class='blue'>phoneme</span> 3
   <span class='red'>CALL</span> @
   ipa ə
+  <span class='red'>IfNextVowelAppend</span>(r-) <span class='grey'>// Override behaviour of @, only linking</span>
 <span class='blue'>endphoneme</span>
 </pre>                
           </div>
@@ -11199,7 +11194,7 @@
               
             
             
-            <pre><span class='grey'>// r- : linking r (ipa ɹ) </span>
+            <pre><span class='grey'>// r- : Intrusive/Linking r (ipa ɹ‿) </span>
 <span class='grey'>//    : changes to r if not at word end and not preceded by schwa and not preceded by rhotic schwa</span>
 <span class='grey'>//    : mainly used as a sub-tool for treating certain vowels, schwas and diphtongs</span>
 <span class='grey'>//    : en-us + en-gb + en-rp</span>
@@ -12363,6 +12358,114 @@
   
   <tr>
     <td>
+      a#7
+    </td>
+    
+     
+        
+        
+          <td class='absent'><div class='absent  ph_english'>Absent</div></td>
+        
+      
+      </td>
+    
+     
+        
+        
+          <td class='absent'><div class='absent  ph_english_rp'>Absent</div></td>
+        
+      
+      </td>
+    
+     
+        
+        
+          <td class='absent'><div class='absent  ph_english_us'>Absent</div></td>
+        
+      
+      </td>
+    
+     
+        
+        
+         <td>
+          <div class="code ph_english_tengwar">
+            
+            
+            
+              
+              
+            
+              
+              
+            
+              
+              
+            
+            
+            <pre><span class='grey'>// Unstressed, unrhoticized a, but it was coming from a rhotic schwa first so do not forget it</span>
+<span class='grey'>// Because we may want to re-add linking r</span>
+<span class='grey'>// (The replacement 3 > a#7 is done in the voice file)</span>
+<span class='blue'>phoneme</span> a#7
+  <span class='red'>import_phoneme</span> a#
+  <span class='grey'>// Override : this is a linking R, not an intrusive R</span>
+  <span class='red'>IfNextVowelAppend</span>(r-)
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
+        
+      
+      </td>
+    
+     
+        
+        
+          <td class='inherited'><div class='inherited ph_english_tengwar_rp'>Inherited from ph_english_tengwar</div></td>
+        
+      
+      </td>
+    
+     
+        
+        
+          <td class='inherited'><div class='inherited ph_english_tengwar_gb'>Inherited from ph_english_tengwar</div></td>
+        
+      
+      </td>
+    
+     
+        
+        
+          <td class='inherited'><div class='inherited ph_english_tengwar_us'>Inherited from ph_english_tengwar</div></td>
+        
+      
+      </td>
+    
+  </tr>
+  
+  
+  <tr>
+    <th></th>
+  
+    <th style="white-space:nowrap"><button type='button' class='toggler' data-class='ph_english'>❤</button> <span class=''>ph_english</span></th>
+  
+    <th style="white-space:nowrap"><button type='button' class='toggler' data-class='ph_english_rp'>❤</button> <span class=''>ph_english_rp</span></th>
+  
+    <th style="white-space:nowrap"><button type='button' class='toggler' data-class='ph_english_us'>❤</button> <span class=''>ph_english_us</span></th>
+  
+    <th style="white-space:nowrap"><button type='button' class='toggler' data-class='ph_english_tengwar'>❤</button> <span class=''>ph_english_tengwar</span></th>
+  
+    <th style="white-space:nowrap"><button type='button' class='toggler' data-class='ph_english_tengwar_rp'>❤</button> <span class=''>ph_english_tengwar_rp</span></th>
+  
+    <th style="white-space:nowrap"><button type='button' class='toggler' data-class='ph_english_tengwar_gb'>❤</button> <span class=''>ph_english_tengwar_gb</span></th>
+  
+    <th style="white-space:nowrap"><button type='button' class='toggler' data-class='ph_english_tengwar_us'>❤</button> <span class=''>ph_english_tengwar_us</span></th>
+    
+  </tr>
+  
+  <tr>
+    <td>
       r-2
     </td>
     
@@ -12412,6 +12515,110 @@
 <span class='blue'>phoneme</span> r-2
   <span class='red'>import_phoneme</span> r-
   ipa ɹ
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
+        
+      
+      </td>
+    
+     
+        
+        
+          <td class='inherited'><div class='inherited ph_english_tengwar_rp'>Inherited from ph_english_tengwar</div></td>
+        
+      
+      </td>
+    
+     
+        
+        
+          <td class='inherited'><div class='inherited ph_english_tengwar_gb'>Inherited from ph_english_tengwar</div></td>
+        
+      
+      </td>
+    
+     
+        
+        
+          <td class='inherited'><div class='inherited ph_english_tengwar_us'>Inherited from ph_english_tengwar</div></td>
+        
+      
+      </td>
+    
+  </tr>
+  
+  
+  <tr>
+    <th></th>
+  
+    <th style="white-space:nowrap"><button type='button' class='toggler' data-class='ph_english'>❤</button> <span class=''>ph_english</span></th>
+  
+    <th style="white-space:nowrap"><button type='button' class='toggler' data-class='ph_english_rp'>❤</button> <span class=''>ph_english_rp</span></th>
+  
+    <th style="white-space:nowrap"><button type='button' class='toggler' data-class='ph_english_us'>❤</button> <span class=''>ph_english_us</span></th>
+  
+    <th style="white-space:nowrap"><button type='button' class='toggler' data-class='ph_english_tengwar'>❤</button> <span class=''>ph_english_tengwar</span></th>
+  
+    <th style="white-space:nowrap"><button type='button' class='toggler' data-class='ph_english_tengwar_rp'>❤</button> <span class=''>ph_english_tengwar_rp</span></th>
+  
+    <th style="white-space:nowrap"><button type='button' class='toggler' data-class='ph_english_tengwar_gb'>❤</button> <span class=''>ph_english_tengwar_gb</span></th>
+  
+    <th style="white-space:nowrap"><button type='button' class='toggler' data-class='ph_english_tengwar_us'>❤</button> <span class=''>ph_english_tengwar_us</span></th>
+    
+  </tr>
+  
+  <tr>
+    <td>
+      r-3
+    </td>
+    
+     
+        
+        
+          <td class='absent'><div class='absent  ph_english'>Absent</div></td>
+        
+      
+      </td>
+    
+     
+        
+        
+          <td class='absent'><div class='absent  ph_english_rp'>Absent</div></td>
+        
+      
+      </td>
+    
+     
+        
+        
+          <td class='absent'><div class='absent  ph_english_us'>Absent</div></td>
+        
+      
+      </td>
+    
+     
+        
+        
+         <td>
+          <div class="code ph_english_tengwar">
+            
+            
+            
+              
+              
+            
+              
+              
+            
+              
+              
+            
+            
+            <pre><span class='blue'>phoneme</span> r-3
+  <span class='red'>import_phoneme</span> r-
+  ipa ɹ̩‿
 <span class='blue'>endphoneme</span>
 </pre>                
           </div>

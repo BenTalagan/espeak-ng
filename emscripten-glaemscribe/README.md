@@ -12,7 +12,7 @@ Removed worker logic from demos : too much overhead here and not useful.
 
 ### Before building, activate emscripten
 
-source ~/emsdk/emsdk_set_env.sh 
+source ~/emsdk/emsdk_env.sh 
 
 
 ### Build From root directory

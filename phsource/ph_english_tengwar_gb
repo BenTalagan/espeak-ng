@@ -62,7 +62,7 @@ endphoneme
 phoneme A:
   vwl  starttype #a  endtype #a
   length 230
-  IfNextVowelAppend(r-)
+  IfNextVowelAppend(r-3) // Intrusive R
   FMT(vowel/aa_2)
 endphoneme
 
@@ -328,7 +328,7 @@ phoneme @
   vwl   starttype #@  endtype #@
   unstressed
   length 140
-  IfNextVowelAppend(r-)
+  IfNextVowelAppend(r-3) // Intrusive
   IF thisPh(isWordEnd) THEN
     FMT(vowel/@_6, 90)
   ENDIF
@@ -338,6 +338,7 @@ endphoneme
 phoneme 3
   CALL @
   ipa ə
+  IfNextVowelAppend(r-) // Override behaviour of @, only linking
 endphoneme
 
 phoneme 3:

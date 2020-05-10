@@ -121,7 +121,7 @@ phoneme l      // use dark [l/2] before not-vowel
   CALL base1/l
 endphoneme
 
-// r- : linking r (ipa ɹ) 
+// r- : Intrusive/Linking r (ipa ɹ‿) 
 //    : changes to r if not at word end and not preceded by schwa and not preceded by rhotic schwa
 //    : mainly used as a sub-tool for treating certain vowels, schwas and diphtongs
 //    : en-us + en-gb + en-rp
@@ -158,6 +158,12 @@ phoneme r-2
   import_phoneme r-
   ipa ɹ
 endphoneme
+
+phoneme r-3
+  import_phoneme r-
+  ipa ɹ̩‿
+endphoneme
+
 
 
 // z/2 : used for 's suffix
@@ -258,16 +264,27 @@ phoneme aa
 endphoneme
 
 // G: (BEN) : Taken from the english RP
-//    Unstressed a, like in **a**bout, or at the end of words, may trigger a linking r
+//    Unstressed a, like in **a**bout, or at the end of words, may trigger an intrusive r
 //    This may be \[@\] or may be a more open schwa.
 phoneme a#
   vwl  starttype #@  endtype #@
   ipa ɐ
   unstressed
   length 150
-  IfNextVowelAppend(r-)
+  // This is an intrusive R
+  IfNextVowelAppend(r-3)
   FMT(vowel/@_low)
 endphoneme
+
+// Unstressed, unrhoticized a, but it was coming from a rhotic schwa first so do not forget it
+// Because we may want to re-add linking r
+// (The replacement 3 > a#7 is done in the voice file)
+phoneme a#7
+  import_phoneme a#
+  // Override : this is a linking R, not an intrusive R
+  IfNextVowelAppend(r-)
+endphoneme
+
 
 // G: (BEN): For all.
 //   ex : "an"
@@ -286,7 +303,7 @@ endphoneme
 phoneme A:
   vwl  starttype #a  endtype #a
   length 240
-  IfNextVowelAppend(r-) // Linking r, grandpa igor
+  IfNextVowelAppend(r-3) // Intrusive r, grandpa igor
   FMT(vwl_en_rp/aa)
 endphoneme
 
@@ -732,12 +749,17 @@ phoneme 3:
 endphoneme
 
 
-// @ : schwa
+// @ : schwa, non rhotic
 //   : 
 //   : examples : 
 //   : not in diphtongs : patina (p@raI@), pegasus (pEg@s@s), pejorative (p@dZ0r@tIv), pencil ()
-//   : in diphtongs, always indicates presence of r : pear (pe@), pier (pi@3)
+//
+//   : In diphtongs, always indicates presence of r : pear (pe@), pier (pi@3)
+//   : but in that case, a combination is used : e@ / i@3
+//
 // G : Taken from US, classic schwa
+//   : But modified
+//
 phoneme @    //  Schwa
   vwl   starttype #@  endtype #@
   unstressed

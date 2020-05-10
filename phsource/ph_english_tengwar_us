@@ -105,7 +105,7 @@ phoneme aI3
   vwl  starttype #a  endtype #@
   length 310
   ipa aɪɚ
-  IfNextVowelAppend(r-)
+  IfNextVowelAppend(r)
   FMT(vwl_en_us/ai3)
 endphoneme
 
