@@ -10,10 +10,6 @@ Removed worker logic from demos : too much overhead here and not useful.
 - install cmake from brew
 
 
-### Before building, activate emscripten
-
-source ~/emsdk/emsdk_env.sh 
-
 
 ### Build From root directory
 
@@ -36,6 +32,12 @@ make install
 ```
 
 #### General emscripten rebuild flow
+
+Activate emscripten
+
+```
+source ~/emsdk/emsdk_env.sh 
+```
 
 This can be a good idea to exchange `phonemes` and `phonemes_light` files in ph_source. This will result in a smaller file.
 
