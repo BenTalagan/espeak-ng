@@ -13,6 +13,7 @@ EN_PHONEMES_SORTED = [
   'aa',
   'a#',
   'a#2',
+  'a#7',
   'a2',
   'A#',
   'A:',
