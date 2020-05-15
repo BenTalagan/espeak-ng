@@ -2119,15 +2119,13 @@
             
               
               
-                <div class='sameas'>Same as in ph_english_us</div>
-              
             
             
             <pre><span class='blue'>phoneme</span> aI3
   vwl  starttype #a  endtype #@
   length 310
   ipa aɪɚ
-  <span class='red'>IfNextVowelAppend</span>(r-)
+  <span class='red'>IfNextVowelAppend</span>(r)
   FMT(vwl_en_us/ai3)
 <span class='blue'>endphoneme</span>
 </pre>                
@@ -12407,7 +12405,7 @@
 <span class='grey'>// Because we may want to re-add linking r</span>
 <span class='grey'>// (The replacement 3 > a#7 is done in the voice file)</span>
 <span class='blue'>phoneme</span> a#7
-  <span class='red'>import_phoneme</span> a#
+  <span class='red'>CALL</span> a#
   <span class='grey'>// Override : this is a linking R, not an intrusive R</span>
   <span class='red'>IfNextVowelAppend</span>(r-)
 <span class='blue'>endphoneme</span>
