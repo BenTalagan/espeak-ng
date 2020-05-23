@@ -377,7 +377,10 @@ endphoneme
 
 phoneme 3:
   vwl  starttype #@  endtype #@
-  ipa ɜː|ɹ // G : To make things easier, we add the rhotic mark to ipa
+  ipa ɜː|ɹ
+  IF nextPh(isRhotic) THEN
+    ipa ɜː
+  ENDIF
   length 210
   IfNextVowelAppend(r-)
   ChangeIfDiminished(3)

@@ -85,14 +85,9 @@ endphoneme
 
 phoneme i@3
   vwl  starttype #i  endtype #@
-  length 250
-  
-  IF MbrolaSynth THEN
-    ChangePhoneme(i@)
-  ENDIF
-
+  length 240
   IfNextVowelAppend(r-)
-  FMT(vdiph2/ii@)
+  FMT(vwl_en_rp/i@)
 endphoneme
 
 // phoneme U@
@@ -118,4 +113,16 @@ phoneme aI3
   vwl  starttype #a  endtype #@
   length 280
   ChangePhoneme(aI@)
+endphoneme
+
+// Fire
+phoneme aI@
+  vwl  starttype #a  endtype #@
+  length 270
+  
+  // Mini-tweak, correct from aiə to aɪɐ (more logical with other a schwas)
+  ipa aɪɐ
+  
+  IfNextVowelAppend(r-)
+  FMT(vwl_en/aI@)
 endphoneme

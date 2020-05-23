@@ -2374,7 +2374,34 @@
      
         
         
-          <td class='inherited'><div class='inherited ph_english_tengwar_rp'>Inherited from ph_english_tengwar</div></td>
+         <td>
+          <div class="code ph_english_tengwar_rp">
+            
+            
+            
+              
+              
+            
+              
+              
+            
+              
+              
+            
+            
+            <pre><span class='grey'>// Fire</span>
+<span class='blue'>phoneme</span> aI@
+  vwl  starttype #a  endtype #@
+  length 270
+  
+  <span class='grey'>// Mini-tweak, correct from aiə to aɪɐ (more logical with other a schwas)</span>
+  ipa aɪɐ
+  
+  <span class='red'>IfNextVowelAppend</span>(r-)
+  FMT(vwl_en/aI@)
+<span class='blue'>endphoneme</span></pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -2399,7 +2426,8 @@
               
             
             
-            <pre><span class='blue'>phoneme</span> aI@
+            <pre><span class='grey'>// Fire</span>
+<span class='blue'>phoneme</span> aI@
   vwl  starttype #a  endtype #@
   length 280
   <span class='red'>IfNextVowelAppend</span>(r-)
@@ -3742,16 +3770,17 @@
             
               
               
-                <div class='sameas'>Same as in ph_english_us</div>
-              
             
             
-            <pre><span class='blue'>phoneme</span> e@
+            <pre><span class='grey'>// Ex : Care</span>
+<span class='grey'>// For the IPA, restore the rhotic mark of the diphtong before vowels.</span>
+<span class='grey'>// This is what Tolkien does in the full writing modes (but his own pronounciation is more like the GA)</span>
+<span class='blue'>phoneme</span> e@
   vwl  starttype #e  endtype #@
   length 260
   ipa ɛ|ɹ
   <span class='green'>IF</span> nextPhW(r) <span class='green'>THEN</span>
-    ipa ɛ
+    ipa eə
   <span class='green'>ENDIF</span>
   <span class='red'>IfNextVowelAppend</span>(r)
   FMT(vwl_en_us/er)
@@ -5777,17 +5806,17 @@
             
               
               
-                <div class='sameas'>Same as in ph_english_us</div>
-              
             
             
-            <pre><span class='grey'>// Near</span>
+            <pre><span class='grey'>// Ex: fear</span>
+<span class='grey'>// For the IPA, restore the rhotic mark of the diphtong before vowels.</span>
+<span class='grey'>// This is what Tolkien does in the full writing modes (but his own pronounciation is more like the GA)</span>
 <span class='blue'>phoneme</span> i@3
   vwl  starttype #i  endtype #@
   length 280
   ipa ɪ|ɹ
   <span class='green'>IF</span> nextPhW(r) <span class='green'>THEN</span>
-    ipa ɪ
+    ipa ɪə
   <span class='green'>ENDIF</span>
   <span class='red'>IfNextVowelAppend</span>(r)
   FMT(vwl_en_us/ir)
@@ -5809,10 +5838,10 @@
             
               
               
-                <div class='sameas'>Same as in ph_english</div>
-              
             
               
+              
+                <div class='sameas'>Same as in ph_english_rp</div>
               
             
               
@@ -5821,14 +5850,9 @@
             
             <pre><span class='blue'>phoneme</span> i@3
   vwl  starttype #i  endtype #@
-  length 250
-  
-  <span class='green'>IF</span> MbrolaSynth <span class='green'>THEN</span>
-    <span class='red'>ChangePhoneme</span>(i@)
-  <span class='green'>ENDIF</span>
-
+  length 240
   <span class='red'>IfNextVowelAppend</span>(r-)
-  FMT(vdiph2/ii@)
+  FMT(vwl_en_rp/i@)
 <span class='blue'>endphoneme</span>
 </pre>                
           </div>
@@ -5860,7 +5884,7 @@
             <pre><span class='blue'>phoneme</span> i@3
   vwl  starttype #i  endtype #@
   length 250
-  
+    
   <span class='green'>IF</span> MbrolaSynth <span class='green'>THEN</span>
     <span class='red'>ChangePhoneme</span>(i@)
   <span class='green'>ENDIF</span>
@@ -9094,13 +9118,15 @@
               
             
             
-            <pre><span class='grey'>// Cure (as in US)</span>
+            <pre><span class='grey'>// Cure</span>
+<span class='grey'>// For the IPA, restore the rhotic mark of the diphtong before vowels.</span>
+<span class='grey'>// This is what Tolkien does in the full writing modes (but his own pronounciation is more like the GA)</span>
 <span class='blue'>phoneme</span> U@
   vwl  starttype #@  endtype #@
   length 250
   ipa ʊ|ɹ
   <span class='green'>IF</span> nextPhW(r-) OR nextPhW(r-2) <span class='green'>THEN</span>
-    ipa ʊ
+    ipa ʊə
   <span class='green'>ENDIF</span>
   <span class='red'>IfNextVowelAppend</span>(r-2)
   FMT(vwl_en_us/ur)
@@ -10479,8 +10505,13 @@
             
             <pre><span class='grey'>// G : long rhotic schwa, ex : nURse</span>
 <span class='blue'>phoneme</span> 3:
-  vwl  starttype #@  endtype #@
-  ipa ɜː|ɹ <span class='grey'>// G : To make things easier, we add the rhotic mark to ipa</span>
+  vwl  starttype #@  endtype #@  
+
+  ipa ɜː|ɹ
+  <span class='green'>IF</span> nextPh(isRhotic) <span class='green'>THEN</span>
+    ipa ɜː
+  <span class='green'>ENDIF</span>
+  
   length 210
   <span class='red'>IfNextVowelAppend</span>(r-2)
   <span class='red'>ChangeIfDiminished</span>(3)
@@ -10581,7 +10612,10 @@
             <pre><span class='grey'>// phoneme 3 : the root file uses the US version</span>
 <span class='blue'>phoneme</span> 3:
   vwl  starttype #@  endtype #@
-  ipa ɜː|ɹ <span class='grey'>// G : To make things easier, we add the rhotic mark to ipa</span>
+  ipa ɜː|ɹ
+  <span class='green'>IF</span> nextPh(isRhotic) <span class='green'>THEN</span>
+    ipa ɜː
+  <span class='green'>ENDIF</span>
   length 210
   <span class='red'>IfNextVowelAppend</span>(r-)
   <span class='red'>ChangeIfDiminished</span>(3)
@@ -10664,7 +10698,34 @@
      
         
         
-          <td class='absent'><div class='absent  ph_english_tengwar'>Absent</div></td>
+         <td>
+          <div class="code ph_english_tengwar">
+            
+            
+            
+              
+              
+            
+              
+              
+            
+              
+              
+                <div class='sameas'>Same as in ph_english_us</div>
+              
+            
+            
+            <pre><span class='blue'>phoneme</span> ?  <span class='grey'>// glottal stp</span>
+  vls glt stp
+  lengthmod 1   <span class='grey'>// 5? longer preceding vowel</span>
+  nolink
+  Vowelin  glstop
+  Vowelout glstop
+  WAV(ustop/null)
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -10672,7 +10733,7 @@
      
         
         
-          <td class='absent'><div class='absent  ph_english_tengwar_rp'>Absent</div></td>
+          <td class='inherited'><div class='inherited ph_english_tengwar_rp'>Inherited from ph_english_tengwar</div></td>
         
       
       </td>
@@ -10680,7 +10741,7 @@
      
         
         
-          <td class='absent'><div class='absent  ph_english_tengwar_gb'>Absent</div></td>
+          <td class='inherited'><div class='inherited ph_english_tengwar_gb'>Inherited from ph_english_tengwar</div></td>
         
       
       </td>
@@ -10688,7 +10749,7 @@
      
         
         
-          <td class='absent'><div class='absent  ph_english_tengwar_us'>Absent</div></td>
+          <td class='inherited'><div class='inherited ph_english_tengwar_us'>Inherited from ph_english_tengwar</div></td>
         
       
       </td>
@@ -11307,28 +11368,32 @@
 <span class='grey'>//    : examples : overage, -aring, -europe-</span>
 <span class='blue'>phoneme</span> r-
   liquid rhotic
+  
   ipa ɹ‿
+  <span class='green'>IF</span> <span class='green'>NOT</span> thisPh(isWordEnd) <span class='green'>THEN</span>
+    ipa ɹ
+  <span class='green'>ENDIF</span>
   
   <span class='green'>IF</span> <span class='green'>NOT</span> thisPh(isWordEnd) AND <span class='green'>NOT</span> prevPh(@) AND <span class='green'>NOT</span> prevPh(3) <span class='green'>THEN</span>
     <span class='red'>ChangePhoneme</span>(r)
+  <span class='green'>ELSE</span>
+    lengthmod 0
+
+    NextVowelStarts
+      VowelStart(r2/r2@)
+      VowelStart(r2/r2a)
+      VowelStart(r2/r2e)
+      VowelStart(r2/r2i)
+      VowelStart(r2/r2o)
+      VowelStart(r2/r2u)
+    EndSwitch
+
+    <span class='green'>IF</span> prevPh(isVowel) <span class='green'>THEN</span>
+      VowelEnding(r/xr, -60)
+    <span class='green'>ENDIF</span>
+
+    FMT(r/r)
   <span class='green'>ENDIF</span>
-  
-  lengthmod 0
-
-  NextVowelStarts
-    VowelStart(r2/r2@)
-    VowelStart(r2/r2a)
-    VowelStart(r2/r2e)
-    VowelStart(r2/r2i)
-    VowelStart(r2/r2o)
-    VowelStart(r2/r2u)
-  EndSwitch
-
-  <span class='green'>IF</span> prevPh(isVowel) <span class='green'>THEN</span>
-    VowelEnding(r/xr, -60)
-  <span class='green'>ENDIF</span>
-
-  FMT(r/r)
 <span class='blue'>endphoneme</span>
 </pre>                
           </div>
@@ -11431,7 +11496,31 @@
      
         
         
-          <td class='absent'><div class='absent  ph_english_tengwar'>Absent</div></td>
+         <td>
+          <div class="code ph_english_tengwar">
+            
+            
+            
+              
+              
+            
+              
+              
+            
+              
+              
+                <div class='sameas'>Same as in ph_english_us</div>
+              
+            
+            
+            <pre><span class='blue'>phoneme</span> r/   <span class='grey'>// used for [r] when not preceding a vowel</span>
+  liquid
+  lengthmod 2   <span class='grey'>//</span>
+<span class='grey'>//  formants NULL</span>
+<span class='blue'>endphoneme</span>
+</pre>                
+          </div>
+        </td>
         
       
       </td>
@@ -11439,7 +11528,7 @@
      
         
         
-          <td class='absent'><div class='absent  ph_english_tengwar_rp'>Absent</div></td>
+          <td class='inherited'><div class='inherited ph_english_tengwar_rp'>Inherited from ph_english_tengwar</div></td>
         
       
       </td>
@@ -11447,7 +11536,7 @@
      
         
         
-          <td class='absent'><div class='absent  ph_english_tengwar_gb'>Absent</div></td>
+          <td class='inherited'><div class='inherited ph_english_tengwar_gb'>Inherited from ph_english_tengwar</div></td>
         
       
       </td>
@@ -11455,7 +11544,7 @@
      
         
         
-          <td class='absent'><div class='absent  ph_english_tengwar_us'>Absent</div></td>
+          <td class='inherited'><div class='inherited ph_english_tengwar_us'>Inherited from ph_english_tengwar</div></td>
         
       
       </td>

@@ -90,6 +90,8 @@ phoneme aI3
   ChangePhoneme(aI@)
 endphoneme
 
+
+// Fire
 phoneme aI@
   vwl  starttype #a  endtype #@
   length 280
@@ -200,7 +202,7 @@ endphoneme
 phoneme i@3
   vwl  starttype #i  endtype #@
   length 250
-  
+    
   IF MbrolaSynth THEN
     ChangePhoneme(i@)
   ENDIF
@@ -208,8 +210,6 @@ phoneme i@3
   IfNextVowelAppend(r-)
   FMT(vdiph2/ii@)
 endphoneme
-
-
 
 phoneme V
   vwl  starttype #a  endtype #@

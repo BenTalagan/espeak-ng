@@ -129,28 +129,32 @@ endphoneme
 
 phoneme r-
   liquid rhotic
+  
   ipa ɹ‿
+  IF NOT thisPh(isWordEnd) THEN
+    ipa ɹ
+  ENDIF
   
   IF NOT thisPh(isWordEnd) AND NOT prevPh(@) AND NOT prevPh(3) THEN
     ChangePhoneme(r)
+  ELSE
+    lengthmod 0
+
+    NextVowelStarts
+      VowelStart(r2/r2@)
+      VowelStart(r2/r2a)
+      VowelStart(r2/r2e)
+      VowelStart(r2/r2i)
+      VowelStart(r2/r2o)
+      VowelStart(r2/r2u)
+    EndSwitch
+
+    IF prevPh(isVowel) THEN
+      VowelEnding(r/xr, -60)
+    ENDIF
+
+    FMT(r/r)
   ENDIF
-  
-  lengthmod 0
-
-  NextVowelStarts
-    VowelStart(r2/r2@)
-    VowelStart(r2/r2a)
-    VowelStart(r2/r2e)
-    VowelStart(r2/r2i)
-    VowelStart(r2/r2o)
-    VowelStart(r2/r2u)
-  EndSwitch
-
-  IF prevPh(isVowel) THEN
-    VowelEnding(r/xr, -60)
-  ENDIF
-
-  FMT(r/r)
 endphoneme
 
 // An alternate "linking" r but not marked as such. This is for "true" r (the phoneme is already rhotic)
@@ -162,6 +166,21 @@ endphoneme
 phoneme r-3
   import_phoneme r-
   ipa ɹ̩‿
+endphoneme
+
+phoneme r/   // used for [r] when not preceding a vowel
+  liquid
+  lengthmod 2   //
+//  formants NULL
+endphoneme
+
+phoneme ?  // glottal stp
+  vls glt stp
+  lengthmod 1   // 5? longer preceding vowel
+  nolink
+  Vowelin  glstop
+  Vowelout glstop
+  WAV(ustop/null)
 endphoneme
 
 
@@ -430,12 +449,15 @@ phoneme E2
   ChangePhoneme(E)  // a second change ([E]  to [I2]) won't happen
 endphoneme
 
+// Ex : Care
+// For the IPA, restore the rhotic mark of the diphtong before vowels.
+// This is what Tolkien does in the full writing modes (but his own pronounciation is more like the GA)
 phoneme e@
   vwl  starttype #e  endtype #@
   length 260
   ipa ɛ|ɹ
   IF nextPhW(r) THEN
-    ipa ɛ
+    ipa eə
   ENDIF
   IfNextVowelAppend(r)
   FMT(vwl_en_us/er)
@@ -536,13 +558,15 @@ phoneme i@
   FMT(vwl_en_rp/i@)
 endphoneme
 
-// Near
+// Ex: fear
+// For the IPA, restore the rhotic mark of the diphtong before vowels.
+// This is what Tolkien does in the full writing modes (but his own pronounciation is more like the GA)
 phoneme i@3
   vwl  starttype #i  endtype #@
   length 280
   ipa ɪ|ɹ
   IF nextPhW(r) THEN
-    ipa ɪ
+    ipa ɪə
   ENDIF
   IfNextVowelAppend(r)
   FMT(vwl_en_us/ir)
@@ -584,18 +608,19 @@ phoneme U
 endphoneme
 
 
-// Cure (as in US)
+// Cure
+// For the IPA, restore the rhotic mark of the diphtong before vowels.
+// This is what Tolkien does in the full writing modes (but his own pronounciation is more like the GA)
 phoneme U@
   vwl  starttype #@  endtype #@
   length 250
   ipa ʊ|ɹ
   IF nextPhW(r-) OR nextPhW(r-2) THEN
-    ipa ʊ
+    ipa ʊə
   ENDIF
   IfNextVowelAppend(r-2)
   FMT(vwl_en_us/ur)
 endphoneme
-
 
 
 /////////
@@ -740,8 +765,13 @@ endphoneme
 
 // G : long rhotic schwa, ex : nURse
 phoneme 3:
-  vwl  starttype #@  endtype #@
-  ipa ɜː|ɹ // G : To make things easier, we add the rhotic mark to ipa
+  vwl  starttype #@  endtype #@  
+
+  ipa ɜː|ɹ
+  IF nextPh(isRhotic) THEN
+    ipa ɜː
+  ENDIF
+  
   length 210
   IfNextVowelAppend(r-2)
   ChangeIfDiminished(3)
