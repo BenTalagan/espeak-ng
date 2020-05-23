@@ -44,6 +44,7 @@ endphoneme
 phoneme 3    //  Schwa, used for rhotic schwa in American
   CALL @
   ipa ə
+  IfNextVowelAppend(r-) // Override behaviour of @, only linking
 endphoneme
 
 phoneme 3:
