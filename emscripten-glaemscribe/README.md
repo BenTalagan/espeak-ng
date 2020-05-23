@@ -1,25 +1,22 @@
+# Main differences/additions
+
 Reworked the Makefile to use a more recent version of emscripten.
 Will generate multiple async/sync wasm/nowasm versions for different purposes.
 Removed worker logic from demos : too much overhead here and not useful.
 
+==Only MacOS is covered.==
 
-### Preinstall requirements (version may be different for binaryen)
+### Preinstall requirements
 
 - install xcode command line tools
 - install emscripten from sources (in ~/emsdk for example)
 - install cmake from brew
 
-
-
 ### Build From root directory
 
 #### First run
 
-Should call ./autogen.sh in the 
-
-  root and src/ucd-tools
- 
-directories !!
+Should call ./autogen.sh in the `root` and `src/ucd-tools` directories !!  
 
 #### General espeakng rebuild flow
 
@@ -39,9 +36,9 @@ Activate emscripten
 source ~/emsdk/emsdk_env.sh 
 ```
 
-This can be a good idea to exchange `phonemes` and `phonemes_light` files in ph_source. This will result in a smaller file.
+This can be a good idea to exchange `phonemes` and `phonemes_light` files in ph_source. This will result in a smaller compiled library.
 
-````
+```
 mv phsource/phonemes phsource/phonemes.orig
 mv phsource/phonemes.light phsource/phonemes 
 ```
@@ -70,7 +67,7 @@ cd ..
 
 Restore phonemes
 
-````
+```
 mv phsource/phonemes phsource/phonemes.light
 mv phsource/phonemes.orig phsource/phonemes
 ```
