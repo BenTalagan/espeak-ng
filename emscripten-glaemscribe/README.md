@@ -1,8 +1,10 @@
 # Main differences/additions
 
-Reworked the Makefile to use a more recent version of emscripten.
-Will generate multiple async/sync wasm/nowasm versions for different purposes.
-Removed worker logic from demos : too much overhead here and not useful.
+The build flow is different from the original demo :
+
+- Reworked the Makefile to use a more recent version of emscripten.
+- Will generate multiple async/sync wasm/nowasm versions for different purposes.
+- Removed worker logic from demos : too much overhead here and not useful.
 
 ==Only MacOS is covered.==
 
