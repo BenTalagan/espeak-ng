@@ -1,134 +1,149 @@
 # Lexical set: full monopthongs
-trap .
-bath .
-palm .
-lot .
-cloth .
-thought .
-kit .
-dress .
-strut .
-foot .
+trap
+bath
+palm
+lot
+cloth
+thought
+kit
+dress
+strut
+foot
 
 # Potential diphtongs
-face .
-goat .
-fleece .
-goose .
+face
+goat
+fleece
+goose
 
 # Full diphtongs
-price .
-choice .
-mouth .
+price
+choice
+mouth
 
 # Pre-R Vowel
-nurse .
-start .
-north .
-force .
-near .
-square .
-cure .
+nurse
+start
+north
+force
+near
+square
+cure
 
 # Horse / hoarse merger
-horse .
-hoarse .
+horse
+hoarse
 
 # {A#} : [a] that lengthens when stressed, in US accent
-mama .
+mama
 
 # {A~} : nasal A
-croissant .
+croissant
 
 # Can / Cannot / Can't
-I can .
-I can't .
-I cannot .
+I can
+I can't
+I cannot
 
 # {a2} : [a] that does not reduce (quite rare, latin words)
-diffraction .
+diffraction
 
 # {a#} : weaken [a] if not stressed (About), else, non rhotic shwa {@} (pegAsus)
-about .
-pegasus .
+about
+pegasus
 
 # {a#2} : only in "an", depends of the following ph starting with a vowel or not. Can't find a real example though. Maybe for 'h' ?
-an apple .
-an hour .
-a host .
-an host .
+an apple
+an hour
+a host
+an host
 
 # Schwa {@2} : only in "the". Changes to [i] before vowel.
-the lord .
-the age .
+the lord
+the age
 
 # Schwa {@5} : only in "to". Changes to [u] before vowel.
-to go .
-to ache .
+to go
+to ache
 
 # Schwa {@L} : special case of schwa before [l] (simPLE)
-simple .
+simple
 
 # Rhotic scha in middle of word
-motherfaker .
+motherfaker
 
 # Short ending rhotic schwa {3}, loses rhoticization or get strengthened to [a] in some accents
-letter .
+letter
 # Short ending schwa {@}, never rhotic
-comma .
+comma
 # Schwi {@}, before s
-roses .
+roses
 
 # {aI3} Diphtong aI (price) + short rothic schwa
-fire .
+fire
 # Diphtong (mouth) + rothic shwa
-hour .
+hour
 # Various words with potential problems
-science .
-explore .
-demoness .
-philoxera .
+science
+explore
+demoness
+philoxera
 
 # Linking rs
-a about .
-letter .
-letter in .
-mother .
-mother and child .
-fire .
-fire in .
-hour .
-hour in .
-near .
-near in .
-square .
-square in .
-star .
-star in .
-cure .
-cure in .
+a about
+letter
+letter in
+mother
+mother and child
+fire
+fire in
+hour
+hour in
+near
+near in
+square
+square in
+star
+star in
+cure
+cure in
 
 # Linking r with non rhotic vowels (long/short a)
-grandpa .
-grandpa igor .
-vanilla .
-vanilla ice .
+grandpa
+grandpa igor
+vanilla
+vanilla ice
 
 # Velarizing n inside words
-incoming .
+incoming
 
 # Happy tensing
-happy .
+happy
 
 # Non-reducing t
-autism .
+autism
 
 # Flapping t
-city .
+city
 
 # d => ([t] or [d]) , s => ([s] or [z]) (depending on voicing)
-baked .
-raged .
-cafes .
-slopes .
+baked
+raged
+cafes
+slopes
 
+# Rhoticized long vowels
+
+purr purring 
+bar barring
+war warring
+soar soaring
+fear fearing
+care caring
+tour touring
+cure curing
+fire firing
+sour souring
+lawyer lawyering
+lower lowering
+letter lettering

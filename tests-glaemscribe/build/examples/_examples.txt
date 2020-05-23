@@ -1,82 +1,95 @@
-trap .
-bath .
-palm .
-lot .
-cloth .
-thought .
-kit .
-dress .
-strut .
-foot .
-face .
-goat .
-fleece .
-goose .
-price .
-choice .
-mouth .
-nurse .
-start .
-north .
-force .
-near .
-square .
-cure .
-horse .
-hoarse .
-mama .
-croissant .
-I can .
-I can't .
-I cannot .
-diffraction .
-about .
-pegasus .
-an apple .
-an hour .
-a host .
-an host .
-the lord .
-the age .
-to go .
-to ache .
-simple .
-motherfaker .
-letter .
-comma .
-roses .
-fire .
-hour .
-science .
-explore .
-demoness .
-philoxera .
-a about .
-letter .
-letter in .
-mother .
-mother and child .
-fire .
-fire in .
-hour .
-hour in .
-near .
-near in .
-square .
-square in .
-star .
-star in .
-cure .
-cure in .
-grandpa .
-grandpa igor .
-vanilla .
-vanilla ice .
-incoming .
-happy .
-autism .
-city .
-baked .
-raged .
-cafes .
-slopes .
+trap ,
+bath ,
+palm ,
+lot ,
+cloth ,
+thought ,
+kit ,
+dress ,
+strut ,
+foot ,
+face ,
+goat ,
+fleece ,
+goose ,
+price ,
+choice ,
+mouth ,
+nurse ,
+start ,
+north ,
+force ,
+near ,
+square ,
+cure ,
+horse ,
+hoarse ,
+mama ,
+croissant ,
+I can ,
+I can't ,
+I cannot ,
+diffraction ,
+about ,
+pegasus ,
+an apple ,
+an hour ,
+a host ,
+an host ,
+the lord ,
+the age ,
+to go ,
+to ache ,
+simple ,
+motherfaker ,
+letter ,
+comma ,
+roses ,
+fire ,
+hour ,
+science ,
+explore ,
+demoness ,
+philoxera ,
+a about ,
+letter ,
+letter in ,
+mother ,
+mother and child ,
+fire ,
+fire in ,
+hour ,
+hour in ,
+near ,
+near in ,
+square ,
+square in ,
+star ,
+star in ,
+cure ,
+cure in ,
+grandpa ,
+grandpa igor ,
+vanilla ,
+vanilla ice ,
+incoming ,
+happy ,
+autism ,
+city ,
+baked ,
+raged ,
+cafes ,
+slopes ,
+purr purring ,
+bar barring ,
+war warring ,
+soar soaring ,
+fear fearing ,
+care caring ,
+tour touring ,
+cure curing ,
+fire firing ,
+sour souring ,
+lawyer lawyering ,
+lower lowering ,
+letter lettering ,

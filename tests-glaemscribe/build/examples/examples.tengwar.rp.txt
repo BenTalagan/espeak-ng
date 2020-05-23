@@ -1,82 +1,95 @@
-tɹˈæp
-bˈɑːθ
-pˈɑːm
-lˈɒt
-klˈɒθ
-θˈɔːt
-kˈɪt
-dɹˈɛs
-stɹˈʌt
-fˈʊt
-fˈeɪs
-ɡˈəʊt
-flˈiːs
-ɡˈuːs
-pɹˈaɪs
-tʃˈɔɪs
-mˈaʊθ
-nˈɜːs
-stˈɑːt
-nˈɔːθ
-fˈɔːs
-nˈiə
-skwˈeə
-kjˈʊə
-hˈɔːs
-hˈɔːs
-mˈæmɐ
-kwˈɑːsɑ̃
-aɪ kˈæn
-aɪ kˈɑːnt
-aɪ kˈænɒt
-dɪfɹˈækʃən
-ɐbˈaʊt
-pˈɛɡəsəs
-ɐn ˈæpəl
-ɐn ˈaʊɐ
-ɐ hˈəʊst
-æn hˈəʊst
-ðə lˈɔːd
-ðɪ ˈeɪdʒ
-tʊ̟ ɡˈəʊ
-tʊ ˈeɪk
-sˈɪmpəl
-mˈʌðəfˌeɪkɐ
-lˈɛtɐ
-kˈɒmɐ
-ɹˈəʊzɪz
-fˈaɪə
-ˈaʊɐ
-sˈaɪəns
-ɪksplˈɔː
-dˈiːmənˌɛs
-fˈɪləksəɹɐ
-ɐɹ̩‿ ɐbˈaʊt
-lˈɛtɐ
-lˈɛtɐɹ‿ ˈɪn
-mˈʌðɐ
-mˈʌðɐɹ‿ ænd tʃˈaɪld
-fˈaɪə
-fˈaɪəɹ‿ ˈɪn
-ˈaʊɐ
-ˈaʊɐɹ‿ ˈɪn
-nˈiə
-nˌiəɹ‿ ˈɪn
-skwˈeə
-skwˈeəɹ‿ ˈɪn
-stˈɑː
-stˈɑːɹ‿ ˈɪn
-kjˈʊə
-kjˈʊəɹ‿ ˈɪn
-ɡɹˈændpɑː
-ɡɹˈændpɑːɹ̩‿ ˈiːɡɔː
-vɐnˈɪlɐ
-vɐnˈɪlɐɹ̩‿ ˈaɪs
-ˈɪn‿kʌmˌɪŋ
-hˈæpɪ
-ˈɔːtɪzəm
-sˈɪtɪ
-bˈeɪkt
-ɹˈeɪdʒd
-kˈæfeɪz
-slˈəʊps
+tɹˈæp 
+bˈɑːθ 
+pˈɑːm 
+lˈɒt 
+klˈɒθ 
+θˈɔːt 
+kˈɪt 
+dɹˈɛs 
+stɹˈʌt 
+fˈʊt 
+fˈeɪs 
+ɡˈəʊt 
+flˈiːs 
+ɡˈuːs 
+pɹˈaɪs 
+tʃˈɔɪs 
+mˈaʊθ 
+nˈɜːs 
+stˈɑːt 
+nˈɔːθ 
+fˈɔːs 
+nˈiə 
+skwˈeə 
+kjˈʊə 
+hˈɔːs 
+hˈɔːs 
+mˈæmɐ 
+kwˈɑːsɑ̃ 
+aɪ kˈæn 
+aɪ kˈɑːnt 
+aɪ kˈænɒt 
+dɪfɹˈækʃən 
+ɐbˈaʊt 
+pˈɛɡəsəs 
+ɐn ˈæpəl 
+ɐn ˈaʊɐ 
+ɐ hˈəʊst 
+æn hˈəʊst 
+ðə lˈɔːd 
+ðɪ ˈeɪdʒ 
+tʊ̟ ɡˈəʊ 
+tʊ ˈeɪk 
+sˈɪmpəl 
+mˈʌðəfˌeɪkɐ 
+lˈɛtɐ 
+kˈɒmɐ 
+ɹˈəʊzɪz 
+fˈaɪə 
+ˈaʊɐ 
+sˈaɪəns 
+ɪksplˈɔː 
+dˈiːmənˌɛs 
+fˈɪləksəɹɐ 
+ɐɹ̩‿ ɐbˈaʊt 
+lˈɛtɐ 
+lˈɛtɐɹ‿ ɪn 
+mˈʌðɐ 
+mˈʌðɐɹ‿ ænd tʃˈaɪld 
+fˈaɪə 
+fˈaɪəɹ‿ ɪn 
+ˈaʊɐ 
+ˈaʊɐɹ‿ ɪn 
+nˈiə 
+nˈiəɹ‿ ɪn 
+skwˈeə 
+skwˈeəɹ‿ ɪn 
+stˈɑː 
+stˈɑːɹ‿ ɪn 
+kjˈʊə 
+kjˈʊəɹ‿ ɪn 
+ɡɹˈændpɑː 
+ɡɹˈændpɑːɹ̩‿ ˈiːɡɔː 
+vɐnˈɪlɐ 
+vɐnˈɪlɐɹ̩‿ ˈaɪs 
+ˈɪn‿kʌmˌɪŋ 
+hˈæpɪ 
+ˈɔːtɪzəm 
+sˈɪtɪ 
+bˈeɪkt 
+ɹˈeɪdʒd 
+kˈæfeɪz 
+slˈəʊps 
+pˈɜː pˈɜːɹɪŋ 
+bˈɑː bˈɑːɹɪŋ 
+wˈɔː wˈɔːɹɪŋ 
+sˈɔː sˈɔːɹɪŋ 
+fˈiə fˈiəɹɪŋ 
+kˈeə kˈeəɹɪŋ 
+tˈʊə tˈʊəɹɪŋ 
+kjˈʊə kjˈʊəɹɪŋ 
+fˈaɪə fˈaɪəɹɪŋ 
+sˈaʊɐ sˈaʊəɪŋ 
+lˈɔɪɐ lˈɔɪəɪŋ 
+lˈəʊɐ lˈəʊəɪŋ 
+lˈɛtɐ lˈɛtəɪŋ 

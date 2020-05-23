@@ -48,6 +48,11 @@ class Line
   def initialize
     @translations = {}
   end
+  
+  def to_s
+    "Type: #{type} / Content: #{content}" +
+    "Translations:\n #{translations}"
+  end
 end
 
 def read_example_file(filename)
@@ -78,7 +83,7 @@ def dump_as_raw_example_file(content, filename)
   f = File.open(filename, "wb:UTF-8") {|f|
     content.each{|ll|
       if ll.type == :example
-        f << ll.content + "\n"
+        f << ll.content + " ,\n"
       end
     }  
   }  
@@ -158,7 +163,8 @@ def gather_transcription_results(lines)
   SPECS.each{ |voice,file_name|
     slines = File.open("#{example_file(file_name)}","rb:UTF-8").readlines
     slines.each_with_index{ |sline,lidx|
-      lookup[lidx].translations[voice] = sline.strip
+      sline = sline.gsub("","").strip
+      lookup[lidx].translations[voice] = sline
     }
   }
 end
