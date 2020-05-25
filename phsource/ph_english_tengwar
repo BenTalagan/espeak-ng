@@ -566,7 +566,7 @@ phoneme i@3
   length 280
   ipa ɪ|ɹ
   IF nextPhW(r) THEN
-    ipa ɪə
+    ipa iə
   ENDIF
   IfNextVowelAppend(r)
   FMT(vwl_en_us/ir)

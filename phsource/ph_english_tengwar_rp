@@ -122,7 +122,9 @@ phoneme aI@
   length 270
   
   // Mini-tweak, correct from aiə to aɪɐ (more logical with other a schwas)
-  ipa aɪɐ
+  IF NOT next2PhW(isVowel) THEN
+    ipa aɪɐ
+  ENDIF
   
   IfNextVowelAppend(r-)
   FMT(vwl_en/aI@)

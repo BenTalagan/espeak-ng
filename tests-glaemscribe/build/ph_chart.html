@@ -2395,7 +2395,9 @@
   length 270
   
   <span class='grey'>// Mini-tweak, correct from aiə to aɪɐ (more logical with other a schwas)</span>
-  ipa aɪɐ
+  <span class='green'>IF</span> <span class='green'>NOT</span> next2PhW(isVowel) <span class='green'>THEN</span>
+    ipa aɪɐ
+  <span class='green'>ENDIF</span>
   
   <span class='red'>IfNextVowelAppend</span>(r-)
   FMT(vwl_en/aI@)
@@ -5816,7 +5818,7 @@
   length 280
   ipa ɪ|ɹ
   <span class='green'>IF</span> nextPhW(r) <span class='green'>THEN</span>
-    ipa ɪə
+    ipa iə
   <span class='green'>ENDIF</span>
   <span class='red'>IfNextVowelAppend</span>(r)
   FMT(vwl_en_us/ir)
