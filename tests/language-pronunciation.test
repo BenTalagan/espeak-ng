@@ -38,6 +38,7 @@ test_phonemes as "Beng" "X'@kOl,o m'anuh,e S'ad#in,Ob#aw,Oe X'@man m'O*&d,a 'a*u
 X'ihO~t,Or b'ibek 'a*u b'udd#i 'atS#e 'a*u X'ihO~t,e p'OrOXp,Or b#atr'itbO*,e 'atSOr,On k'o*ib l'age" "সকলো মানুহে স্বাধীনভাৱে সমান মৰ্যদা আৰু অধিকাৰে জন্মগ্ৰহণ কৰে । সিহঁতৰ বিবেক আৰু বুদ্ধি আছে আৰু সিহঁতে পৰস্পৰ ভাতৃত্বৰে আচৰণ কৰিব লাগে ।"
 test_phonemes az "Latn" "byts'yn insanL'aR l&jag'&t v& hygugLa*@n'a J'W*& az'ad b&*ab'&R do:uLuRL'aR
 ona*'@n Syu*aLR'@ v& vidZdanLa*'@ v'aR v& b'iRbiRl&*'in& mynasib'&td& gaRdaSL'@x Runhund'a davRanmaL@d@RL'aR" "Bütün insanlar ləyaqət və hüquqlarına görə azad bərabər doğulurlar. Onarın şüuralrı və vicdanları var və bir-birlərinə münasibətdə qardaşlıq runhunda davranmalıdırlar."
+test_phonemes ba "Cyrl" "m'in h'in 'uL b'eD h'eD 'uLAr b'VL t'eQe" "мин һин ул беҙ һеҙ улар был теге."
 test_phonemes bg "Cyrl" "'ax tS'udna b@Lg'arska z'em;o
 pol'uSvaj ts@ft;'aSti: Z'ita" "Ах чудна българска земьо, полюшвай цъфтящи жита."
 test_phonemes bn "Beng" "m'alOS,ij 'Obojd#,O Sr'omik,Oder b'i*udd#,e tS'OlOm,an_:_: m'egat#r'i_:_: 'ob#idZ,ane Se d'eSe S'Oto S'Oto 'ob#ib,aSik,e 'at.Ok k'O*etS#,e Se d'eSer 'imigr,eSOn p'uliS
@@ -149,7 +150,7 @@ los es don'ada **az'ona e k,onsi;'ensa e d'ebe 'ata la 'un a la 'ot**a en 'un sp
 test_phonemes lfn "Latn" "t'ota um'anes n'ase l'ib**e e eg'al en d'inja e di**'etos
 los es don'ada **az'ona e k,onsi;'ensa e d'ebe 'ata la 'un a la 'ot**a en 'un spi**'ito de f**'ati;,a" "Tota umanes nase libre e egal en dinia e diretos. Los es donada razona e consiensa e debe ata la un a la otra en un spirito de fratia."
 test_phonemes lt "Latn" "i:l;ingd'ama fext'Uoto:jo: Sp'aga subl;i:ktS;;o:j'us;i p@-rag@-r;'eAZee apv'alu: arb'u:za:" "Įlinkdama fechtuotojo špaga sublykčiojusi pragręžė apvalų arbūzą."
-test_phonemes lv "Latn" "gl'a:ZScu:n^a R'u:ci:Si Dz\`'E:Ruma: tS'iepj b'aha k'ontsERtfli:Jel^u v'a::kus" "Glāžšķūņa rūķīši dzērumā čiepj Baha koncertflīģeļu vākus."
+test_phonemes lv "Latn" "gl'a:ZScu:n^a R'u:ci:Si Dz\`_|'E:Ruma: tS'iepj b'aha k'ontsERtfli:Jel^u v'a::kus" "Glāžšķūņa rūķīši dzērumā čiepj Baha koncertflīģeļu vākus."
 test_phonemes mi "Latn" "k'o_| t'e_| kat'oa_ 'o_| N'a_| taN'ata_ 'i_| t'e_| f,ana,uNat'aNa_| m'ai_ 'e_| wat'ea_ 'ana_ 'i_| N'a_| h'ere_| kat'oa_|
 'e_| t,aur,iter'ite_ 'ana_| h'oki_| N'a_| m'ana_| m'e_| N'a_| t'ika_|
 'e_| f,akafif'ia_ 'ana_| h'oki_| k'i_ 'a_| rat'ou_| t'e_| Nak'au_| f'ai_| f,aka'aro_| m'e_| t'e_| h,ineN'aro_| moh'io_| k'i_| t'e_| t'ika_| m'e_| t'e_| h'e_|
@@ -232,13 +233,19 @@ test_phonemes te "Telu" "n'e:nu g'a:Ju t'inag,alanu m'ariju 'ala: c'e:sina: n'a:
 test_phonemes tn "Latn" "B'aTU B'oKl B'a ts'i:tswl B'a g,olUl,os-'igill_:_: ll g'o l,ekallk'ana k'a s-'iRiti_:_: ll d,itSwan'elU
 B'a_| aB'etswl g'o_| ak'an^a_:_: ll _|m,aik'ul#U
 ,m-ml B'a tSwan'ets-i g'o d,iRll'ana k'a _|m'owa_! wa B,okaul'eNgwl" "Batho botlhe ba tsetswe ba gololosegile le go lekalekana ka seriti le ditshwanelo. Ba abetswe go akanya le maikutlo, mme ba tshwanetse go direlana ka mowa wa bokaulengwe."
+test_phonemes tk "Latn" "tYRkm'WntSW
+t'YRkmWn n'ilI" "Türkmençe, Türkmen dili"
 test_phonemes tr "Latn" "piZ'amaL@ hast'a j'a:@z SofW*'E tSabudZ'ak Jyv&nd'I
 SISlid'E byj'Yk tS'Wp j@:@nLa*'@" "Pijamalı hasta yağız şoföre çabucak güvendi. Şişli’de büyük çöp yığınları."
 test_phonemes tt "Cyrl" "b0rL'Vq keSel'&r d'& 0z'0t h'&m 'yz 0brujLAr'V h'&m xoquqLAr'V jAGVnn'An t'iN bup'Vp tuAp'Ar
 0L0rG'A 0q'VL h'&m wWZ;d'An birelQ'&n h'&m b'&rb&rsen'& q0r0t'A tuGAnnArS;'A mWnAs&b&tt'& buLVrG'A tieSl'&r" "Барлык кешеләр дә азат һәм үз абруйлары һәм хокуклары ягыннан тиң бупып туапар. Аларга акыл һәм вөҗдан бирелгән һәм бәр-бәрсенә карата туганнарча мөнасәбәттә булырга тиешләр."
 test_phonemes ur "Arab" "t.#'Vnd. m'e~
-'e:k q'VH@t z'Vda ga:'o:n se: g'Vz@Rte: v'aqt 'e:k c'Vr.@cr.e:
+'e:k q'VH@t z'Vda ga:'o:n se: g'Vz@Rte: v'aqt 'e:k c'Ir.cIr.,e:
 b'a:s@R 'o: f'a:RIQ S'axs. k'o: b'a:z J'Vl p'VRi n'Uma: 'aZ@dHe: naz.'aR 'a:e:" "ٹھنڈ میں، ایک قحط زدہ گاؤں سے گذرتے وقت ایک چڑچڑے، باأثر و فارغ شخص کو بعض جل پری نما اژدہے نظر آئے۔"
+test_phonemes uz "Latn" "ozb'ektS&
+'ozbek t'yLy" "O‘zbekcha, o‘zbek tili"
+test_phonemes uz "Cyrl" "o:zb'ektS&
+'o:zbek t'yLy" "Ўзбекча, ўзбек тили"
 test_phonemes vi "Latn" "t['@3t[_| k'a:4_| m,O6j_| N'y@2j_| s'i1n^_| z'a:1_| d_'e2w_| d_,y@6c_| t['y6_| z'O1_| v,a:2_| _b'i2n^_| d_'a4N_| v'e2_| n^'@1n_| f'@4m_| v,a:2_| kw'iE2n_| l'@:6j_|
 m,O6j_| k,O1n_| N'y@2j_| d_'e2w_| d_,y@6c_| t['a:6w_| hw'a:3_| _b'a:1n_| tS,O1_| l'i3_| tS'i3_| v,a:2_| l'y@1N_| t['@1m_| v,a:2_| k'@2n_| f,a:4j_| d_'o3j_| s'y4_| v,@:3j_| n^'a1w_| tS'O#1N_| t['i2n^_| 'e-1n^_| 'E7m_|" "Tất cả mọi người sinh ra đều được tự do và bình đẳng về nhân phẩm và quyền lợi. Mọi con người đều được tạo hóa ban cho lý trí và lương tâm và cần phải đối xử với nhau trong tình anh em."
 

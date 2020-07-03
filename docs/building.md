@@ -97,8 +97,8 @@ be installed using the following commands:
 | autotools     | `sudo apt-get install make autoconf automake libtool pkg-config` |
 | c99 compiler  | `sudo apt-get install gcc`                                       |
 | sonic         | `sudo apt-get install libsonic-dev`                              |
-| ronn          | `sudo apt-get install ruby-ronn`                                 |
-| kramdown      | `sudo apt-get install ruby-kramdown`                             |
+| ronn          | `sudo apt-get install ronn`                                      |
+| kramdown      | `sudo apt-get install kramdown`                                  |
 
 For recent Debian or Ubuntu >= 18.04 you should also install:
 
@@ -260,7 +260,7 @@ In order to build the Android APK file, you need:
 
 1.  the [Android Studio](https://developer.android.com/studio/) with API 26 support;
 2.  the [Android NDK](http://developer.android.com/tools/sdk/ndk/index.html);
-3.  Gradle 3.2.1 or later.
+3.  Gradle 5.6.4 or later.
 
 ### Building with Gradle
 

@@ -10,22 +10,31 @@ The espeak-ng project is a fork of the espeak project.
 ### 1.51 (In Development)
 
 updated languages:
-
+*  ba (Bashkir) -- boracasli98, Valdis Vitolins
 *  chr (Cherokee) -- Michael Conrad
 *  de (German) -- Karl Eick
 *  el (Modern Greek) -- Reece Dunn (support for variant Greek letter forms)
 *  en (English) -- Steven Presser, Ben Talagan
 *  grc (Ancient Greek) -- Reece Dunn (support for variant Greek letter forms)
+*  it (Italian) -- Christian Leo
 *  shn (Shan Tay Yai) -- ronaldaug
 *  tr (Turkish) -- boracasli98
 *  ur (Urdu) -- Ejaz Shah
+*  uz (Uzbek) -- boracasli98, Valdis Vitolins
 *  zh (Chinese) -- Silas S. Brown, Rongcui Dong
 
 new languages:
+*  chr (Cherokee) -- Michael Conrad
+*  cu (Chuvash) -- boracasli98, Valdis Vitolins
 *  haw (Hawaiian) -- Valdis Vitolins
 *  he (Hebrew) -- boracasli98, Valdis Vitolins
-*  uk (Ukrainian) -- Valdis Vitolins
+*  ltg (Latgalian) -- Valdis Vitolins
+*  nog (Nogai) -- boracasli98, Valdis Vitolins
 *  qu (Quechua) -- Valdis Vitolins
+*  th (Thai) -- Valdis Vitolins
+*  tk (Turkmen) -- boracasli98, Valdis Vitolins
+*  ug (Uyghur) -- boracasli98, Valdis Vitolins
+*  uk (Ukrainian) -- Valdis Vitolins
 
 ### 1.50 - 2019-11-29
 

@@ -2,18 +2,21 @@
 // Spelling-to-phoneme rules for Bashkir
 
 // Letters
+а	A:
 б	be
 в	we
 г	ge
+ғ	Q"e
 д	de
+ҙ	De
 е	je
 ё	jo
 ж	Ze
-җ	Z;e
 з	ze
 и	i
 й	kVsk,A'i
 к	kA
+ҡ	qA
 л	el
 м	em
 н	en
@@ -23,6 +26,7 @@
 п	pe
 р	er
 с	es
+ҫ	eT
 т	te
 у	u
 ү	y
@@ -36,15 +40,15 @@
 ъ	kAlVnl,Vqbilges'e
 ы	V:
 ь	neS;k&l,ekbilges'e
-э	e|:
+э	I|:
+ә	&:
 ю	ju
 я	jA
-
 
 // Numbers
 _0	n'ul?
 _1	b'er
-_2	ik'e 
+_2	ik'e
 _3	'WS;
 _4	d'yrt
 _5	b'iS
@@ -54,7 +58,7 @@ _8	sig'ez
 _9	tug'Vz
 _10	'un
 _11	unb'er
-_12	unik'e 
+_12	unik'e
 _13	un'WS;
 _14	und'yrt
 _15	unb'iS

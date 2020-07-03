@@ -2014,6 +2014,8 @@ include ph_bulgarian
 phonemetable sl pl
 include ph_slovenian
 
+phonemetable th shn
+
 phonemetable cs sk
 include ph_czech
 
@@ -2034,8 +2036,14 @@ phonemetable uk ru
 phonemetable az tr
 include ph_azerbaijani
 
-phonemetable uz tr
-include ph_uzbek
+phonemetable cv tr
+include ph_chuvash
+
+phonemetable tk tr
+include ph_turkmen
+
+phonemetable ug tr
+include ph_uyghur
 
 phonemetable pt-pt pt
 include ph_portugal
@@ -2049,4 +2057,7 @@ include ph_vietnam_sgn
 phonemetable sd ur
 include ph_sindhi
 
+phonemetable nog kk
 
+phonemetable uz kk
+include ph_uzbek
